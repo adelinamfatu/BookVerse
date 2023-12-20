@@ -4,13 +4,6 @@ const cors = require('cors');
 const server = express();
 const port = 6100;
 
-const admin = require('firebase-admin');
-const credentials = require('./key.json');
-
-admin.initializeApp({credential: admin.credential.cert(credentials)});
-
-const db = admin.firestore();
-
 const userRoutes = require('./routes/user-routes');
 
 server.use(bodyParser.json());

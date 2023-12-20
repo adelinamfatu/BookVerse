@@ -6,7 +6,7 @@
           <v-card-title class="text-h5">Login</v-card-title>
           <v-card-text>
             <v-form @submit.prevent="register">
-              <v-text-field v-model="username" label="Username"></v-text-field>
+              <v-text-field v-model="email" label="Email"></v-text-field>
               <v-text-field v-model="password" label="Password" type="password"></v-text-field>
               <v-btn @click="register" color="primary">Register</v-btn>
             </v-form>
@@ -21,18 +21,18 @@
 import { ref } from "vue";
 import axios from 'axios';
 
-const username = ref("");
+const email = ref("");
 const password = ref("");
 
 const register = async () => {
   const userData = {
-    username: username.value,
+    email: email.value,
     password: password.value
   };
   console.log(userData);
 
   try {
-    const response = await axios.post('http://localhost:6100/api/users', userData);
+    const response = await axios.post('http://localhost:6100/api/users/add', userData);
     console.log(response.data);
   } catch (error) {
     console.error("Error registering user:", error);
