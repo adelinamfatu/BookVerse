@@ -1,18 +1,44 @@
 <template>
   <v-container>
-    <v-row justify="center">
-      <v-col cols="12" sm="8" md="4">
-        <v-card>
-          <v-card-title class="text-h5">Login</v-card-title>
-          <v-card-text>
-            <v-form @submit.prevent="login">
-              <v-text-field v-model="username" label="Username"></v-text-field>
-              <v-text-field v-model="password" label="Password" type="password"></v-text-field>
-              <v-btn type="submit" color="primary">Login</v-btn>
-            </v-form>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+    <v-card class="mx-auto" color="#26c6da" dark max-width="800" rounded="xl">
+      <v-row class="mx-0" style="overflow:hidden;">
+        <v-col cols="6" class="yellow">
+          <div class="fill-height d-flex justify-center align-center">this should be different color</div>
+        </v-col>
+        <v-col cols="6">
+          <v-card-title>
+            <v-icon large left>mdi-twitter</v-icon>
+            <span class="title font-weight-light">Twitter</span>
+          </v-card-title>
+
+          <v-card-text
+            class="headline font-weight-bold"
+          >"Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."</v-card-text>
+
+          <v-card-actions>
+            <v-list-item class="grow">
+              <v-list-item-avatar color="grey darken-3">
+                <v-img
+                  class="elevation-6"
+                  src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
+                ></v-img>
+              </v-list-item-avatar>
+
+              <v-list-item-content>
+                <v-list-item-title>Evan You</v-list-item-title>
+              </v-list-item-content>
+
+              <v-row align="center" justify="end">
+                <v-icon class="mr-1">mdi-heart</v-icon>
+                <span class="subheading mr-2">256</span>
+                <span class="mr-1">·</span>
+                <v-icon class="mr-1">mdi-share-variant</v-icon>
+                <span class="subheading">45</span>
+              </v-row>
+            </v-list-item>
+          </v-card-actions>
+        </v-col>
+      </v-row>
+    </v-card>
   </v-container>
 </template>
