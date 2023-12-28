@@ -1,8 +1,8 @@
 <template>
-  <v-container fluid class="fill-height" style="background-color: #E8EAF6;">
+  <v-container fluid class="fill-height" style="background-color: #E3F2FD;">
     <v-row justify="center">
       <v-col cols="7" sm="3" md="5">
-        <v-card color="light-blue-lighten-4"> 
+        <v-card color="light-blue-lighten-4" elevation="10"> 
           <v-row justify="center" class="mt-5">
             <v-col class="d-flex justify-center align-center">
               <v-avatar size="70">
@@ -19,10 +19,31 @@
           </v-row>
           <v-card-text class="mt-5">
             <v-form @submit.prevent="register">
-              <v-text-field color="indigo-darken-1" clearable v-model="email" label="Email"></v-text-field>
-              <v-text-field color="indigo-darken-1" clearable v-model="password" label="Password" type="password"></v-text-field>
+              <v-text-field
+                :rules="emailRules"
+                class="mb-4"
+                density="compact"
+                label="Email"
+                placeholder="Email address"
+                clearable
+                v-model="email"
+                prepend-inner-icon="mdi-email-outline"
+                variant="outlined">
+              </v-text-field>
+              <v-text-field
+                :rules="passwordRules"
+                :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+                :type="visible ? 'text' : 'password'"
+                density="compact"
+                v-model="password"
+                label="Password"
+                placeholder="Enter your password"
+                prepend-inner-icon="mdi-lock-outline"
+                variant="outlined"
+                @click:append-inner="visible = !visible">
+              </v-text-field>
               <div class="d-flex justify-center">
-                <v-btn @click="register" color="indigo-lighten-3" class="mt-4 mb-4">Register</v-btn>
+                <v-btn @click="register" color="orange-accent-1" class="mt-4 mb-4">Register</v-btn>
               </div>
             </v-form>
           </v-card-text>
@@ -38,6 +59,15 @@ import axios from 'axios';
 
 const email = ref("");
 const password = ref("");
+const emailRules = ref([
+  value => !!value || 'Email is required',
+  value => /.+@.+\..+/.test(value) || 'Email must be valid'
+]);
+const passwordRules = ref([
+  value => !!value || 'Password is required',
+  value => (value && value.length >= 8) || 'Password should be at least 8 characters long'
+])
+const visible = ref(false);
 
 const register = async () => {
   const userData = {
