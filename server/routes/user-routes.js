@@ -8,10 +8,23 @@ router.post('/register', async (req, res) => {
       email: req.body.email,
       password: req.body.password
     });
-    res.send(response)
+    res.send(response);
   } catch(error) {
-    res.send(error)
+    res.send(error);
   }
+});
+
+router.post('/signin', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const userRecord = await auth.getUserByEmail(email);
+    const uid = userRecord.uid;
+    auth.createCustomToken(uid).then((customToken) => {
+      res.send(customToken);
+    });
+  } catch (error) {
+    res.status(400).send(error.message);
+  };
 });
 
 /*

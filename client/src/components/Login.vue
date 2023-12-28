@@ -60,3 +60,34 @@
     </v-row>
   </v-container>
 </template>
+
+<script setup>
+import { ref } from "vue";
+import axios from 'axios';
+
+const email = ref("");
+const password = ref("");
+const emailRules = ref([
+  value => !!value || 'Email is required',
+  value => /.+@.+\..+/.test(value) || 'Email must be valid'
+]);
+const passwordRules = ref([
+  value => !!value || 'Password is required',
+  value => (value && value.length >= 8) || 'Password should be at least 8 characters long'
+])
+const visible = ref(false);
+
+const login = async () => {
+  const userData = {
+    email: email.value,
+    password: password.value
+  };
+
+  try {
+    const response = await axios.post('http://localhost:6100/api/users/signin', userData);
+    const token = response.data;
+  } catch (error) {
+    console.error("Error logging in user:", error);
+  }
+}
+</script>
