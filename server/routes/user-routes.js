@@ -1,7 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../database');
+const { auth, db } = require('../database');
 
+router.post('/register', async (req, res) => {
+  try {
+    const response = await auth.createUser({
+      email: req.body.email,
+      password: req.body.password
+    });
+    res.send(response)
+  } catch(error) {
+    res.send(error)
+  }
+});
+
+/*
 router.post('/add', (req, res) => {
   try {
     const id = req.body.email
@@ -14,6 +27,6 @@ router.post('/add', (req, res) => {
   } catch(error) {
     res.send(error)
   }
-});
+});*/
 
 module.exports = router;
