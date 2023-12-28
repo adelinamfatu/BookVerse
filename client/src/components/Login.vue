@@ -1,44 +1,62 @@
 <template>
-  <v-container>
-    <v-card class="mx-auto" color="#26c6da" dark max-width="800" rounded="xl">
-      <v-row class="mx-0" style="overflow:hidden;">
-        <v-col cols="6" class="yellow">
-          <div class="fill-height d-flex justify-center align-center">this should be different color</div>
-        </v-col>
-        <v-col cols="6">
-          <v-card-title>
-            <v-icon large left>mdi-twitter</v-icon>
-            <span class="title font-weight-light">Twitter</span>
-          </v-card-title>
-
-          <v-card-text
-            class="headline font-weight-bold"
-          >"Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."</v-card-text>
-
-          <v-card-actions>
-            <v-list-item class="grow">
-              <v-list-item-avatar color="grey darken-3">
-                <v-img
-                  class="elevation-6"
-                  src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
-                ></v-img>
-              </v-list-item-avatar>
-
-              <v-list-item-content>
-                <v-list-item-title>Evan You</v-list-item-title>
-              </v-list-item-content>
-
-              <v-row align="center" justify="end">
-                <v-icon class="mr-1">mdi-heart</v-icon>
-                <span class="subheading mr-2">256</span>
-                <span class="mr-1">·</span>
-                <v-icon class="mr-1">mdi-share-variant</v-icon>
-                <span class="subheading">45</span>
-              </v-row>
-            </v-list-item>
-          </v-card-actions>
-        </v-col>
-      </v-row>
-    </v-card>
+  <v-container fluid class="fill-height" style="background-color: #E3F2FD;">
+    <v-row justify="center">
+      <v-col cols="7" sm="3" md="5">
+        <v-card color="light-blue-lighten-4" elevation="10"> 
+          <v-row justify="center" class="mt-5">
+            <v-col class="d-flex justify-center align-center">
+              <v-avatar size="70">
+                <img src="@/assets/logo.png" alt="Icon" style="width: 70px; height: auto;">
+              </v-avatar>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col>
+              <v-card-title class="text-h5" style="color: white; text-align: center; margin: 0; padding: 0;">
+                <span style="font-size: 32px; font-weight: bold">BookVerse</span>
+              </v-card-title>
+            </v-col>
+          </v-row>
+          <v-card-text class="mt-5">
+            <v-form @submit.prevent="login">
+              <v-text-field
+                :rules="emailRules"
+                class="mb-4"
+                density="compact"
+                label="Email"
+                placeholder="Email address"
+                clearable
+                v-model="email"
+                prepend-inner-icon="mdi-email-outline"
+                variant="outlined">
+              </v-text-field>
+              <v-text-field
+                :rules="passwordRules"
+                :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+                :type="visible ? 'text' : 'password'"
+                density="compact"
+                v-model="password"
+                label="Password"
+                placeholder="Enter your password"
+                prepend-inner-icon="mdi-lock-outline"
+                variant="outlined"
+                @click:append-inner="visible = !visible">
+              </v-text-field>
+              <div class="d-flex justify-center">
+                <v-btn @click="login" color="orange-accent-1">Login</v-btn>
+              </div>
+            </v-form>
+          </v-card-text>
+          <v-row justify="center" class="mb-4">
+            <v-col>
+              <div class="d-flex justify-center align-center">
+                <span style="font-size: 14px;">Don't have an account?</span>
+                <router-link to="/register" style="margin-left: 5px; text-decoration: underline; color: blue;">Register</router-link>
+              </div>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>

@@ -43,10 +43,18 @@
                 @click:append-inner="visible = !visible">
               </v-text-field>
               <div class="d-flex justify-center">
-                <v-btn @click="register" color="orange-accent-1" class="mt-4 mb-4">Register</v-btn>
+                <v-btn @click="register" color="orange-accent-1">Register</v-btn>
               </div>
             </v-form>
           </v-card-text>
+          <v-row justify="center" class="mb-4">
+            <v-col>
+              <div class="d-flex justify-center align-center">
+                <span style="font-size: 14px;">Already have an account?</span>
+                <router-link to="/login" style="margin-left: 5px; text-decoration: underline; color: blue;">Login</router-link>
+              </div>
+            </v-col>
+          </v-row>
         </v-card>
       </v-col>
     </v-row>
