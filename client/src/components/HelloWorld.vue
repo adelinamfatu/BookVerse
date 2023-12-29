@@ -70,6 +70,37 @@
   </v-container>
 </template>
 
-<script setup>
-  //
+<script>
+import { ref, onMounted } from "vue";
+import axios from 'axios';
+
+export default {
+  name: 'Dashboard',
+
+  setup() {
+    onMounted(async () => {
+      try {
+        const token = localStorage.getItem('firebaseToken');
+
+        if (!token) {
+          console.error('Token not found in local storage');
+          return;
+        }
+
+        const response = await axios.get('http://localhost:6100/api/users/books', {
+          headers: {
+            'x-access-token': token
+          }
+        });
+
+        console.log(response.data);
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    });
+
+    return {};
+  }
+}
 </script>

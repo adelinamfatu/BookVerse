@@ -85,7 +85,7 @@ const register = async () => {
 
   try {
     const response = await axios.post('http://localhost:6100/api/users/register', userData);
-    console.log(response)
+    //console.log(response)
   } catch (error) {
     console.error("Error registering user:", error);
   }

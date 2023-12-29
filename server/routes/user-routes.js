@@ -35,7 +35,7 @@ router.get('/books', verifyToken, async (req, res) => {
       snapshot.forEach((doc) => {
           books.push(doc.data());
       });
-
+      console.log('Tokenul a fost validat')
       res.status(200).send(books);
   } catch (error) {
       console.error('Error fetching books:', error);
