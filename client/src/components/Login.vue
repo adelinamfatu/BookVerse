@@ -64,7 +64,9 @@
 <script setup>
 import { ref } from "vue";
 import axios from 'axios';
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const email = ref("");
 const password = ref("");
 const emailRules = ref([
@@ -86,6 +88,8 @@ const login = async () => {
   try {
     const response = await axios.post('http://localhost:6100/api/users/signin', userData);
     const token = response.data;
+    localStorage.setItem('firebaseToken', token);
+    router.push('/books');
   } catch (error) {
     console.error("Error logging in user:", error);
   }

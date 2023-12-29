@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { auth, db } = require('../database');
+const { db, auth } = require('../database');
+const verifyToken = require('../middleware/auth')
 
 router.post('/register', async (req, res) => {
   try {
@@ -25,6 +26,21 @@ router.post('/signin', async (req, res) => {
   } catch (error) {
     res.status(400).send(error.message);
   };
+});
+
+router.get('/books', verifyToken, async (req, res) => {
+  try {
+      const snapshot = await db.collection('books').get();
+      const books = [];
+      snapshot.forEach((doc) => {
+          books.push(doc.data());
+      });
+
+      res.status(200).send(books);
+  } catch (error) {
+      console.error('Error fetching books:', error);
+      res.status(500).send('Internal Server Error');
+  }
 });
 
 /*
