@@ -65,6 +65,8 @@
 import { ref } from "vue";
 import axios from 'axios';
 import { useRouter } from 'vue-router'
+import { auth } from '../firebase'
+import { signInWithCustomToken } from "firebase/auth";
 
 const router = useRouter()
 const email = ref("");
@@ -89,7 +91,13 @@ const login = async () => {
     const response = await axios.post('http://localhost:6100/api/users/signin', userData);
     const token = response.data;
     localStorage.setItem('firebaseToken', token);
-    router.push('/books');
+    signInWithCustomToken(auth, token).then((userCredential) => {
+      router.push('/feed');
+    })
+    .catch((error) => {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+    });
   } catch (error) {
     console.error("Error logging in user:", error);
   }

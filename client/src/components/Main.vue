@@ -1,5 +1,5 @@
 <template>
-  <v-card style="width: 85%" elevation="12" color="amber-lighten-5">
+  <v-card style="width: 85%" elevation="12" color="orange-lighten-5">
     <v-layout>
       <v-navigation-drawer
         expand-on-hover
