@@ -38,8 +38,12 @@
 
 <script setup>
 import { ref } from "vue";
+import { signOut } from "firebase/auth";
+import { auth } from '../firebase'
+import { useRouter } from 'vue-router'
 
 const dialogLogout = ref(false);
+const router = useRouter();
 
 const showLogoutDialog = () => {
   dialogLogout.value = true;
@@ -48,5 +52,10 @@ const showLogoutDialog = () => {
 const logout = () => {
   localStorage.removeItem('firebaseToken');
   dialogLogout.value = false;
+  signOut(auth).then(() => {
+    router.push('/login');
+  }).catch((error) => {
+    console.error(error);
+  });
 }
 </script>

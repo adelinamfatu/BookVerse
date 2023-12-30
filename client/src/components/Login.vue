@@ -68,7 +68,7 @@ import { useRouter } from 'vue-router'
 import { auth } from '../firebase'
 import { signInWithCustomToken } from "firebase/auth";
 
-const router = useRouter()
+const router = useRouter();
 const email = ref("");
 const password = ref("");
 const emailRules = ref([
