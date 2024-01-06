@@ -3,13 +3,16 @@ import { createStore } from 'vuex'
 const store = createStore({
     state () {
       return {
-        count: 0
+        user: null
       }
     },
     mutations: {
-      increment (state) {
-        state.count++
-      }
+      setUser(state, user) {
+        state.user = user;
+      },
+      clearUser(state) {
+        state.user = null;
+      },
     }
 });
 
