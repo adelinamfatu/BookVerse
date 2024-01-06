@@ -13,6 +13,14 @@ const store = createStore({
       clearUser(state) {
         state.user = null;
       },
+    },
+    actions: {
+      setUser({ commit }, user) {
+        commit('setUser', user);
+      },
+      clearUser({ commit }) {
+        commit('clearUser');
+      }
     }
 });
 
