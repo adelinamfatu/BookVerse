@@ -18,9 +18,20 @@ const routes = [
         component: () => import('@/views/Login.vue'),
       },
       {
-        path: '/Feed',
-        name: 'Feed',
-        component: () => import('@/views/Feed.vue'),
+        path: '/dashboard',
+        name: 'Dashboard',
+        components: {
+          default: () => import('@/views/Dashboard.vue'),
+          sidebar: () => import('@/components/Sidebar.vue')
+        },
+      },
+      {
+        path: '/bookshelves',
+        name: 'Bookshelves',
+        components: {
+          default: () => import('@/views/Bookshelves.vue'),
+          sidebar: () => import('@/components/Sidebar.vue')
+        },
       }
     ],
   },

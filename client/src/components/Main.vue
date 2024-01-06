@@ -25,15 +25,14 @@
         </v-list>
         <v-divider></v-divider>
         <v-list density="compact" nav>
-          <v-list-item rounded="xl" prepend-icon="mdi-bookshelf" title="My bookshelves" value="myfiles" class="mt-5"></v-list-item>
+          <v-list-item rounded="xl" prepend-icon="mdi-view-dashboard" title="Dashboard" value="dashboard" class="mt-5"></v-list-item>
+          <v-list-item path='/bookshelf' rounded="xl" prepend-icon="mdi-bookshelf" title="My bookshelves" value="myfiles" class="mt-5"></v-list-item>
           <v-list-item rounded="xl" prepend-icon="mdi-star" title="Starred" value="starred" class="mt-5"></v-list-item>
           <v-list-item rounded="xl" prepend-icon="mdi-heart" title="Shared with me" value="shared" class="mt-5"></v-list-item>
           <v-list-item rounded="xl" prepend-icon="mdi-logout" title="Logout" value="logout" class="mt-10" @click="showLogoutDialog"></v-list-item>
         </v-list>
       </v-navigation-drawer>
-      <v-main style="height: 85vh">
-        <Book />
-      </v-main>
+      <v-main style="height: 85vh"></v-main>
     </v-layout>
   </v-card>
 </template>
@@ -43,7 +42,6 @@ import { ref } from 'vue';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useRouter } from 'vue-router';
-import { Book } from '@/components/Book.vue'
 
 auth.onAuthStateChanged(user => {
 })
