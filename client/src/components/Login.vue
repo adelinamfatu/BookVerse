@@ -81,6 +81,9 @@ const passwordRules = ref([
 ])
 const visible = ref(false);
 
+auth.onAuthStateChanged(user => {
+})
+
 const login = async () => {
   const userData = {
     email: email.value,

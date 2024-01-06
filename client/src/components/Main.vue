@@ -42,6 +42,9 @@ import { signOut } from "firebase/auth";
 import { auth } from '../firebase'
 import { useRouter } from 'vue-router'
 
+auth.onAuthStateChanged(user => {
+})
+
 const dialogLogout = ref(false);
 const router = useRouter();
 
