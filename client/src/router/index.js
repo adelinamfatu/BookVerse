@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
+    redirect: '/login',
     component: () => import('@/layouts/default/Default.vue'),
     children: [
       {
