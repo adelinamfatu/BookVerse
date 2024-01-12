@@ -28,9 +28,11 @@
 </template>
 
 <script>
+import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router'
 import Book from '@/components/Book.vue';
+import axios from 'axios';
 
 export default {
   name: 'Dashboard',
@@ -40,18 +42,35 @@ export default {
   setup() {
     const store = useStore();
     const router = useRouter();
+    const model = ref([]);
+    const books = ref([]);
     /*
     if (!store.state.user) {
         router.push('/login');
     }*/
-  },
-  data() {
+
+    const fetchBooks = async () => {
+      try {
+        const token = localStorage.getItem('firebaseToken');
+        const response = await axios.get('http://localhost:6100/api/books/all', {
+          headers: {
+            'x-access-token': token, 
+            },
+          });
+
+        books.value = response.data;
+      } catch (error) {
+        console.error('Error fetching books:', error);
+      }
+    };
+
+    onMounted(() => {
+      fetchBooks();
+    });
+
     return {
-      model: [],
-      books: [
-        { title: 'Book 1', author: 'Author 1' },
-        { title: 'Book 2', author: 'Author 2' },
-      ],
+      model,
+      books,
     };
   },
 };
