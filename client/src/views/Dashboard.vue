@@ -1,9 +1,8 @@
 <template>
   <div class="container">
-    <v-card style="height: 95vh; width: 100%" elevation="12">
-      <v-card-title>Dashboard</v-card-title>
-      <v-card-text>
-        <p>Most popular this week</p>
+    <v-card style="height: 95vh; width: 100%" color="brown-lighten-5" elevation="12">
+      <div class="pa-4">
+        <h2 class="mb-4 ml-8">Recommended for you</h2>  
         <v-slide-group
           v-model="model"
           class="pa-4"
@@ -22,7 +21,8 @@
             ></book>
           </v-slide-group-item>
         </v-slide-group>
-      </v-card-text>
+        <MostPopular />
+      </div>
     </v-card>
   </div>
 </template>
@@ -32,12 +32,14 @@ import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router'
 import Book from '@/components/Book.vue';
+import MostPopular from '@/components/MostPopular.vue';
 import axios from 'axios';
 
 export default {
   name: 'Dashboard',
   components: {
     Book,
+    MostPopular
   },
   setup() {
     const store = useStore();
