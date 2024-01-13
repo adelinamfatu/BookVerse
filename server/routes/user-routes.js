@@ -18,11 +18,18 @@ router.post('/register', async (req, res) => {
 router.post('/signin', async (req, res) => {
   const { email, password } = req.body;
   try {
-    const userRecord = await auth.getUserByEmail(email);
-    const uid = userRecord.uid;
-    auth.createCustomToken(uid).then((customToken) => {
+    //const userRecord = await auth.getUserByEmail(email);
+    //const uid = userRecord.uid;
+    auth.signInWithEmailAndPassword(email, password)
+      .then((user) => {
+        const token = user.getIdToken(true);
+        console.log(token);
+      })
+      .catch((err)=>{
+      });
+    /*auth.createCustomToken(uid).then((customToken) => {
       res.send(customToken);
-    });
+    });*/
   } catch (error) {
     res.status(400).send(error.message);
   };

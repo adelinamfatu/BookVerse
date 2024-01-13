@@ -66,7 +66,7 @@ import { ref } from "vue";
 import axios from 'axios';
 import { useRouter } from 'vue-router'
 import { auth } from '../firebase'
-import { signInWithCustomToken } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useStore } from 'vuex';
 
 const store = useStore();
@@ -92,21 +92,20 @@ const login = async () => {
     password: password.value
   };
 
-  try {
-    const response = await axios.post('http://localhost:6100/api/users/signin', userData);
-    const token = response.data;
-    localStorage.setItem('firebaseToken', token);
-    signInWithCustomToken(auth, token).then((userCredential) => {
+  signInUser(userData.email, userData.password);
+}
+
+const signInUser = (email, password) => {
+  console.log(auth);
+  signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
       const user = userCredential.user;
       store.dispatch('setUser', user);
       router.push('/dashboard');
     })
     .catch((error) => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
+      const errorCode = error.code;
+      const errorMessage = error.message;
     });
-  } catch (error) {
-    console.error("Error logging in user:", error);
-  }
-}
+};
 </script>

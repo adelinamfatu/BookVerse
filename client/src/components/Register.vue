@@ -64,6 +64,8 @@
 <script setup>
 import { ref } from "vue";
 import axios from 'axios';
+import { auth } from '../firebase'
+import { createUserWithEmailAndPassword  } from 'firebase/auth';
 
 const email = ref("");
 const password = ref("");
@@ -84,8 +86,15 @@ const register = async () => {
   };
 
   try {
-    const response = await axios.post('http://localhost:6100/api/users/register', userData);
-    //console.log(response)
+    createUserWithEmailAndPassword(auth, userData.email, userData.password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      console.log(user);
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+    });
   } catch (error) {
     console.error("Error registering user:", error);
   }
