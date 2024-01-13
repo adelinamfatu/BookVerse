@@ -14,11 +14,13 @@
             :key="index"
             v-slot="{ toggle, selectedClass }"
           >
-            <book
-              :book="book"
-              :class="['ma-4', selectedClass]"
-              @click="toggle"
-            ></book>
+            <router-link :to="`/book/${encodeURIComponent(book.title)}`">
+              <book
+                :book="book"
+                :class="['ma-4', selectedClass]"
+                @click="toggle"
+              ></book>
+            </router-link>
           </v-slide-group-item>
         </v-slide-group>
         <MostPopular />
@@ -30,7 +32,7 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
 import Book from '@/components/Book.vue';
 import MostPopular from '@/components/MostPopular.vue';
 import axios from 'axios';
@@ -39,26 +41,22 @@ export default {
   name: 'Dashboard',
   components: {
     Book,
-    MostPopular
+    MostPopular,
   },
   setup() {
     const store = useStore();
     const router = useRouter();
     const model = ref([]);
     const books = ref([]);
-    /*
-    if (!store.state.user) {
-        router.push('/login');
-    }*/
 
     const fetchBooks = async () => {
       try {
         const token = localStorage.getItem('firebaseToken');
         const response = await axios.get('http://localhost:6100/api/books/all', {
           headers: {
-            'x-access-token': token, 
-            },
-          });
+            'x-access-token': token,
+          },
+        });
 
         books.value = response.data;
       } catch (error) {

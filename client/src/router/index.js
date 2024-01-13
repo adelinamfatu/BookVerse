@@ -32,7 +32,12 @@ const routes = [
           default: () => import('@/views/Bookshelves.vue'),
           sidebar: () => import('@/components/Sidebar.vue')
         },
-      }
+      },
+      {
+        path: '/book/:bookName',
+        name: 'BookDetails',
+        component: () => import('@/components/BookDetails.vue'),
+      },
     ],
   },
 ]
