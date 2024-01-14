@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="fill-height" style="background-color: #E3F2FD;">
     <v-row justify="center">
-      <v-col cols="7" sm="3" md="5">
+      <v-col cols="7" md="5">
         <v-card color="light-blue-lighten-4" elevation="10"> 
           <v-row justify="center" class="mt-5">
             <v-col class="d-flex justify-center align-center">
@@ -17,11 +17,10 @@
               </v-card-title>
             </v-col>
           </v-row>
-          <v-card-text class="mt-5">
+          <v-card-text>
             <v-form @submit.prevent="register">
               <v-text-field
                 :rules="emailRules"
-                class="mb-4"
                 density="compact"
                 label="Email"
                 placeholder="Email address"
@@ -41,6 +40,31 @@
                 prepend-inner-icon="mdi-lock-outline"
                 variant="outlined"
                 @click:append-inner="visible = !visible">
+              </v-text-field>
+              <v-text-field
+                :rules="confirmPasswordRules"
+                :append-inner-icon="confirmVisible ? 'mdi-eye-off' : 'mdi-eye'"
+                :type="confirmVisible ? 'text' : 'password'"
+                density="compact"
+                v-model="confirmPassword"
+                label="Confirm password"
+                placeholder="Confirm your password"
+                prepend-inner-icon="mdi-lock-outline"
+                variant="outlined"
+                @click:append-inner="confirmVisible = !confirmVisible">
+              </v-text-field>
+              <v-text-field
+                :rules="nameRules"
+                class="mb-4"
+                density="compact"
+                label="Name"
+                clearable
+                @input="updateFormattedName"
+                @keypress="onKeyPress"
+                placeholder="First and last name"
+                v-model="name"
+                prepend-inner-icon="mdi-account-outline"
+                variant="outlined">
               </v-text-field>
               <div class="d-flex justify-center">
                 <v-btn @click="register" color="orange-accent-1">Register</v-btn>
@@ -69,6 +93,9 @@ import { createUserWithEmailAndPassword  } from 'firebase/auth';
 
 const email = ref("");
 const password = ref("");
+const confirmPassword = ref("");
+const name = ref("");
+
 const emailRules = ref([
   value => !!value || 'Email is required',
   value => /.+@.+\..+/.test(value) || 'Email must be valid'
@@ -76,27 +103,56 @@ const emailRules = ref([
 const passwordRules = ref([
   value => !!value || 'Password is required',
   value => (value && value.length >= 8) || 'Password should be at least 8 characters long'
-])
+]);
+const confirmPasswordRules = ref([
+  value => !!value || 'Confirm Password is required',
+  value => value === password.value || 'Passwords do not match'
+]);
+const nameRules = ref([
+  value => !!value || 'Name is required'
+]);
 const visible = ref(false);
+const confirmVisible = ref(false);
+
+const updateFormattedName = () => {
+  name.value = processName(name.value);
+};
 
 const register = async () => {
   const userData = {
     email: email.value,
-    password: password.value
+    name: name.value
   };
 
   try {
-    createUserWithEmailAndPassword(auth, userData.email, userData.password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      console.log(user);
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-    });
+    const userCredential = await createUserWithEmailAndPassword(auth, userData.email, password.value);
+    const user = userCredential.user;
+
+    axios.post('http://localhost:6100/api/users/add', userData)
+      .then(response => {
+      })
+      .catch(error => {
+        console.error('Backend request error:', error);
+      });
+
   } catch (error) {
-    console.error("Error registering user:", error);
+    const errorCode = error.code;
+    const errorMessage = error.message;
   }
 }
+
+const processName = (inputName) => {
+  return inputName
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
+
+const onKeyPress = (event) => {
+  const charCode = event.which || event.keyCode;
+
+  if ((charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122) && charCode !== 32) {
+    event.preventDefault();
+  }
+};
 </script>
