@@ -34,7 +34,7 @@ const routes = [
         },
       },
       {
-        path: '/book/:bookName',
+        path: '/book/:isbn',
         name: 'BookDetails',
         component: () => import('@/components/BookDetails.vue'),
       },

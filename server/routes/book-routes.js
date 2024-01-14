@@ -20,18 +20,20 @@ router.get('/all', verifyToken, async (req, res) => {
     }
 });
 
-router.get('/:isbn', verifyToken, async (req, res) => {
+router.get('/:isbn', async (req, res) => {
     try {
         const isbn = req.params.isbn;
-        const snapshot = await db.collection('books').where('isbn', '==', isbn).get();
+        const docRef = db.collection('books').doc(isbn);
+        const snapshot = await docRef.get();
 
-        if (snapshot.empty) {
+        if (!snapshot.exists) {
             return res.status(404).send('Book not found');
         }
 
-        const bookData = snapshot.docs[0].data();
+        const bookData = snapshot.data();
         res.status(200).send(bookData);
     } catch (error) {
+        console.log(error);
         res.status(500).send('Internal Server Error');
     }
 });

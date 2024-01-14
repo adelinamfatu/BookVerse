@@ -31,8 +31,6 @@
 
 <script>
 import { ref, onMounted } from 'vue';
-import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
 import Book from '@/components/Book.vue';
 import MostPopular from '@/components/MostPopular.vue';
 import axios from 'axios';
@@ -44,8 +42,6 @@ export default {
     MostPopular,
   },
   setup() {
-    const store = useStore();
-    const router = useRouter();
     const model = ref([]);
     const books = ref([]);
 
