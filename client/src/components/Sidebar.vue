@@ -54,8 +54,7 @@ export default {
       items: [
         { title: 'Dashboard', route: '/dashboard', icon: 'mdi-view-dashboard' },
         { title: 'My bookshelves', route: '/bookshelves', icon: 'mdi-bookshelf' },
-        { title: 'Starred', route: '/starred', icon: 'mdi-star' },
-        { title: 'Shared with me', route: '/shared', icon: 'mdi-heart' }
+        { title: 'Favorites', route: '/starred', icon: 'mdi-heart' },
       ],
     };
   },
