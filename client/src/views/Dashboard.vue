@@ -14,7 +14,7 @@
             :key="index"
             v-slot="{ toggle, selectedClass }"
           >
-            <router-link :to="`/book/${encodeURIComponent(book.title)}`">
+            <router-link :to="`/book/${encodeURIComponent(book.isbn)}`">
               <book
                 :book="book"
                 :class="['ma-4', selectedClass]"
@@ -82,5 +82,9 @@ export default {
   height: 100vh;
   display: flex;
   align-items: center;
+}
+
+a {
+  text-decoration: none;
 }
 </style>
