@@ -96,7 +96,6 @@ const login = async () => {
 }
 
 const signInUser = (email, password) => {
-  console.log(auth);
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;

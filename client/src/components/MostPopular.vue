@@ -2,12 +2,12 @@
   <v-row align="center" justify="center">
     <v-col>
       <v-card class="pa-4 mx-auto" style="height: 45vh; width: 95%; border-radius: 30px" elevation="5" color="orange-lighten-5">
-        <v-row align="center"> <!-- Center the content vertically -->
+        <v-row align="center">
           <v-col>
             <v-img src="@/assets/books-pile.png" height="40vh" contain></v-img>
           </v-col>
           <v-col>
-            <h2 class="mb-4" style="color: #01579B">2024 year 50 most popular bestsellers</h2>
+            <h2 class="mb-4" style="color: #01579B">{{ new Date().getFullYear() }} year 50 most popular bestsellers</h2>
             <p class="mb-4" style="color: #90A4AE">List of the most interesting books of the year based on customers and critics reviews</p>
             <v-btn rounded color="red-lighten-3">
               <v-icon left>mdi-eye</v-icon>View all

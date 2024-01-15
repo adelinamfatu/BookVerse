@@ -2,7 +2,7 @@
   <div class="container">
     <v-card style="height: 95vh; width: 100%" color="brown-lighten-5" elevation="12">
       <div class="pa-4">
-        <h2 class="mb-4 ml-8">Recommended for you</h2>  
+        <h2 style="color: #37474F" class="mb-4 ml-8">Recommended for you</h2>  
         <v-slide-group
           v-model="model"
           class="pa-4"
