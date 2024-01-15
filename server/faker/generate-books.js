@@ -1,4 +1,4 @@
-const { db } = require('./database');
+const { db } = require('../database');
 const { faker } = require('@faker-js/faker');
 
 const genres = ['Fantasy', 'Science Fiction', 'Mystery', 'Romance', 
@@ -36,4 +36,4 @@ for (let i = 0; i < 20; i++) {
   addBookToFirestore(bookTitle, authorName, publicationYear, publishingHouse, coverImageUrl, genre, isbn, rating);
 }
 
-console.log('Finished generating data');
+console.log('Finished generating books');

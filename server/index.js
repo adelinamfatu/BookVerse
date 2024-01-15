@@ -6,11 +6,13 @@ const port = 6100;
 
 const userRoutes = require('./routes/user-routes');
 const bookRoutes = require('./routes/book-routes');
+const bookshelfRoutes = require('./routes/bookshelf-routes');
 
 server.use(bodyParser.json());
 server.use(cors());
 server.use('/api/users', userRoutes);
 server.use('/api/books', bookRoutes);
+server.use('/api/books', bookshelfRoutes);
 
 server.use(express.json());
 server.listen(port, () => {
