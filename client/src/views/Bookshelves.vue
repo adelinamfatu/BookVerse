@@ -30,12 +30,12 @@ export default {
     return {
       cards: [
         {
-          title: 'Card 1',
+          title: 'To read',
           color: '#FFC107',
           supplementaryText: 'Supplementary Text 1',
         },
         {
-          title: 'Card 2',
+          title: 'Reading',
           color: '#4CAF50',
           supplementaryText: 'Supplementary Text 2',
         },

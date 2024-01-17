@@ -1,20 +1,24 @@
 <template>
   <v-card class="mb-4">
     <v-container :style="{ backgroundColor: color, height: '200px' }">
-      <!-- Content inside the colored portion -->
     </v-container>
 
-    <v-card-title>{{ title }}</v-card-title>
+    <v-row>
+      <v-col>
+        <v-card-title>{{ title }}</v-card-title>
+      </v-col>
 
-    <v-card-actions>
-      <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="toggleShow"></v-btn>
-    </v-card-actions>
+      <v-col class="d-flex">
+        <v-card-actions class="ml-auto">
+          <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="toggleShow"></v-btn>
+        </v-card-actions>
+      </v-col>
+    </v-row>
 
     <v-expand-transition>
       <div v-show="show">
         <v-divider></v-divider>
         <v-card-text>
-          <!-- Your supplementary text -->
           {{ supplementaryText }}
         </v-card-text>
       </div>

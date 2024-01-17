@@ -12,7 +12,7 @@ server.use(bodyParser.json());
 server.use(cors());
 server.use('/api/users', userRoutes);
 server.use('/api/books', bookRoutes);
-server.use('/api/books', bookshelfRoutes);
+server.use('/api/bookshelves', bookshelfRoutes);
 
 server.use(express.json());
 server.listen(port, () => {
