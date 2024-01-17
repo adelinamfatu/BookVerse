@@ -12,7 +12,7 @@
         <v-card-text class="text-center">Are you sure you want to logout?</v-card-text>
         <v-card-actions class="justify-center">
           <v-btn text @click="dialogLogout = false">No</v-btn>
-          <v-btn text color="primary" @click="logout">Yes</v-btn>
+          <v-btn text color="primary" @click="confirmLogout">Yes</v-btn>
         </v-card-actions>
         </v-card>
       </v-dialog>
@@ -51,6 +51,7 @@
 export default {
   data() {
     return {
+      dialogLogout: false,
       items: [
         { title: 'Dashboard', route: '/dashboard', icon: 'mdi-view-dashboard' },
         { title: 'My bookshelves', route: '/bookshelves', icon: 'mdi-bookshelf' },
@@ -58,6 +59,16 @@ export default {
         { title: 'Profile', route: '/profile', icon: 'mdi-account' },
       ],
     };
+  },
+  methods: {
+    showLogoutDialog() {
+      this.dialogLogout = true;
+    },
+    confirmLogout() {
+      this.$store.dispatch('auth/logout');
+      this.$router.push('/login');
+      this.dialogLogout = false;
+    },
   },
 };
 </script>
