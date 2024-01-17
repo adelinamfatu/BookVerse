@@ -24,7 +24,7 @@ const actions = {
       commit('setUser', user);
       commit('setFirebaseToken', token);
 
-      dispatch('fetchUserData');
+      //dispatch('fetchUserData');
     } catch (error) {
       console.error('Login error:', error);
     }
@@ -32,6 +32,7 @@ const actions = {
 
   async register({ commit, dispatch }, registerData) {
     try {
+      console.log('Am intrat');
       const userCredential = await createUserWithEmailAndPassword(auth, registerData.email, registerData.password);
       const user = userCredential.user;
       const token = user.accessToken;
@@ -40,7 +41,7 @@ const actions = {
       commit('setUser', user);
       commit('setFirebaseToken', token);
 
-      dispatch('storeUserData');
+      //dispatch('storeUserData');
     } catch (error) {
       console.error('Registration error:', error);
     }

@@ -88,9 +88,9 @@
 <script setup>
 import { ref } from "vue";
 import axios from 'axios';
-import { auth } from '../firebase'
-import { createUserWithEmailAndPassword  } from 'firebase/auth';
+import { useStore } from 'vuex';
 
+const store = useStore();
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
@@ -124,9 +124,13 @@ const register = async () => {
     name: name.value
   };
 
+  const registerData = {
+    email: email.value, 
+    password: password.value
+  };
+
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, userData.email, password.value);
-    const user = userCredential.user;
+    await store.dispatch('auth/register', registerData);
 
     axios.post('http://localhost:6100/api/users/add', userData)
       .then(response => {
@@ -134,6 +138,8 @@ const register = async () => {
       .catch(error => {
         console.error('Backend request error:', error);
       });
+
+    router.push('/dashboard');
 
   } catch (error) {
     const errorCode = error.code;

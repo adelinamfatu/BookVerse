@@ -94,19 +94,4 @@ const login = async () => {
     console.error('Login error:', error);
   }
 }
-
-const signInUser = (email, password) => {
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      const token = user.accessToken;
-      localStorage.setItem('firebaseToken', token);
-      store.dispatch('setUser', user);
-      router.push('/dashboard');
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-    });
-};
 </script>
