@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="fill-height" style="background-color: #E3F2FD;">
     <v-row justify="center">
-      <v-col cols="7" sm="3" md="5">
+      <v-col cols="7" md="5">
         <v-card color="light-blue-lighten-4" elevation="10"> 
           <v-row justify="center" class="mt-5">
             <v-col class="d-flex justify-center align-center">
@@ -65,8 +65,6 @@
 import { ref } from "vue";
 import axios from 'axios';
 import { useRouter } from 'vue-router'
-import { auth } from '../firebase'
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useStore } from 'vuex';
 
 const store = useStore();
@@ -83,16 +81,18 @@ const passwordRules = ref([
 ])
 const visible = ref(false);
 
-auth.onAuthStateChanged(user => {
-})
-
 const login = async () => {
   const userData = {
     email: email.value,
     password: password.value
   };
 
-  signInUser(userData.email, userData.password);
+  try {
+    await store.dispatch('auth/login', userData);
+    router.push('/dashboard');
+  } catch (error) {
+    console.error('Login error:', error);
+  }
 }
 
 const signInUser = (email, password) => {

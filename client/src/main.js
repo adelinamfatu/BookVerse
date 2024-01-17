@@ -4,7 +4,7 @@ import { registerPlugins } from '@/plugins'
 import App from './App.vue'
 
 // Vuex Store
-import { store } from './store'
+import store from './store'
 
 // Composables
 import { createApp } from 'vue'
