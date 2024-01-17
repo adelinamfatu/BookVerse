@@ -2,6 +2,7 @@
 <div>
   <v-navigation-drawer 
     expand-on-hover 
+    disable-resize-watcher
     rail 
     color="blue-lighten-4"
     elevation="12"
@@ -55,11 +56,12 @@ export default {
       items: [
         { title: 'Dashboard', route: '/dashboard', icon: 'mdi-view-dashboard' },
         { title: 'My bookshelves', route: '/bookshelves', icon: 'mdi-bookshelf' },
-        { title: 'Favorites', route: '/starred', icon: 'mdi-heart' },
+        { title: 'Favorites', route: '/favorites', icon: 'mdi-heart' },
         { title: 'Profile', route: '/profile', icon: 'mdi-account' },
       ],
     };
   },
+  
   methods: {
     showLogoutDialog() {
       this.dialogLogout = true;

@@ -33,11 +33,13 @@ export default {
     color: String,
     supplementaryText: String,
   },
+
   data() {
     return {
       show: false,
     };
   },
+  
   methods: {
     toggleShow() {
       this.show = !this.show;

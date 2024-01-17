@@ -34,6 +34,14 @@ const routes = [
         },
       },
       {
+        path: '/favorites',
+        name: 'Favorites',
+        components: {
+          default: () => import('@/views/Favorites.vue'),
+          sidebar: () => import('@/components/Sidebar.vue')
+        },
+      },
+      {
         path: '/book/:isbn',
         name: 'BookDetails',
         component: () => import('@/components/BookDetails.vue'),
