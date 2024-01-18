@@ -65,4 +65,30 @@ router.put('/favorites/add/:isbn', async (req, res) => {
     }
 });
 
+router.put('/favorites/remove/:isbn', async (req, res) => {
+  try {
+    const { isbn } = req.params;
+    const { userEmail } = req.body;
+
+    if (!isbn || !userEmail) {
+      return res.status(400).json({ error: 'ISBN and userEmail are required' });
+    }
+
+    const bookRef = db.collection('books').doc(isbn);
+    const bookDoc = await bookRef.get();
+
+    if (!bookDoc.exists) {
+      return res.status(404).json({ error: 'Book not found' });
+    }
+
+    await bookRef.update({
+      favorites: admin.firestore.FieldValue.arrayRemove(userEmail),
+    });
+
+    return res.json({ message: 'User removed from favorites successfully' });
+  } catch (error) {
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 module.exports = router;

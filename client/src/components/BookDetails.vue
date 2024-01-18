@@ -26,6 +26,7 @@
             <v-rating v-else :model-value="0" readonly></v-rating>
           </div>
           <p v-if="bookDetails" class="description">{{ bookDetails.description }}</p>
+          
           <v-btn
             :color="isFavorite ? 'pink' : 'white'"
             rounded
@@ -38,6 +39,7 @@
               location="bottom"
             >{{ isFavorite ? 'Already Favorited' : 'Not Favorited' }}</v-tooltip>
           </v-btn>
+
         </v-col>
       </v-row>
     </v-card>
@@ -67,21 +69,28 @@ export default {
       }
     },
     async toggleFavorite() {
-      const isbn = this.$route.params.isbn;
-
-      /*
-      const userEmail = this.$store.getters['auth/user'].email;
-      try {
-        await axios.put(`http://localhost:6100/api/books/favorites/add/${isbn}`, {
-          userEmail: userEmail,
-        });
-
-        this.isFavorite = !this.isFavorite;
-      } catch (error) {
-        console.error('Error toggling favorite:', error);
-      }*/
-
       this.isFavorite = !this.isFavorite;
+      const isbn = this.$route.params.isbn;
+      const userEmail = this.$store.getters['auth/user'].email;
+
+      if (this.isFavorite) {
+        try {
+          await axios.put(`http://localhost:6100/api/books/favorites/add/${isbn}`, {
+            userEmail: userEmail,
+          });
+
+        } catch (error) {
+        }
+      }
+      else {
+        try {
+          await axios.put(`http://localhost:6100/api/books/favorites/remove/${isbn}`, {
+            userEmail: userEmail,
+          });
+
+        } catch (error) {
+        }
+      }
     },
   },
   async created() {
