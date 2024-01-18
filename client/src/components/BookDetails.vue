@@ -27,13 +27,16 @@
           </div>
           <p v-if="bookDetails" class="description">{{ bookDetails.description }}</p>
           <v-btn
-            fab
-            color="white"
+            :color="isFavorite ? 'pink' : 'white'"
             rounded
             class="fab-button"
             @click="toggleFavorite"
           >
-            <v-icon color="pink">{{ 'mdi-heart' }}</v-icon>
+            <v-icon :color="isFavorite ? 'white' : 'pink'">{{ 'mdi-heart' }}</v-icon>
+            <v-tooltip
+              activator="parent"
+              location="bottom"
+            >{{ isFavorite ? 'Already Favorited' : 'Not Favorited' }}</v-tooltip>
           </v-btn>
         </v-col>
       </v-row>
@@ -48,6 +51,7 @@ export default {
   data() {
     return {
       bookDetails: null,
+      isFavorite: false,
     };
   },
   methods: {
@@ -61,6 +65,23 @@ export default {
       } catch (error) {
         console.error('Error fetching book details:', error);
       }
+    },
+    async toggleFavorite() {
+      const isbn = this.$route.params.isbn;
+
+      /*
+      const userEmail = this.$store.getters['auth/user'].email;
+      try {
+        await axios.put(`http://localhost:6100/api/books/favorites/add/${isbn}`, {
+          userEmail: userEmail,
+        });
+
+        this.isFavorite = !this.isFavorite;
+      } catch (error) {
+        console.error('Error toggling favorite:', error);
+      }*/
+
+      this.isFavorite = !this.isFavorite;
     },
   },
   async created() {
@@ -96,5 +117,4 @@ export default {
     padding-right: 2rem;
     text-align: justify;
 }
-
 </style>
