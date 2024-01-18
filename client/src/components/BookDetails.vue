@@ -61,34 +61,48 @@ export default {
       this.$router.go(-1);
     },
     async fetchBookDetails(isbn) {
+      const token = this.$store.getters['auth/firebaseToken'];
+
       try {
-        const response = await axios.get(`http://localhost:6100/api/books/${isbn}`);
+        const response = await axios.get(`http://localhost:6100/api/books/details/${isbn}`, {
+          headers: {
+            'x-access-token': token,
+          },
+        });
+        
         this.bookDetails = response.data;
+        this.isFavorite = response.data.isFavorite;
       } catch (error) {
         console.error('Error fetching book details:', error);
       }
     },
     async toggleFavorite() {
+      const token = this.$store.getters['auth/firebaseToken'];
       this.isFavorite = !this.isFavorite;
       const isbn = this.$route.params.isbn;
-      const userEmail = this.$store.getters['auth/user'].email;
 
       if (this.isFavorite) {
         try {
-          await axios.put(`http://localhost:6100/api/books/favorites/add/${isbn}`, {
-            userEmail: userEmail,
+          await axios.put(`http://localhost:6100/api/books/favorites/add/${isbn}`, {}, {
+            headers: {
+              'x-access-token': token,
+            },
           });
 
         } catch (error) {
+          console.log(error);
         }
       }
       else {
         try {
-          await axios.put(`http://localhost:6100/api/books/favorites/remove/${isbn}`, {
-            userEmail: userEmail,
+          await axios.put(`http://localhost:6100/api/books/favorites/remove/${isbn}`, {}, {
+            headers: {
+              'x-access-token': token,
+            },
           });
 
         } catch (error) {
+          console.log(error);
         }
       }
     },

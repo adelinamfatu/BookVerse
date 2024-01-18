@@ -34,6 +34,7 @@ import { ref, onMounted } from 'vue';
 import Book from '@/components/Book.vue';
 import MostPopular from '@/components/MostPopular.vue';
 import axios from 'axios';
+import { useStore } from 'vuex';
 
 export default {
   name: 'Dashboard',
@@ -42,12 +43,13 @@ export default {
     MostPopular,
   },
   setup() {
+    const store = useStore();
     const model = ref([]);
     const books = ref([]);
 
     const fetchBooks = async () => {
       try {
-        const token = localStorage.getItem('firebaseToken');
+        const token = store.getters['auth/firebaseToken'];
         const response = await axios.get('http://localhost:6100/api/books/all', {
           headers: {
             'x-access-token': token,
