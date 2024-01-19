@@ -1,16 +1,19 @@
 <template>
-  <v-row>
-    <v-col cols="4">
-      <v-img :src="book.coverImage" alt="Book Cover" max-height="10rem"></v-img>
+   <v-row class="my-1" justify="center" align="center">
+    <v-col cols="1">
+      <v-img :src="book.coverImage" alt="Book Cover" max-height="9rem"></v-img>
     </v-col>
 
-    <v-col cols="4">
-      <v-card-title>{{ book.title }}</v-card-title>
-      <v-card-text>{{ book.author }}</v-card-text>
+    <v-col cols="3">
+      <v-card-text style="font-weight: bold; font-size: 17px;">{{ book.title }}</v-card-text>
+      <v-card-text style="font-style: italic;">by {{ book.author }}</v-card-text>
     </v-col>
 
-    <v-col cols="4">
-      <v-card-text>{{ book.description }}</v-card-text>
+    <v-col cols="7">
+      <v-card-text style="font-size: 16px;">
+        {{ truncateDescription }}
+        <router-link :to="'/book/' + book.isbn">See more</router-link>
+      </v-card-text>
     </v-col>
   </v-row>
 </template>
@@ -23,9 +26,16 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      showMore: false,
+    };
+  },
+  computed: {
+    truncateDescription() {
+      const words = this.book.description.split(' ');
+      return words.slice(0, 20).join(' ');
+    },
+  },
 };
 </script>
-
-<style scoped>
-
-</style>

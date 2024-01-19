@@ -4,7 +4,7 @@
             <div class="pa-4">
                 <h2 style="color: #37474F" class="mb-4 ml-8">Favorites</h2>  
 
-                <v-card class="book-card" v-for="(book, index) in displayedBooks" :key="index">
+                <v-card elevation="5" color="deep-orange-lighten-5" class="book-card" v-for="(book, index) in displayedBooks" :key="index">
                   <favorite-book :book="book"></favorite-book>
                 </v-card>
 
@@ -54,6 +54,7 @@ export default {
           },
         });
         this.allBooks = response.data;
+        console.log(this.allBooks);
         this.totalBooks = this.allBooks.length;
         this.handlePageChange();
       } catch (error) {

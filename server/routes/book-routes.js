@@ -59,9 +59,9 @@ router.get('/favorites', verifyToken, async (req, res) => {
     const books = [];
 
     snapshot.forEach((doc) => {
-      const { title, coverImage, author } = doc.data();
+      const { title, coverImage, author, description } = doc.data();
       const isbn = doc.id;
-      books.push({ isbn, title, coverImage, author });
+      books.push({ isbn, title, coverImage, author, description });
     });
 
     res.status(200).send(books);
