@@ -47,6 +47,30 @@ router.get('/details/:isbn', verifyToken, async (req, res) => {
   }
 });
 
+router.get('/favorites', verifyToken, async (req, res) => {
+  try {
+    const userEmail = req.user.email;
+
+    if (!userEmail) {
+      return res.status(400).json({ error: 'User email is required' });
+    }
+
+    const snapshot = await db.collection('books').where('favoritedBy', 'array-contains', userEmail).get();
+    const books = [];
+
+    snapshot.forEach((doc) => {
+      const { title, coverImage, author } = doc.data();
+      const isbn = doc.id;
+      books.push({ isbn, title, coverImage, author });
+    });
+
+    res.status(200).send(books);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 router.put('/favorites/add/:isbn', verifyToken, async (req, res) => {
   try {
     const { isbn } = req.params;
