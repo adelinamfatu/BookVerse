@@ -20,8 +20,8 @@
         <v-list>
             <v-list-item
               prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
-              title="Sandra Adams"
-              subtitle="sandra_a88@gmailcom"
+              title="Sandra James"
+              subtitle="sandra@gmail.com"
             ></v-list-item>
           </v-list>
         <v-divider></v-divider>
@@ -48,6 +48,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -58,18 +60,39 @@ export default {
         { title: 'Favorites', route: '/favorites', icon: 'mdi-heart' },
         { title: 'Profile', route: '/profile', icon: 'mdi-account' },
       ],
+      userDetails: null,
     };
   },
   
   methods: {
+    async fetchUserData() {
+      const token = this.$store.getters['auth/firebaseToken'];
+
+      try {
+        const response = await axios.get('http://localhost:6100/api/users/info', {
+          headers: {
+              'x-access-token': token,
+            },
+        });
+        this.userDetails = response.data;
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    },
+
     showLogoutDialog() {
       this.dialogLogout = true;
     },
+
     confirmLogout() {
       this.$store.dispatch('auth/logout');
       this.$router.push('/login');
       this.dialogLogout = false;
     },
+  },
+
+  async created() {
+    await this.fetchUserData();
   },
 };
 </script>

@@ -28,7 +28,7 @@
 
           <v-row>
             <v-col cols="12">
-              <p v-if="bookDetails" class="subtitle">{{ bookDetails.rating.toFixed(2) }} from {{ bookDetails.reviews }} reviews</p>
+              <p v-if="bookDetails" class="subtitle">{{ bookDetails.rating.toFixed(2) }} stars from {{ bookDetails.reviews }} reviews</p>
             </v-col>
           </v-row>
 
@@ -68,6 +68,7 @@ export default {
     goBack() {
       this.$router.go(-1);
     },
+
     async fetchBookDetails(isbn) {
       const token = this.$store.getters['auth/firebaseToken'];
 
@@ -84,6 +85,7 @@ export default {
         console.error('Error fetching book details:', error);
       }
     },
+
     async toggleFavorite() {
       const token = this.$store.getters['auth/firebaseToken'];
       this.isFavorite = !this.isFavorite;
@@ -115,6 +117,7 @@ export default {
       }
     },
   },
+  
   async created() {
     const isbn = this.$route.params.isbn;
     await this.fetchBookDetails(isbn);

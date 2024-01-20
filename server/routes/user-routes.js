@@ -21,4 +21,23 @@ router.post('/add', (req, res) => {
   }
 });
 
+router.get('/info', verifyToken, async (req, res) => {
+  try {
+    const userEmail = req.user.email;
+
+    const userDoc = await db.collection('users').doc(userEmail).get();
+
+    if (userDoc.exists) {
+      const userInfo = userDoc.data();
+      const { name, profilePicture } = userInfo;
+      res.json({ name, profilePicture });
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
+
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 module.exports = router;
