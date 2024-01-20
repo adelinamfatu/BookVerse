@@ -4,7 +4,7 @@
     </v-container>
 
     <v-row>
-      <v-col>
+      <v-col :md="isEditing ? 8 : 6">
         <v-card-title>
           <template v-if="!isEditing">{{ editedTitle }}</template>
           <template v-else>
@@ -13,7 +13,7 @@
         </v-card-title>
       </v-col>
 
-      <v-col class="d-flex">
+      <v-col :md="isEditing ? 4 : 6" class="d-flex">
         <v-card-actions class="ml-auto">
           <v-btn icon @click="toggleEditing">
             <v-icon>{{ isEditing ? 'mdi-check' : 'mdi-pencil' }}</v-icon>
@@ -41,6 +41,7 @@ export default {
     color: String,
     supplementaryText: String,
   },
+
   data() {
     return {
       show: false,
@@ -48,6 +49,7 @@ export default {
       editedTitle: this.title,
     };
   },
+
   methods: {
     toggleShow() {
       this.show = !this.show;
