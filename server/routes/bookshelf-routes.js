@@ -22,4 +22,32 @@ router.get('/all', verifyToken, async (req, res) => {
     }
 });
 
+router.post('/add', verifyToken, async (req, res) => {
+    try {
+        const userEmail = req.user.email;
+        const { title, color } = req.body;
+
+        if (!title || !color) {
+            return res.status(400).send('The title, and color are required.');
+        }
+
+        const newBookshelfRef = await db.collection('bookshelves').add({
+            title,
+            color,
+        });
+
+        await db.collection('users').doc(userEmail).update({
+            [`bookshelves.${newBookshelfRef.id}`]: {
+                title,
+                color,
+            },
+        });
+
+        res.status(201).send(newBookshelfRef.id);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 module.exports = router;

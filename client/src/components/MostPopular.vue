@@ -14,6 +14,7 @@
             </v-btn>
           </v-col>
           <v-col>
+            
             <v-card class="pa-4 mx-auto" style="height: 12vh; width: 95%; border-radius: 30px" elevation="10" color="blue-lighten-4">
               <v-row align="center">
                 <v-avatar>
@@ -27,6 +28,7 @@
                 </v-card-subtitle>
               </v-row>
             </v-card>
+
             <v-card class="pa-4 mx-auto mt-4" style="height: 12vh; width: 95%; border-radius: 30px" elevation="10" color="cyan-lighten-4">
               <v-row align="center">
                 <v-avatar>
@@ -40,6 +42,7 @@
                 </v-card-subtitle>
               </v-row>
             </v-card>
+
             <v-card class="pa-4 mx-auto mt-4" style="height: 12vh; width: 95%; border-radius: 30px" elevation="10" color="green-lighten-4">
                 <v-row align="center">
                   <v-avatar>
@@ -53,6 +56,7 @@
                   </v-card-subtitle>
                 </v-row>
             </v-card>
+
           </v-col>
         </v-row>
       </v-card>

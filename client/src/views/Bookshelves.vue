@@ -30,6 +30,7 @@
 
 <script>
 import BookshelfCard from '../components/BookshelfCard.vue';
+import axios from 'axios';
 
 export default {
   components: {
@@ -68,13 +69,29 @@ export default {
   },
 
   methods: {
-    addBookshelf() {
-      const newBookshelf = {
-        title: 'New Bookshelf',
-        color: '#607D8B', 
-        supplementaryText: 'New Supplementary Text',
-      };
-      this.cards.push(newBookshelf);
+    async addBookshelf() {
+      const token = this.$store.getters['auth/firebaseToken'];
+
+      try {
+        const response = await axios.post('http://localhost:6100/api/bookshelves/add', {
+          title: 'New Bookshelf',
+          color: '#607D8B', 
+        }, {
+          headers: {
+            'x-access-token': token,
+          },
+        });
+
+        const newBookshelf = {
+          id: response.data,
+          title: 'New Bookshelf',
+          color: '#607D8B', 
+        }; 
+
+        this.cards.push(newBookshelf);
+      } catch (error) {
+        console.error('Error adding bookshelf:', error);
+      }
     },
   }
 };
