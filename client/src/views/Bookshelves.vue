@@ -2,15 +2,24 @@
   <div class="container">
     <v-card class="overflow-y-auto" color="brown-lighten-5" style="height: 95vh; width: 100%" elevation="12">
       <div class="pa-4">
-        <h2 style="color: #37474F" class="mb-4 ml-8">My bookshelf</h2> 
+        <v-row>
+          <v-col cols="8">
+            <h2 style="color: #37474F" class="mb-4 ml-8">My bookshelves</h2>
+          </v-col>
+          <v-col cols="4" class="text-right">
+            <v-btn @click="addBookshelf" icon color="light-blue-accent-4">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
         <v-container>
           <v-row>
             <v-col v-for="(card, index) in cards" :key="index" cols="12" sm="6" md="4" lg="3">
-            <BookshelfCard
-              :title="card.title"
-              :color="card.color"
-              :supplementaryText="card.supplementaryText"
-            />
+              <BookshelfCard
+                :title="card.title"
+                :color="card.color"
+                :supplementaryText="card.supplementaryText"
+              />
             </v-col>
           </v-row>
         </v-container>
@@ -57,6 +66,17 @@ export default {
       ],
     };
   },
+
+  methods: {
+    addBookshelf() {
+      const newBookshelf = {
+        title: 'New Bookshelf',
+        color: '#607D8B', 
+        supplementaryText: 'New Supplementary Text',
+      };
+      this.cards.push(newBookshelf);
+    },
+  }
 };
 </script>
 

@@ -32,7 +32,6 @@ const actions = {
 
   async register({ commit, dispatch }, registerData) {
     try {
-      console.log('Am intrat');
       const userCredential = await createUserWithEmailAndPassword(auth, registerData.email, registerData.password);
       const user = userCredential.user;
       const idToken = await user.getIdToken();
@@ -56,8 +55,6 @@ const actions = {
 
 const mutations = {
   setLoginStatus(state, status) {
-    console.log(state);
-    console.log(status);
     state.isLogged = status;
     localStorage.setItem("isLogged", status);
   },
