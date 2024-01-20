@@ -1,18 +1,18 @@
 <template>
-    <div class="container">
-        <v-card style="height: 95vh; width: 100%" color="brown-lighten-5" elevation="12">
-            <div class="pa-4">
-                <h2 style="color: #37474F" class="mb-4 ml-8">Favorites</h2>  
+  <div class="container">
+    <v-card style="height: 95vh; width: 100%" color="brown-lighten-5" elevation="12">
+      <div class="pa-4">
+        <h2 style="color: #37474F" class="mb-4 ml-8">Favorites</h2>  
 
-                <v-card elevation="5" color="deep-orange-lighten-5" class="book-card" v-for="(book, index) in displayedBooks" :key="index">
-                  <favorite-book :book="book"></favorite-book>
-                </v-card>
-
-                <v-pagination :length="totalPages" v-model="currentPage" @update:model-value="updatePagination"></v-pagination>
-                
-            </div>
+        <v-card elevation="5" color="deep-orange-lighten-5" class="book-card" v-for="(book, index) in displayedBooks" :key="index">
+          <favorite-book :book="book"></favorite-book>
         </v-card>
-    </div>
+
+        <v-pagination :length="totalPages" v-model="currentPage" @update:model-value="updatePagination"></v-pagination>
+                
+      </div>
+    </v-card>
+  </div>
 </template>
 
 <script>
