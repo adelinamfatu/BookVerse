@@ -1,10 +1,10 @@
 // Composables
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
+import store from '../store';
 
 const routes = [
   {
     path: '/',
-    redirect: '/login',
     component: () => import('@/layouts/default/Default.vue'),
     children: [
       {
@@ -24,6 +24,7 @@ const routes = [
           default: () => import('@/views/Dashboard.vue'),
           sidebar: () => import('@/components/Sidebar.vue')
         },
+        meta: { requiresAuth: true },
       },
       {
         path: '/bookshelves',
@@ -32,6 +33,7 @@ const routes = [
           default: () => import('@/views/Bookshelves.vue'),
           sidebar: () => import('@/components/Sidebar.vue')
         },
+        meta: { requiresAuth: true },
       },
       {
         path: '/favorites',
@@ -40,6 +42,7 @@ const routes = [
           default: () => import('@/views/Favorites.vue'),
           sidebar: () => import('@/components/Sidebar.vue')
         },
+        meta: { requiresAuth: true },
       },
       {
         path: '/profile',
@@ -48,11 +51,13 @@ const routes = [
           default: () => import('@/views/Profile.vue'),
           sidebar: () => import('@/components/Sidebar.vue')
         },
+        meta: { requiresAuth: true },
       },
       {
         path: '/book/:isbn',
         name: 'BookDetails',
         component: () => import('@/components/BookDetails.vue'),
+        meta: { requiresAuth: true },
       },
     ],
   },
@@ -62,5 +67,25 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 })
+
+router.beforeEach((to, from, next) => {
+  const isLogged = store.getters['auth/isLogged'];
+
+  if (to.path === '/') {
+    if (!isLogged) {
+      next({ name: 'Login' });
+    } else {
+      next({ name: 'Dashboard' });
+    }
+  } else if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (!isLogged) {
+      next({ name: 'Login' });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 export default router

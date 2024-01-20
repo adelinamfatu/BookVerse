@@ -53,7 +53,6 @@ export default {
           },
         });
         this.allBooks = response.data;
-        console.log(this.allBooks);
         this.totalBooks = this.allBooks.length;
         this.handlePageChange();
       } catch (error) {

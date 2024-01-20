@@ -8,7 +8,7 @@ const state = {
 };
 
 const getters = {
-  isLogged: (state) => state.isLogged,
+  isLogged: (state) => JSON.parse(state.isLogged),
   user: (state) => state.user,
   firebaseToken: (state) => state.firebaseToken,
 };
@@ -18,11 +18,11 @@ const actions = {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, loginData.email, loginData.password);
       const user = userCredential.user;
-      const token = user.accessToken;
+      const idToken = await user.getIdToken();
 
       commit('setLoginStatus', true);
       commit('setUser', user);
-      commit('setFirebaseToken', token);
+      commit('setFirebaseToken', idToken);
 
       //dispatch('fetchUserData');
     } catch (error) {
@@ -35,11 +35,11 @@ const actions = {
       console.log('Am intrat');
       const userCredential = await createUserWithEmailAndPassword(auth, registerData.email, registerData.password);
       const user = userCredential.user;
-      const token = user.accessToken;
+      const idToken = await user.getIdToken();
 
       commit('setLoginStatus', true);
       commit('setUser', user);
-      commit('setFirebaseToken', token);
+      commit('setFirebaseToken', idToken);
 
       //dispatch('storeUserData');
     } catch (error) {
@@ -56,6 +56,8 @@ const actions = {
 
 const mutations = {
   setLoginStatus(state, status) {
+    console.log(state);
+    console.log(status);
     state.isLogged = status;
     localStorage.setItem("isLogged", status);
   },
