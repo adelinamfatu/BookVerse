@@ -22,15 +22,23 @@
           <p v-if="bookDetails" class="headline">{{ bookDetails.title }}</p>
           <p v-if="bookDetails" class="subtitle">by {{ bookDetails.author }}</p>
           <div v-if="bookDetails">
-            <v-rating v-if="bookDetails.rating !== undefined" v-model="bookDetails.rating" readonly></v-rating>
+            <v-rating half-increments v-if="bookDetails.rating !== undefined" v-model="bookDetails.rating" readonly></v-rating>
             <v-rating v-else :model-value="0" readonly></v-rating>
           </div>
+
+          <v-row>
+            <v-col cols="12">
+              <p v-if="bookDetails" class="subtitle">{{ bookDetails.rating.toFixed(2) }} from {{ bookDetails.reviews }} reviews</p>
+            </v-col>
+          </v-row>
+
           <p v-if="bookDetails" class="description">{{ bookDetails.description }}</p>
           
           <v-btn
             :color="isFavorite ? 'pink' : 'white'"
             rounded
             class="fab-button"
+            style="margin-top: 16px;"
             @click="toggleFavorite"
           >
             <v-icon :color="isFavorite ? 'white' : 'pink'">{{ 'mdi-heart' }}</v-icon>
