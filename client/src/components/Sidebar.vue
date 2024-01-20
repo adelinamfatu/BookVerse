@@ -19,9 +19,10 @@
       <v-list>
         <v-list>
             <v-list-item
+              v-if="userDetails"
               prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
-              title="Sandra James"
-              subtitle="sandra@gmail.com"
+              :title="userDetails.name"
+              :subtitle="userDetails.email"
             ></v-list-item>
           </v-list>
         <v-divider></v-divider>
@@ -75,6 +76,7 @@ export default {
             },
         });
         this.userDetails = response.data;
+        this.userDetails.email = this.$store.getters['auth/user'].email;
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -91,8 +93,8 @@ export default {
     },
   },
 
-  async created() {
-    await this.fetchUserData();
+  mounted() {
+    this.fetchUserData();
   },
 };
 </script>
