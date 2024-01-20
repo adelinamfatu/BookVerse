@@ -18,13 +18,13 @@
         </v-dialog>
       <v-list>
         <v-list>
-            <v-list-item
-              v-if="userDetails"
-              :prepend-avatar="userDetails.profilePicture || 'https://firebasestorage.googleapis.com/v0/b/bookverse-86b43.appspot.com/o/profile.png?alt=media&token=5e990f95-08fa-4c78-8911-a50d8d2a9a1d'"
-              :title="userDetails.name"
-              :subtitle="userDetails.email"
-            ></v-list-item>
-          </v-list>
+          <v-list-item
+            v-if="userDetails"
+            :prepend-avatar="userDetails.profilePicture || 'https://firebasestorage.googleapis.com/v0/b/bookverse-86b43.appspot.com/o/profile.png?alt=media&token=5e990f95-08fa-4c78-8911-a50d8d2a9a1d'"
+            :title="userDetails.name"
+            :subtitle="userDetails.email"
+          ></v-list-item>
+        </v-list>
         <v-divider></v-divider>
         <v-list-item
           v-for="item in items"
@@ -33,7 +33,7 @@
           :to="item.route"
           rounded="xl"
           :prepend-icon="item.icon"
-          class="mt-5"
+          class="mt-6"
         ></v-list-item>
         <v-list-item
           rounded="xl"

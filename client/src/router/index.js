@@ -42,6 +42,14 @@ const routes = [
         },
       },
       {
+        path: '/profile',
+        name: 'Profile',
+        components: {
+          default: () => import('@/views/Profile.vue'),
+          sidebar: () => import('@/components/Sidebar.vue')
+        },
+      },
+      {
         path: '/book/:isbn',
         name: 'BookDetails',
         component: () => import('@/components/BookDetails.vue'),
