@@ -4,13 +4,12 @@
       <!-- Delete button positioned inside the color container -->
       <v-row>
         <v-col class="text-right">
-          <v-btn icon color="rgba(255, 255, 255, 0.25)" @click="deleteBookshelf">
+          <v-btn icon color="rgba(255, 255, 255, 0.25)" @click="openDeleteDialog">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </v-col>
       </v-row>
     </v-container>
-
 
     <v-row>
       <v-col :md="isEditing ? 8 : 6">
@@ -43,6 +42,18 @@
         </v-card-text>
       </div>
     </v-expand-transition>
+
+    <v-dialog v-model="deleteDialogVisible" max-width="400px">
+      <v-card>
+        <v-card-title class="text-center">Confirm Delete</v-card-title>
+        <v-card-text class="text-center">Are you sure you want to delete this bookshelf?</v-card-text>
+        <v-card-actions class="justify-center">
+          <v-btn text @click="cancelDelete">No</v-btn>
+          <v-btn text color="primary" @click="confirmDelete">Yes</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
   </v-card>
 </template>
 
@@ -62,6 +73,7 @@ export default {
       show: false,
       isEditing: false,
       editedTitle: this.title,
+      deleteDialogVisible: false,
     };
   },
 
@@ -77,6 +89,19 @@ export default {
       } else {
         this.isEditing = true;
       }
+    },
+
+    openDeleteDialog() {
+      this.deleteDialogVisible = true;
+    },
+
+    cancelDelete() {
+      this.deleteDialogVisible = false;
+    },
+
+    confirmDelete() {
+      this.$emit('delete-bookshelf', this.id);
+      this.deleteDialogVisible = false;
     },
 
     deleteBookshelf() {

@@ -15,7 +15,7 @@
             <v-btn text color="primary" @click="confirmLogout">Yes</v-btn>
           </v-card-actions>
           </v-card>
-        </v-dialog>
+      </v-dialog>
       <v-list>
         <v-list>
           <v-list-item
