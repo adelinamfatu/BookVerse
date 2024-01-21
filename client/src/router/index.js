@@ -62,7 +62,10 @@ const routes = [
       {
         path: '/bookshelf/:bookshelfId',
         name: 'BookshelfBooks',
-        component: () => import('@/views/BookshelfBooks.vue'),
+        components: {
+          default: () => import('@/views/BookshelfBooks.vue'),
+          sidebar: () => import('@/components/Sidebar.vue')
+        },
         meta: { requiresAuth: true },
       },
     ],

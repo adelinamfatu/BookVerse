@@ -1,15 +1,21 @@
 <template>
-  <div>
-    <h2>Books in Bookshelf</h2>
+  <div class="container">
+    <v-card class="overflow-y-auto" style="height: 95vh; width: 100%" color="brown-lighten-5" elevation="12">
+        <div class="pa-4">
+            
+            <h2 style="color: #37474F" class="mb-4 ml-8">Books in Bookshelf</h2>
 
-    <v-row>
-      <v-col v-for="(book, index) in books" :key="index" cols="12" sm="6" md="4" lg="3">
-        <v-card>
-          <v-card-title>{{ book.title }}</v-card-title>
-          <v-card-subtitle>{{ book.author }}</v-card-subtitle>
-        </v-card>
-      </v-col>
-    </v-row>
+            <v-row>
+                <v-col v-for="(book, index) in books" :key="index" cols="12" sm="6" md="4" lg="3">
+                    <v-card>
+                    <v-card-title>{{ book.title }}</v-card-title>
+                    <v-card-subtitle>{{ book.author }}</v-card-subtitle>
+                    </v-card>
+                </v-col>
+            </v-row>
+
+        </div>
+    </v-card>
   </div>
 </template>
 
@@ -26,3 +32,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.container {
+  background-color: #E3F2FD;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+</style>

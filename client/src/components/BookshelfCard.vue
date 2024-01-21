@@ -93,7 +93,7 @@ export default {
     },
 
     navigateToBookshelfRoute() {
-      this.$router.push(`/bookshelves/${this.id}`);
+      this.$router.push(`/bookshelf/${this.id}`);
     },
   },
 };
