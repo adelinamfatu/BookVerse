@@ -59,6 +59,12 @@ const routes = [
         component: () => import('@/components/BookDetails.vue'),
         meta: { requiresAuth: true },
       },
+      {
+        path: '/bookshelf/:bookshelfId',
+        name: 'BookshelfBooks',
+        component: () => import('@/views/BookshelfBooks.vue'),
+        meta: { requiresAuth: true },
+      },
     ],
   },
 ]

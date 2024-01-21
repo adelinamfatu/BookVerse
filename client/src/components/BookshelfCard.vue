@@ -26,8 +26,11 @@
     <v-expand-transition>
       <div v-show="show">
         <v-divider></v-divider>
-        <v-card-text>
+        <v-card-text class="d-flex justify-end align-end">
           {{ supplementaryText }}
+          <v-btn icon @click="navigateToBookshelfRoute">
+            <v-icon>mdi-arrow-expand-all</v-icon>
+          </v-btn>
         </v-card-text>
       </div>
     </v-expand-transition>
@@ -87,6 +90,10 @@ export default {
       .catch(error => {
         console.error('Error updating bookshelf', error);
       });
+    },
+
+    navigateToBookshelfRoute() {
+      this.$router.push(`/bookshelves/${this.id}`);
     },
   },
 };
