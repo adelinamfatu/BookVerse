@@ -1,12 +1,19 @@
 <template>
   <v-card class="mb-4">
-    <v-container :style="{ backgroundColor: color, height: '200px' }">
+    <v-container :style="{ backgroundColor: internalColor, height: '200px' }">
       <v-row v-if="!isDefault">
         <v-col class="text-right">
           <v-btn icon color="rgba(255, 255, 255, 0.25)" @click="openDeleteDialog">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </v-col>
+      </v-row>
+
+      <v-row v-if="isEditing" class="d-flex align-center justify-center">
+        <v-color-picker 
+          :value="internalColor" 
+          hide-canvas hide-inputs 
+          @update:modelValue="handleColorChange"></v-color-picker>
       </v-row>
     </v-container>
 
@@ -74,6 +81,7 @@ export default {
       isEditing: false,
       editedTitle: this.title,
       deleteDialogVisible: false,
+      internalColor: this.color,
     };
   },
 
@@ -108,12 +116,19 @@ export default {
       this.$emit('delete-bookshelf', this.id);
     },
 
+    handleColorChange(newColor) {
+      console.log(this.internalColor);
+      this.internalColor = newColor;
+      
+      this.$emit('update:color', newColor);
+    },
+
     async saveChanges() {
       const token = this.$store.getters['auth/firebaseToken'];
 
       const updatedData = {
         title: this.editedTitle,
-        color: this.color,
+        color: this.internalColor,
         supplementaryText: this.supplementaryText,
       };
 
