@@ -16,6 +16,7 @@
           <v-row>
             <v-col v-for="(card, index) in cards" :key="index" cols="12" sm="6" md="6" lg="4">
               <BookshelfCard
+                :id="card.id"
                 :title="card.title"
                 :color="card.color"
                 :supplementaryText="card.supplementaryText"

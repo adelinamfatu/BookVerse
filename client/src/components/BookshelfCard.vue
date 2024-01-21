@@ -35,8 +35,11 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   props: {
+    id: String,
     title: String,
     color: String,
     supplementaryText: String,
@@ -54,12 +57,36 @@ export default {
     toggleShow() {
       this.show = !this.show;
     },
+
     toggleEditing() {
       if (this.isEditing) {
         this.isEditing = false;
+        this.saveChanges();
       } else {
         this.isEditing = true;
       }
+    },
+
+    async saveChanges() {
+      const token = this.$store.getters['auth/firebaseToken'];
+
+      const updatedData = {
+        title: this.editedTitle,
+        color: this.color,
+        supplementaryText: this.supplementaryText,
+      };
+
+      axios.put(`http://localhost:6100/api/bookshelves/update/${this.id}`, updatedData, {
+        headers: {
+          'x-access-token': token,
+        },
+      })
+      .then(response => {
+        console.log('Update successful', response.data);
+      })
+      .catch(error => {
+        console.error('Error updating bookshelf', error);
+      });
     },
   },
 };

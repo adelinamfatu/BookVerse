@@ -10,8 +10,6 @@ router.get('/user', verifyToken, async (req, res) => {
         const userDoc = await db.collection('users').doc(userEmail).get();
         const userBookshelves = userDoc.data().bookshelves;
 
-        console.log(userBookshelves);
-
         if (userBookshelves) {
             const bookshelves = [];
 
@@ -57,6 +55,30 @@ router.post('/add', verifyToken, async (req, res) => {
         });
 
         res.status(201).send(newBookshelfRef.id);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+router.put('/update/:bookshelfId', verifyToken, async (req, res) => {
+    try {
+        const userEmail = req.user.email;
+        const bookshelfId = req.params.bookshelfId;
+
+        const { title, color } = req.body;
+
+        await db.collection('users').doc(userEmail).update({
+            [`bookshelves.${bookshelfId}.title`]: title,
+            [`bookshelves.${bookshelfId}.color`]: color,
+        });
+
+        await db.collection('bookshelves').doc(bookshelfId).update({
+            title,
+            color,
+        });
+
+        res.status(200).send('Bookshelf updated successfully');
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
