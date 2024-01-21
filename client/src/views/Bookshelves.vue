@@ -20,6 +20,7 @@
                 :title="card.title"
                 :color="card.color"
                 :supplementaryText="card.supplementaryText"
+                @delete-bookshelf="deleteBookshelf"
               />
             </v-col>
           </v-row>
@@ -87,6 +88,23 @@ export default {
       } catch (error) {
         console.error('Error adding bookshelf:', error);
       }
+    },
+
+    deleteBookshelf(bookshelfId) {
+      const token = this.$store.getters['auth/firebaseToken'];
+
+      axios.delete(`http://localhost:6100/api/bookshelves/delete/${bookshelfId}`, {
+        headers: {
+          'x-access-token': token,
+        },
+      })
+      .then(response => {
+        console.log('Delete successful', response.data);
+        this.cards = this.cards.filter(card => card.id !== bookshelfId);
+      })
+      .catch(error => {
+        console.error('Error deleting bookshelf', error);
+      });
     },
   }
 };

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { db, auth } = require('../database');
 const verifyToken = require('../middleware/auth');
+const admin = require('firebase-admin');
 
 router.get('/user', verifyToken, async (req, res) => {
     try {
@@ -44,13 +45,14 @@ router.post('/add', verifyToken, async (req, res) => {
 
         const newBookshelfRef = await db.collection('bookshelves').add({
             title,
-            color,
+            isDefault : 0,
         });
 
         await db.collection('users').doc(userEmail).update({
             [`bookshelves.${newBookshelfRef.id}`]: {
                 title,
                 color,
+                isDefault : 0,
             },
         });
 
@@ -79,6 +81,24 @@ router.put('/update/:bookshelfId', verifyToken, async (req, res) => {
         });
 
         res.status(200).send('Bookshelf updated successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+router.delete('/delete/:bookshelfId', verifyToken, async (req, res) => {
+    try {
+        const userEmail = req.user.email;
+        const bookshelfId = req.params.bookshelfId;
+
+        await db.collection('users').doc(userEmail).update({
+            [`bookshelves.${bookshelfId}`]: admin.firestore.FieldValue.delete(),
+        });
+
+        await db.collection('bookshelves').doc(bookshelfId).delete();
+
+        res.status(200).send('Bookshelf deleted successfully');
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');

@@ -1,7 +1,16 @@
 <template>
   <v-card class="mb-4">
     <v-container :style="{ backgroundColor: color, height: '200px' }">
+      <!-- Delete button positioned inside the color container -->
+      <v-row>
+        <v-col class="text-right">
+          <v-btn icon color="rgba(255, 255, 255, 0.25)" @click="deleteBookshelf">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-container>
+
 
     <v-row>
       <v-col :md="isEditing ? 8 : 6">
@@ -68,6 +77,10 @@ export default {
       } else {
         this.isEditing = true;
       }
+    },
+
+    deleteBookshelf() {
+      this.$emit('delete-bookshelf', this.id);
     },
 
     async saveChanges() {
