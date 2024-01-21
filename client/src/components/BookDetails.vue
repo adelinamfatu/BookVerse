@@ -38,7 +38,7 @@
             :color="isFavorite ? 'pink' : 'white'"
             rounded
             class="fab-button"
-            style="margin-top: 16px;"
+            style="margin-top: 16px; margin-bottom: 16px"
             @click="toggleFavorite"
           >
             <v-icon :color="isFavorite ? 'white' : 'pink'">{{ 'mdi-heart' }}</v-icon>
@@ -47,6 +47,33 @@
               location="bottom"
             >{{ isFavorite ? 'Already Favorited' : 'Not Favorited' }}</v-tooltip>
           </v-btn>
+
+          <v-combobox
+            v-model="selectedBookshelf"
+            :items="userBookshelves"
+            item-text="title"
+            item-value="id"
+            density="compact"
+            bg-color="teal-lighten-4"
+            rounded
+            variant="solo-filled"
+            style="width: 20rem; margin: auto"
+          ></v-combobox>
+
+          <v-combobox
+            v-if="userTags.length > 0"
+            v-model="selectedTags"
+            :items="userTags"
+            multiple
+            chips
+            item-text="title"
+            item-value="id"
+            density="compact"
+            bg-color="deep-purple-lighten-4"
+            rounded
+            variant="solo-filled"
+            style="width: 20rem; margin: auto"
+          ></v-combobox>
 
         </v-col>
       </v-row>
@@ -62,8 +89,12 @@ export default {
     return {
       bookDetails: null,
       isFavorite: false,
+      userBookshelves: [],
+      selectedBookshelf: null,
+      selectedTags: []
     };
   },
+
   methods: {
     goBack() {
       this.$router.go(-1);
@@ -83,6 +114,25 @@ export default {
         this.isFavorite = response.data.isFavorite;
       } catch (error) {
         console.error('Error fetching book details:', error);
+      }
+    },
+
+    async fetchUserBookshelves() {
+      const token = this.$store.getters['auth/firebaseToken'];
+
+      try {
+        const response = await axios.get('http://localhost:6100/api/bookshelves/user', {
+          headers: {
+            'x-access-token': token,
+          },
+        });
+
+        this.userBookshelves = response.data.filter(bookshelf => bookshelf.isDefault);
+        this.selectedBookshelf = this.userBookshelves[1];
+
+        this.userTags = response.data.filter(bookshelf => !bookshelf.isDefault);
+      } catch (error) {
+        console.error('Error fetching user bookshelves:', error);
       }
     },
 
@@ -121,6 +171,7 @@ export default {
   async created() {
     const isbn = this.$route.params.isbn;
     await this.fetchBookDetails(isbn);
+    await this.fetchUserBookshelves();
   },
 };
 </script>
@@ -135,7 +186,7 @@ export default {
 }
 
 .headline {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 1rem;
 }
