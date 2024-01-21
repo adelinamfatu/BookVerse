@@ -1,8 +1,7 @@
 <template>
   <v-card class="mb-4">
     <v-container :style="{ backgroundColor: color, height: '200px' }">
-      <!-- Delete button positioned inside the color container -->
-      <v-row>
+      <v-row v-if="!isDefault">
         <v-col class="text-right">
           <v-btn icon color="rgba(255, 255, 255, 0.25)" @click="openDeleteDialog">
             <v-icon>mdi-delete</v-icon>
@@ -12,7 +11,7 @@
     </v-container>
 
     <v-row>
-      <v-col :md="isEditing ? 8 : 6">
+      <v-col :md="isEditing ? 8 : 7">
         <v-card-title>
           <template v-if="!isEditing">{{ editedTitle }}</template>
           <template v-else>
@@ -21,7 +20,7 @@
         </v-card-title>
       </v-col>
 
-      <v-col :md="isEditing ? 4 : 6" class="d-flex">
+      <v-col :md="isEditing ? 4 : 5" class="d-flex">
         <v-card-actions class="ml-auto">
           <v-btn icon @click="toggleEditing">
             <v-icon>{{ isEditing ? 'mdi-check' : 'mdi-pencil' }}</v-icon>
@@ -65,6 +64,7 @@ export default {
     id: String,
     title: String,
     color: String,
+    isDefault: Boolean,
     supplementaryText: String,
   },
 

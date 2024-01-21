@@ -19,6 +19,7 @@
                 :id="card.id"
                 :title="card.title"
                 :color="card.color"
+                :isDefault="card.isDefault"
                 :supplementaryText="card.supplementaryText"
                 @delete-bookshelf="deleteBookshelf"
               />

@@ -21,6 +21,7 @@ router.get('/user', verifyToken, async (req, res) => {
                     id: bookshelfId,  
                     title: bookshelfData.title,
                     color: bookshelfData.color,
+                    isDefault: bookshelfData.isDefault
                 });
             }
 
@@ -45,14 +46,14 @@ router.post('/add', verifyToken, async (req, res) => {
 
         const newBookshelfRef = await db.collection('bookshelves').add({
             title,
-            isDefault : 0,
+            isDefault : false,
         });
 
         await db.collection('users').doc(userEmail).update({
             [`bookshelves.${newBookshelfRef.id}`]: {
                 title,
                 color,
-                isDefault : 0,
+                isDefault : false,
             },
         });
 
