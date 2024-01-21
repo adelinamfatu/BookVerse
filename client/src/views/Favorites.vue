@@ -33,16 +33,19 @@ export default {
       allBooks: [],
     };
   },
+
   computed: {
     totalPages() {
       return Math.ceil(this.totalBooks / this.itemsPerPage);
     },
+
     displayedBooks() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
       return this.allBooks.slice(start, end);
     },
   },
+
   methods: {
     async fetchData() {
       const token = this.$store.getters['auth/firebaseToken'];
@@ -60,12 +63,14 @@ export default {
         console.error('Error fetching books:', error);
       }
     },
+
     handlePageChange() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
       this.displayedBooks = this.allBooks.slice(start, end);
     },
   },
+  
   created() {
     this.fetchData();
   },

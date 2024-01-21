@@ -38,37 +38,31 @@ export default {
   },
   data() {
     return {
-      cards: [
-        {
-          title: 'To read',
-          color: '#FFC107',
-          supplementaryText: 'Supplementary Text 1',
-        },
-        {
-          title: 'Reading',
-          color: '#4CAF50',
-          supplementaryText: 'Supplementary Text 2',
-        },
-        {
-          title: 'Card 3',
-          color: '#2196F3',
-          supplementaryText: 'Supplementary Text 3',
-        },
-        {
-          title: 'Card 4',
-          color: '#FF5722',
-          supplementaryText: 'Supplementary Text 4',
-        },
-        {
-          title: 'Card 5',
-          color: '#9C27B0',
-          supplementaryText: 'Supplementary Text 5',
-        },
-      ],
+      cards: [],
     };
   },
 
+  mounted() {
+    this.fetchBookshelves();
+  },
+
   methods: {
+    async fetchBookshelves() {
+      const token = this.$store.getters['auth/firebaseToken'];
+
+      try {
+        const response = await axios.get('http://localhost:6100/api/bookshelves/user', {
+          headers: {
+            'x-access-token': token,
+          },
+        });
+
+        this.cards = response.data;
+      } catch (error) {
+        console.error('Error fetching bookshelves:', error);
+      }
+    },
+
     async addBookshelf() {
       const token = this.$store.getters['auth/firebaseToken'];
 

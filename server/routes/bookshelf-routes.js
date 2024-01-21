@@ -3,21 +3,34 @@ const router = express.Router();
 const { db, auth } = require('../database');
 const verifyToken = require('../middleware/auth');
 
-router.get('/all', verifyToken, async (req, res) => {
+router.get('/user', verifyToken, async (req, res) => {
     try {
-        const snapshot = await db.collection('bookshelves').get();
-        const bookshelves = [];
+        const userEmail = req.user.email;
 
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            bookshelves.push({
-                name: data.name,
-                color: data.color,
-            });
-        });
-        
-        res.status(200).send(bookshelves);
+        const userDoc = await db.collection('users').doc(userEmail).get();
+        const userBookshelves = userDoc.data().bookshelves;
+
+        console.log(userBookshelves);
+
+        if (userBookshelves) {
+            const bookshelves = [];
+
+            for (const bookshelfId in userBookshelves) {
+                const bookshelfData = userBookshelves[bookshelfId];
+
+                bookshelves.push({
+                    id: bookshelfId,  
+                    title: bookshelfData.title,
+                    color: bookshelfData.color,
+                });
+            }
+
+            res.status(200).send(bookshelves);
+        } else {
+            res.status(200).send([]);
+        }
     } catch (error) {
+        console.error(error);
         res.status(500).send('Internal Server Error');
     }
 });
