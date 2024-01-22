@@ -5,6 +5,7 @@
       rail 
       color="blue-lighten-4"
       elevation="12"
+      style="transform: translateX(0%);"
       >
       <v-dialog v-model="dialogLogout" max-width="400px">
           <v-card>

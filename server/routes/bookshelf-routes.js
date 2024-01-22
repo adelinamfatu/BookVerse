@@ -106,4 +106,28 @@ router.delete('/delete/:bookshelfId', verifyToken, async (req, res) => {
     }
 });
 
+router.post('/add-book/:bookshelfId', verifyToken, async (req, res) => {
+    try {
+        const bookshelfId = req.params.bookshelfId;
+        const { isbn, title, author, coverImage } = req.body;
+
+        if (!isbn || !title || !author || !coverImage) {
+            return res.status(400).send('Book details are required.');
+        }
+
+        await db.collection('bookshelves').doc(bookshelfId).update({
+            [`books.${isbn}`]: {
+                title,
+                author,
+                coverImage
+            },
+        });
+
+        res.status(201).send('Book added to the bookshelf successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 module.exports = router;

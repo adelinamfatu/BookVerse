@@ -58,10 +58,12 @@
             rounded
             variant="solo-filled"
             style="width: 20rem; margin: auto"
+            label="Select bookshelf"
+            @update:modelValue="onBookshelfChange"
           ></v-combobox>
 
           <v-combobox
-            v-if="userTags.length > 0"
+            v-if="userTags?.length > 0"
             v-model="selectedTags"
             :items="userTags"
             multiple
@@ -73,6 +75,7 @@
             rounded
             variant="solo-filled"
             style="width: 20rem; margin: auto"
+            label="Select tags"
           ></v-combobox>
 
         </v-col>
@@ -91,6 +94,7 @@ export default {
       isFavorite: false,
       userBookshelves: [],
       selectedBookshelf: null,
+      userTags: [],
       selectedTags: []
     };
   },
@@ -128,7 +132,7 @@ export default {
         });
 
         this.userBookshelves = response.data.filter(bookshelf => bookshelf.isDefault);
-        this.selectedBookshelf = this.userBookshelves[1];
+        //this.selectedBookshelf = this.userBookshelves[1];
 
         this.userTags = response.data.filter(bookshelf => !bookshelf.isDefault);
       } catch (error) {
@@ -165,6 +169,36 @@ export default {
           console.log(error);
         }
       }
+    },
+
+    async addBookToBookshelf() {
+      if (!this.selectedBookshelf) {
+        return; 
+      }
+
+      const token = this.$store.getters['auth/firebaseToken'];
+      const isbn = this.$route.params.isbn;
+
+      try {
+        const response = await axios.post(`http://localhost:6100/api/bookshelves/add-book/${this.selectedBookshelf.id}`, {
+          isbn,
+          title: this.bookDetails.title,
+          author: this.bookDetails.author,
+          coverImage: this.bookDetails.coverImage,
+        }, {
+          headers: {
+            'x-access-token': token,
+          },
+        });
+
+        console.log(response.data); 
+      } catch (error) {
+        console.error('Error adding book to bookshelf:', error);
+      }
+    },
+
+    async onBookshelfChange() {
+      await this.addBookToBookshelf();
     },
   },
   
