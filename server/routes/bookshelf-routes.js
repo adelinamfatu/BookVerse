@@ -35,6 +35,43 @@ router.get('/user', verifyToken, async (req, res) => {
     }
 });
 
+router.get('/book', verifyToken, async (req, res) => {
+    try {
+        const userEmail = req.user.email;
+        const isbn = req.query.isbn;
+
+        const userDoc = await db.collection('users').doc(userEmail).get();
+        const userBookshelves = userDoc.data().bookshelves;
+
+        if (userBookshelves) {
+            const bookshelves = [];
+
+            for (const bookshelfId in userBookshelves) {
+                const bookshelfDoc = await db.collection('bookshelves').doc(bookshelfId).get();
+                
+                if (bookshelfDoc.exists) {
+                  const bookshelfData = bookshelfDoc.data();
+                  const isSelected = bookshelfData.books && bookshelfData.books[isbn] ? true : false;
+        
+                  bookshelves.push({
+                    id: bookshelfId,
+                    title: bookshelfData.title,
+                    isDefault: bookshelfData.isDefault,
+                    isSelected: isSelected
+                  });
+                }
+            }
+
+            res.status(200).send(bookshelves);
+        } else {
+            res.status(200).send([]);
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 router.post('/add', verifyToken, async (req, res) => {
     try {
         const userEmail = req.user.email;

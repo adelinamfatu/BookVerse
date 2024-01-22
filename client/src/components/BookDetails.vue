@@ -62,21 +62,17 @@
             @update:modelValue="onBookshelfChange"
           ></v-combobox>
 
-          <v-combobox
-            v-if="userTags?.length > 0"
-            v-model="selectedTags"
-            :items="userTags"
-            multiple
-            chips
-            item-text="title"
-            item-value="id"
-            density="compact"
-            bg-color="deep-purple-lighten-4"
-            rounded
-            variant="solo-filled"
-            style="width: 20rem; margin: auto"
-            label="Select tags"
-          ></v-combobox>
+          <v-chip
+            v-for="(tag, index) in userTags"
+            :key="index"
+            :selected="selectedTags && selectedTags.includes(tag)"
+            dense
+            :color="tag.isSelected ? 'indigo darken-4' : 'indigo darken-2'"
+            class="ma-1 pointer-on-hover"
+          >
+            {{ tag.title }}
+            <v-icon v-if="tag.isSelected">mdi-checkbox-marked-circle</v-icon>
+          </v-chip>
 
         </v-col>
       </v-row>
@@ -121,20 +117,21 @@ export default {
       }
     },
 
-    async fetchUserBookshelves() {
+    async fetchUserBookshelves(isbn) {
       const token = this.$store.getters['auth/firebaseToken'];
 
       try {
-        const response = await axios.get('http://localhost:6100/api/bookshelves/user', {
+        const response = await axios.get(`http://localhost:6100/api/bookshelves/book?isbn=${isbn}`, {
           headers: {
             'x-access-token': token,
           },
         });
 
         this.userBookshelves = response.data.filter(bookshelf => bookshelf.isDefault);
-        //this.selectedBookshelf = this.userBookshelves[1];
+        this.selectedBookshelf = this.userBookshelves.find(bookshelf => bookshelf.isSelected === true) || null;
 
         this.userTags = response.data.filter(bookshelf => !bookshelf.isDefault);
+        this.selectedTags = this.userTags.find(tag => tag.isSelected === true);
       } catch (error) {
         console.error('Error fetching user bookshelves:', error);
       }
@@ -171,16 +168,12 @@ export default {
       }
     },
 
-    async addBookToBookshelf() {
-      if (!this.selectedBookshelf) {
-        return; 
-      }
-
+    async addBookToBookshelf(bookshelf) {
       const token = this.$store.getters['auth/firebaseToken'];
       const isbn = this.$route.params.isbn;
 
       try {
-        const response = await axios.post(`http://localhost:6100/api/bookshelves/add-book/${this.selectedBookshelf.id}`, {
+        const response = await axios.post(`http://localhost:6100/api/bookshelves/add-book/${bookshelf.id}`, {
           isbn,
           title: this.bookDetails.title,
           author: this.bookDetails.author,
@@ -198,14 +191,16 @@ export default {
     },
 
     async onBookshelfChange() {
-      await this.addBookToBookshelf();
+      if (this.selectedBookshelf) {
+        await this.addBookToBookshelf(this.selectedBookshelf);
+      }
     },
   },
   
   async created() {
     const isbn = this.$route.params.isbn;
     await this.fetchBookDetails(isbn);
-    await this.fetchUserBookshelves();
+    await this.fetchUserBookshelves(isbn);
   },
 };
 </script>
@@ -235,5 +230,9 @@ export default {
     padding-left: 2rem;
     padding-right: 2rem;
     text-align: justify;
+}
+
+.pointer-on-hover {
+    cursor: pointer !important;
 }
 </style>
