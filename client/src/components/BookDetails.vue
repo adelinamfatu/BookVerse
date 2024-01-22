@@ -65,10 +65,10 @@
           <v-chip
             v-for="(tag, index) in userTags"
             :key="index"
-            :selected="selectedTags && selectedTags.includes(tag)"
             dense
-            :color="tag.isSelected ? 'indigo darken-4' : 'indigo darken-2'"
+            :color="tag.isSelected ? 'pink-darken-4' : 'indigo darken-2'"
             class="ma-1 pointer-on-hover"
+            @click="toggleTag(tag)"
           >
             {{ tag.title }}
             <v-icon v-if="tag.isSelected">mdi-checkbox-marked-circle</v-icon>
@@ -98,6 +98,14 @@ export default {
   methods: {
     goBack() {
       this.$router.go(-1);
+    },
+
+    toggleTag(tag) {
+      tag.isSelected = !tag.isSelected;
+
+      if(tag.isSelected) {
+        this.addBookToBookshelf(tag);
+      }
     },
 
     async fetchBookDetails(isbn) {
