@@ -7,10 +7,7 @@
 
             <v-row>
                 <v-col v-for="(book, index) in books" :key="index" cols="12" sm="6" md="4" lg="3">
-                    <v-card>
-                    <v-card-title>{{ book.title }}</v-card-title>
-                    <v-card-subtitle>{{ book.author }}</v-card-subtitle>
-                    </v-card>
+                    <BookshelfBook :book="book" />
                 </v-col>
             </v-row>
 
@@ -20,7 +17,13 @@
 </template>
 
 <script>
+import BookshelfBook from '../components/BookshelfBook.vue';
+
 export default {
+  components: {
+    BookshelfBook,
+  },
+
   data() {
     return {
       books: [
