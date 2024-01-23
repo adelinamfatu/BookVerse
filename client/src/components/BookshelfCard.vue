@@ -1,9 +1,14 @@
 <template>
   <v-card class="mb-4">
     <v-container :style="{ backgroundColor: internalColor, height: '200px' }">
-      <v-row v-if="!isDefault">
+      <v-row>
+        <v-col>
+          <v-btn icon @click="navigateToBookshelfRoute">
+            <v-icon>mdi-arrow-expand-all</v-icon>
+          </v-btn>
+        </v-col>
         <v-col class="text-right">
-          <v-btn icon color="rgba(255, 255, 255, 0.25)" @click="openDeleteDialog">
+          <v-btn v-if="!isDefault" icon color="rgba(255, 255, 255, 0.25)" @click="openDeleteDialog">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </v-col>
@@ -42,9 +47,6 @@
         <v-divider></v-divider>
         <v-card-text class="d-flex justify-end align-end">
           {{ supplementaryText }}
-          <v-btn icon @click="navigateToBookshelfRoute">
-            <v-icon>mdi-arrow-expand-all</v-icon>
-          </v-btn>
         </v-card-text>
       </div>
     </v-expand-transition>
