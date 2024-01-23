@@ -1,12 +1,14 @@
 <template>
   <div>
+
     <v-navigation-drawer 
+      v-if="isDesktop"
       expand-on-hover 
       rail 
       color="blue-lighten-4"
       elevation="12"
-      style="transform: translateX(0%);"
       >
+
       <v-dialog v-model="dialogLogout" max-width="400px">
           <v-card>
           <v-card-title class="text-center">Confirm Logout</v-card-title>
@@ -17,6 +19,7 @@
           </v-card-actions>
           </v-card>
       </v-dialog>
+
       <v-list>
         <v-list>
           <v-list-item
@@ -26,7 +29,9 @@
             :subtitle="userDetails.email"
           ></v-list-item>
         </v-list>
+
         <v-divider></v-divider>
+
         <v-list-item
           v-for="item in items"
           :key="item.title"
@@ -36,6 +41,7 @@
           :prepend-icon="item.icon"
           class="mt-6"
         ></v-list-item>
+
         <v-list-item
           rounded="xl"
           prepend-icon="mdi-logout"
@@ -44,8 +50,26 @@
           class="mt-10"
           @click="showLogoutDialog"
         ></v-list-item>
+
       </v-list>
     </v-navigation-drawer>
+
+    <v-bottom-navigation 
+      v-if="!isDesktop"
+      bg-color="blue-lighten-4"
+      grow>
+      <v-btn
+        v-for="item in items"
+        :key="item.title"
+        :value="item.route"
+        :class="{ 'v-btn--active': $route.name === item.route }"
+        @click="$router.push(item.route)"
+      >
+        <v-icon>{{ item.icon }}</v-icon>
+        <span>{{ item.title }}</span>
+      </v-btn>
+    </v-bottom-navigation>
+    
   </div>
 </template>
 
@@ -63,6 +87,7 @@ export default {
         { title: 'Profile', route: '/profile', icon: 'mdi-account' },
       ],
       userDetails: null,
+      isDesktop: true,
     };
   },
   
@@ -92,10 +117,20 @@ export default {
       this.$router.push('/login');
       this.dialogLogout = false;
     },
+
+    updateScreenSize() {
+      this.isDesktop = window.innerWidth >= 960; // Adjust the breakpoint as needed
+    },
   },
 
   mounted() {
     this.fetchUserData();
+    this.updateScreenSize();
+    window.addEventListener('resize', this.updateScreenSize);
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('resize', this.updateScreenSize);
   },
 };
 </script>
