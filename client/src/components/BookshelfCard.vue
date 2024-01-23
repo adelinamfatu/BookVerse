@@ -37,19 +37,9 @@
           <v-btn icon @click="toggleEditing">
             <v-icon>{{ isEditing ? 'mdi-check' : 'mdi-pencil' }}</v-icon>
           </v-btn>
-          <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="toggleShow"></v-btn>
         </v-card-actions>
       </v-col>
     </v-row>
-
-    <v-expand-transition>
-      <div v-show="show">
-        <v-divider></v-divider>
-        <v-card-text class="d-flex justify-end align-end">
-          {{ supplementaryText }}
-        </v-card-text>
-      </div>
-    </v-expand-transition>
 
     <v-dialog v-model="deleteDialogVisible" max-width="400px">
       <v-card>

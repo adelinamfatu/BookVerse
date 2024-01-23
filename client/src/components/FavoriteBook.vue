@@ -1,22 +1,34 @@
 <template>
-  <v-card elevation="5" color="deep-orange-lighten-5" class="book-card">
-    <v-row class="my-1" justify="center" align="center">
-      <v-col cols="1">
-        <v-img :src="book.coverImage" alt="Book Cover" max-height="9rem"></v-img>
-      </v-col>
+  <v-card elevation="5">
+    <v-img :src="book.coverImage" alt="Book Cover" max-height="10rem"></v-img>
 
-      <v-col cols="3">
-        <v-card-text style="font-weight: bold; font-size: 17px;">{{ book.title }}</v-card-text>
-        <v-card-text style="font-style: italic;">by {{ book.author }}</v-card-text>
-      </v-col>
+    <v-card-title>
+      {{ book.title }}
+    </v-card-title>
 
-      <v-col cols="7">
-        <v-card-text style="font-size: 16px;">
-          {{ truncateDescription }}
-          <router-link :to="'/book/' + book.isbn">See more</router-link>
-        </v-card-text>
-      </v-col>
-    </v-row>
+    <v-card-subtitle>
+      by {{ book.author }}
+    </v-card-subtitle>
+
+    <v-card-actions class="d-flex justify-space-between">
+      <router-link :to="'/book/' + book.isbn">
+        <v-btn
+          color="orange-lighten-2"
+          variant="text"
+        >
+          See more
+        </v-btn>
+      </router-link>
+
+      <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="toggleShow"></v-btn>
+    </v-card-actions>
+
+    <v-expand-transition>
+      <div v-show="show">
+        <v-divider></v-divider>
+        {{ truncateDescription }}
+      </div>
+    </v-expand-transition>
   </v-card>
 </template>
 
@@ -30,20 +42,30 @@ export default {
   },
   data() {
     return {
-      showMore: false,
+      show: false,
     };
   },
   computed: {
     truncateDescription() {
       const words = this.book.description.split(' ');
-      return words.slice(0, 20).join(' ');
+      return words.slice(0, 25).join(' ');
+    },
+  },
+  methods: {
+    toggleShow() {
+      this.show = !this.show;
     },
   },
 };
 </script>
 
 <style scoped>
-.book-card {
-  margin-bottom: 20px;
+.v-card-subtitle {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.v-card-actions {
+  padding-top: 0;
 }
 </style>

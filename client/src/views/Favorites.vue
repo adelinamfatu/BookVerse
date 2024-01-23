@@ -4,7 +4,13 @@
       <div class="pa-4">
         <h2 style="color: #37474F" class="mb-4 ml-8">Favorites</h2>  
 
-        <favorite-book v-for="(book, index) in displayedBooks" :key="index" :book="book"></favorite-book>
+        <v-container>
+          <v-row>
+            <v-col v-for="(book, index) in displayedBooks" :key="index" cols="12" sm="6" md="6" lg="4">
+              <FavoriteBook :book="book" />
+            </v-col>
+          </v-row>
+        </v-container>
 
         <v-pagination :length="totalPages" v-model="currentPage" @update:model-value="updatePagination"></v-pagination>
       </div>
@@ -24,7 +30,7 @@ export default {
   data() {
     return {
       currentPage: 1,
-      itemsPerPage: 3,
+      itemsPerPage: 6,
       totalBooks: 0,
       allBooks: [],
     };
