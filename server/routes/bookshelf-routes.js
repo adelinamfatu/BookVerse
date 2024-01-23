@@ -147,13 +147,52 @@ router.post('/add-book/:bookshelfId', verifyToken, async (req, res) => {
             return res.status(400).send('Book details are required.');
         }
 
-        await db.collection('bookshelves').doc(bookshelfId).update({
+        const bookshelfRef = db.collection('bookshelves').doc(bookshelfId);
+        const bookshelfDoc = await bookshelfRef.get();
+
+        if (!bookshelfDoc.exists) {
+            return res.status(404).send('Bookshelf not found.');
+        }
+
+        const bookshelfData = bookshelfDoc.data();
+
+        if (!bookshelfData.isDefault) {
+            await bookshelfRef.update({
+                [`books.${isbn}`]: {
+                    title,
+                    author,
+                    coverImage
+                },
+            });
+
+            res.status(201).send('Book added to the bookshelf successfully');
+            return;
+        }
+
+        const batch = db.batch();
+
+        const otherDefaultBookshelvesSnapshot = await db.collection('bookshelves').where('isDefault', '==', true).get();
+
+        otherDefaultBookshelvesSnapshot.forEach((otherBookshelfDoc) => {
+            const otherBookshelfId = otherBookshelfDoc.id;
+            const otherBookshelfData = otherBookshelfDoc.data();
+
+            if (otherBookshelfId !== bookshelfId && otherBookshelfData.books && otherBookshelfData.books[isbn]) {
+                batch.update(db.collection('bookshelves').doc(otherBookshelfId), {
+                    [`books.${isbn}`]: admin.firestore.FieldValue.delete(),
+                });
+            }
+        });
+
+        batch.update(bookshelfRef, {
             [`books.${isbn}`]: {
                 title,
                 author,
                 coverImage
             },
         });
+
+        await batch.commit();
 
         res.status(201).send('Book added to the bookshelf successfully');
     } catch (error) {
@@ -185,7 +224,6 @@ router.delete('/delete-book/:bookshelfId/:isbn', verifyToken, async (req, res) =
             res.status(404).send('Book not found in the bookshelf');
         }
     } catch (error) {
-        console.log(error);
         res.status(500).send('Internal Server Error');
     }
 });
