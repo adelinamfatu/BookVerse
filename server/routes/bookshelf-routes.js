@@ -30,7 +30,6 @@ router.get('/user', verifyToken, async (req, res) => {
             res.status(200).send([]);
         }
     } catch (error) {
-        console.error(error);
         res.status(500).send('Internal Server Error');
     }
 });
@@ -67,7 +66,6 @@ router.get('/book', verifyToken, async (req, res) => {
             res.status(200).send([]);
         }
     } catch (error) {
-        console.error(error);
         res.status(500).send('Internal Server Error');
     }
 });
@@ -96,7 +94,6 @@ router.post('/add', verifyToken, async (req, res) => {
 
         res.status(201).send(newBookshelfRef.id);
     } catch (error) {
-        console.error(error);
         res.status(500).send('Internal Server Error');
     }
 });
@@ -120,7 +117,6 @@ router.put('/update/:bookshelfId', verifyToken, async (req, res) => {
 
         res.status(200).send('Bookshelf updated successfully');
     } catch (error) {
-        console.error(error);
         res.status(500).send('Internal Server Error');
     }
 });
@@ -138,7 +134,6 @@ router.delete('/delete/:bookshelfId', verifyToken, async (req, res) => {
 
         res.status(200).send('Bookshelf deleted successfully');
     } catch (error) {
-        console.error(error);
         res.status(500).send('Internal Server Error');
     }
 });
@@ -162,7 +157,35 @@ router.post('/add-book/:bookshelfId', verifyToken, async (req, res) => {
 
         res.status(201).send('Book added to the bookshelf successfully');
     } catch (error) {
-        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+router.delete('/delete-book/:bookshelfId/:isbn', verifyToken, async (req, res) => {
+    try {
+        const bookshelfId = req.params.bookshelfId;
+        const isbn = req.params.isbn;
+
+        if (!isbn) {
+            return res.status(400).send('ISBN is required.');
+        }
+
+        const bookshelfDoc = await db.collection('bookshelves').doc(bookshelfId).get();
+        const bookshelfData = bookshelfDoc.data();
+
+        if (bookshelfData.books && bookshelfData.books[isbn]) {
+            delete bookshelfData.books[isbn];
+
+            await db.collection('bookshelves').doc(bookshelfId).update({
+                books: bookshelfData.books,
+            });
+
+            res.status(200).send('Book deleted from the bookshelf successfully');
+        } else {
+            res.status(404).send('Book not found in the bookshelf');
+        }
+    } catch (error) {
+        console.log(error);
         res.status(500).send('Internal Server Error');
     }
 });

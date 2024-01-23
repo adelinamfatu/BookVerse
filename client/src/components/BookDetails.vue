@@ -103,7 +103,9 @@ export default {
     toggleTag(tag) {
       tag.isSelected = !tag.isSelected;
 
-      if(tag.isSelected) {
+      if (!tag.isSelected) {
+        this.removeBookFromBookshelf(tag);
+      } else {
         this.addBookToBookshelf(tag);
       }
     },
@@ -195,6 +197,23 @@ export default {
         console.log(response.data); 
       } catch (error) {
         console.error('Error adding book to bookshelf:', error);
+      }
+    },
+
+    async removeBookFromBookshelf(bookshelf) {
+      const token = this.$store.getters['auth/firebaseToken'];
+      const isbn = this.$route.params.isbn;
+
+      try {
+        const response = await axios.delete(`http://localhost:6100/api/bookshelves/delete-book/${bookshelf.id}/${isbn}`, {
+          headers: {
+            'x-access-token': token,
+          },
+        });
+
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error removing book from bookshelf:', error);
       }
     },
 
