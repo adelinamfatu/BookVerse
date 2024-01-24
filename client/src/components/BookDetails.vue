@@ -1,6 +1,6 @@
 <template>
   <div class="center-container">
-    <v-card class="overflow-y-auto" height="80vh" width="80vw" elevation="10" color="blue-grey-lighten-5">
+    <v-card class="overflow-y-auto" height="90vh" width="90vw" elevation="10" color="blue-grey-lighten-5">
       <v-card-actions>
         <v-btn @click="goBack">
           <v-icon>mdi-arrow-left</v-icon> Return

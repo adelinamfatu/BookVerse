@@ -245,12 +245,17 @@ router.get('/books/:bookshelfId', verifyToken, async (req, res) => {
                 coverImage: books[isbn].coverImage,
             }));
 
-            res.status(200).send(bookList);
+            const response = {
+                title: bookshelfData.title,
+                isDefault: bookshelfData.isDefault,
+                books: bookList,
+            };
+
+            res.status(200).send(response);
         } else {
             res.status(404).send('Bookshelf not found.');
         }
     } catch (error) {
-        console.error(error);
         res.status(500).send('Internal Server Error');
     }
 });

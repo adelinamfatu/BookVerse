@@ -3,7 +3,9 @@
     <v-card class="overflow-y-auto" style="height: 95vh; width: 100%" color="brown-lighten-5" elevation="12">
         <div class="pa-4">
             
-            <h2 style="color: #37474F" class="mb-4 ml-8">Books in Bookshelf</h2>
+            <h2 style="color: #37474F" class="mb-4 ml-8">
+              {{ isDefault ? bookshelfTitle : 'Books in ' + bookshelfTitle }}
+            </h2>
 
             <v-row>
                 <v-col v-for="(book, index) in books" :key="index" cols="12" sm="6" md="4" lg="3">
@@ -28,6 +30,8 @@ export default {
   data() {
     return {
       books: [],
+      bookshelfTitle: '',
+      isDefault: false,
     };
   },
 
@@ -46,7 +50,11 @@ export default {
             'x-access-token': token,
           },
         });
-        this.books = response.data;
+
+        this.bookshelfTitle = response.data.title;
+        this.isDefault = response.data.isDefault;
+        this.books = response.data.books;
+
       } catch (error) {
         console.error('Error fetching books:', error);
       }
