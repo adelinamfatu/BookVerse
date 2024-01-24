@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <v-card class="overflow-y-auto" color="brown-lighten-5" style="height: 95vh; width: 100%" elevation="12">
+    <v-card class="overflow-y-auto" color="blue-grey-lighten-5" style="height: 95vh; width: 100%" elevation="12">
       <div class="pa-4">
         <v-row>
           <v-col cols="8">

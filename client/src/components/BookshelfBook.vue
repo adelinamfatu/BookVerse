@@ -26,7 +26,9 @@
         </template>
       </v-rating>
 
-      <v-btn v-if="showFinishedButton" @click="markFinished" color="primary" class="mt-3">Finished</v-btn>
+      <v-btn v-if="showFinishedButton" @click="markFinished" color="indigo-darken-1" class="mt-3">Finished?</v-btn>
+    
+      <v-btn v-if="showCurrentlyReadingButton" @click="markCurrentlyReading" color="blue-darken-1" class="mt-3">Currently reading?</v-btn>
     </v-card>
   </div>
 </template>
@@ -55,6 +57,10 @@ export default {
 
     showFinishedButton() {
       return this.bookshelfTitle === 'Currently reading';
+    },
+
+    showCurrentlyReadingButton() {
+      return this.bookshelfTitle === 'Want to read';
     },
   },
 
