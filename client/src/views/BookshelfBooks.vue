@@ -9,7 +9,7 @@
 
         <v-row>
           <v-col v-for="(book, index) in books" :key="index" cols="12" sm="6" md="4" lg="3">
-            <BookshelfBook :book="book" :bookshelfTitle="bookshelfTitle" />
+            <BookshelfBook :book="book" :bookshelfTitle="bookshelfTitle" @bookMoved="removeBookFromUI" />
           </v-col>
         </v-row>
 
@@ -57,6 +57,14 @@ export default {
 
       } catch (error) {
         console.error('Error fetching books:', error);
+      }
+    },
+
+    removeBookFromUI(isbn) {
+      const index = this.books.findIndex(book => book.isbn === isbn);
+
+      if (index !== -1) {
+        this.books.splice(index, 1);
       }
     },
   },

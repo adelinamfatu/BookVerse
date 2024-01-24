@@ -100,6 +100,8 @@ export default {
           },
         });
 
+        this.$emit('bookMoved', isbn);
+
       } catch (error) {
         //
       }
