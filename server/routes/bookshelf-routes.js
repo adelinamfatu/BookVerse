@@ -318,4 +318,91 @@ router.put('/update-rating/:bookshelfId/:isbn', verifyToken, async (req, res) =>
     }
 });
 
+router.post('/move-book/:bookshelfId/:isbn', verifyToken, async (req, res) => {
+    try {
+        const userEmail = req.user.email;
+        const sourceBookshelfId = req.params.bookshelfId;
+        const targetBookshelfTitle = req.body.targetBookshelfTitle;
+        const isbn = req.params.isbn;
+
+        if (!targetBookshelfTitle) {
+            return res.status(400).send('Target bookshelf title is required.');
+        }
+
+        const userRef = db.collection('users').doc(userEmail);
+        const userDoc = await userRef.get();
+
+        if (!userDoc.exists) {
+            return res.status(404).send('User not found.');
+        }
+
+        const userData = userDoc.data();
+        const sourceBookshelf = userData.bookshelves[sourceBookshelfId];
+
+        if (!sourceBookshelf) {
+            return res.status(404).send('Source bookshelf not found.');
+        }
+
+        if (!sourceBookshelf.isDefault) {
+            return res.status(400).send('Source bookshelf must be a default bookshelf.');
+        }
+
+        const targetBookshelfId = Object.keys(userData.bookshelves).find(
+            (bookshelfId) =>
+                userData.bookshelves[bookshelfId].isDefault &&
+                userData.bookshelves[bookshelfId].title === targetBookshelfTitle
+        );
+
+        if (!targetBookshelfId) {
+            return res.status(404).send('Target default bookshelf not found.');
+        }
+
+        const sourceBookshelfRef = db.collection('bookshelves').doc(sourceBookshelfId);
+        const targetBookshelfRef = db.collection('bookshelves').doc(targetBookshelfId);
+
+        const batch = db.batch();
+
+        const sourceBookshelfDoc = await sourceBookshelfRef.get();
+
+        if (!sourceBookshelfDoc.exists) {
+            return res.status(404).send('Source bookshelf not found.');
+        }
+
+        const sourceBookshelfData = sourceBookshelfDoc.data();
+
+        const sourceBook = sourceBookshelfData.books && sourceBookshelfData.books[isbn];
+
+        if (sourceBook) {
+            batch.update(sourceBookshelfRef, {
+                [`books.${isbn}`]: admin.firestore.FieldValue.delete(),
+            });
+        } else {
+            return res.status(404).send('Book not found in the source bookshelf.');
+        }
+
+        const targetBookshelfDoc = await targetBookshelfRef.get();
+        if (!targetBookshelfDoc.exists) {
+            return res.status(404).send('Target bookshelf not found.');
+        }
+
+        const targetBookshelfData = targetBookshelfDoc.data();
+        if (sourceBook) {
+            batch.update(targetBookshelfRef, {
+                [`books.${isbn}`]: {
+                    title: sourceBook.title || '',
+                    author: sourceBook.author || '',
+                    coverImage: sourceBook.coverImage || '',
+                },
+            });
+        }
+
+        await batch.commit();
+
+        res.status(200).send('Book moved successfully.');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 module.exports = router;

@@ -85,12 +85,32 @@ export default {
       }
     },
 
+    async moveBook(targetBookshelfTitle) {
+      const token = this.$store.getters['auth/firebaseToken'];
+
+      try {
+        const bookshelfId = this.$route.params.bookshelfId;
+        const isbn = this.book.isbn;
+
+        await axios.post(`http://localhost:6100/api/bookshelves/move-book/${bookshelfId}/${isbn}`, {
+          targetBookshelfTitle,
+        }, {
+          headers: {
+            'x-access-token': token,
+          },
+        });
+
+      } catch (error) {
+        //
+      }
+    },
+
     markFinished() {
-      // Implement your logic for marking the book as finished
+      this.moveBook('Read');
     },
 
     markCurrentlyReading() {
-      //
+      this.moveBook('Currently reading');
     },
   },
 
