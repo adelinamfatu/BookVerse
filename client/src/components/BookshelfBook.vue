@@ -26,9 +26,9 @@
         </template>
       </v-rating>
 
-      <v-btn v-if="showFinishedButton" @click="markFinished" color="indigo-darken-1" class="mt-3">Finished?</v-btn>
-    
       <v-btn v-if="showCurrentlyReadingButton" @click="markCurrentlyReading" color="blue-darken-1" class="mt-3">Currently reading?</v-btn>
+
+      <v-btn v-if="showFinishedButton" @click="markFinished" color="indigo-darken-1" class="mt-3">Finished?</v-btn>
     </v-card>
   </div>
 </template>
@@ -44,7 +44,6 @@ export default {
 
   data() {
     return {
-      rating: 0, 
       colors: ['red', 'orange', 'grey', 'cyan', 'green'],
       labels: ['bad', 'so so', 'ok', 'good', 'great'],
     };
@@ -88,6 +87,10 @@ export default {
 
     markFinished() {
       // Implement your logic for marking the book as finished
+    },
+
+    markCurrentlyReading() {
+      //
     },
   },
 

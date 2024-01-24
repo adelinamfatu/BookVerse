@@ -174,7 +174,6 @@ router.post('/add-book/:bookshelfId', verifyToken, async (req, res) => {
 
         const userRef = db.collection('users').doc(userEmail);
         const userDoc = await userRef.get();
-        console.log(userDoc);
 
         if (!userDoc.exists) {
             return res.status(404).send('User not found.');

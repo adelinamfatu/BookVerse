@@ -119,7 +119,7 @@ export default {
     },
 
     updateScreenSize() {
-      this.isDesktop = window.innerWidth >= 960; // Adjust the breakpoint as needed
+      this.isDesktop = window.innerWidth >= 960;
     },
   },
 
