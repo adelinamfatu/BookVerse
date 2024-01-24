@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import BookshelfBook from '../components/BookshelfBook.vue';
 
 export default {
@@ -26,12 +27,30 @@ export default {
 
   data() {
     return {
-      books: [
-        { id: 1, title: 'Book 1', author: 'Author 1' },
-        { id: 2, title: 'Book 2', author: 'Author 2' },
-        { id: 3, title: 'Book 3', author: 'Author 3' }
-      ],
+      books: [],
     };
+  },
+
+  created() {
+    this.fetchBooks();
+  },
+
+  methods: {
+    async fetchBooks() {
+      const token = this.$store.getters['auth/firebaseToken'];
+
+      try {
+        const bookshelfId = this.$route.params.bookshelfId;
+        const response = await axios.get(`http://localhost:6100/api/bookshelves/books/${bookshelfId}`, {
+          headers: {
+            'x-access-token': token,
+          },
+        });
+        this.books = response.data;
+      } catch (error) {
+        console.error('Error fetching books:', error);
+      }
+    },
   },
 };
 </script>

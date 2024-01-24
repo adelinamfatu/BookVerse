@@ -228,4 +228,31 @@ router.delete('/delete-book/:bookshelfId/:isbn', verifyToken, async (req, res) =
     }
 });
 
+router.get('/books/:bookshelfId', verifyToken, async (req, res) => {
+    try {
+        const bookshelfId = req.params.bookshelfId;
+
+        const bookshelfDoc = await db.collection('bookshelves').doc(bookshelfId).get();
+
+        if (bookshelfDoc.exists) {
+            const bookshelfData = bookshelfDoc.data();
+            const books = bookshelfData.books || {};
+
+            const bookList = Object.keys(books).map(isbn => ({
+                isbn,
+                title: books[isbn].title,
+                author: books[isbn].author,
+                coverImage: books[isbn].coverImage,
+            }));
+
+            res.status(200).send(bookList);
+        } else {
+            res.status(404).send('Bookshelf not found.');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 module.exports = router;
