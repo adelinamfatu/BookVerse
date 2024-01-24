@@ -10,10 +10,11 @@
 
       <v-rating
         v-if="showRating"
-        v-model="rating"
+        v-model="book.rating"
         :item-labels="labels"
         class="mt-3"
         size="small"
+        @input="updateRating"
       >
         <template v-slot:item-label="props">
           <span
@@ -31,6 +32,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   props: {
     book: Object,
@@ -52,6 +55,42 @@ export default {
 
     showFinishedButton() {
       return this.bookshelfTitle === 'Currently reading';
+    },
+  },
+
+  methods: {
+    async updateRating(newRating) {
+      const token = this.$store.getters['auth/firebaseToken'];
+
+      try {
+        const bookshelfId = this.$route.params.bookshelfId;
+        const isbn = this.book.isbn; 
+
+        await axios.put(`http://localhost:6100/api/bookshelves/update-rating/${bookshelfId}/${isbn}`, {
+          rating: newRating,
+        } , {
+          headers: {
+            'x-access-token': token,
+          },
+        });
+
+        console.log('Rating updated successfully');
+      } catch (error) {
+        console.error('Error updating rating:', error.message);
+      }
+    },
+
+    markFinished() {
+      // Implement your logic for marking the book as finished
+    },
+  },
+
+  watch: {
+    'book.rating': {
+      handler(newValue) {
+        this.updateRating(newValue);
+      },
+      deep: true, 
     },
   },
 };

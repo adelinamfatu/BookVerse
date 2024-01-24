@@ -243,6 +243,7 @@ router.get('/books/:bookshelfId', verifyToken, async (req, res) => {
                 title: books[isbn].title,
                 author: books[isbn].author,
                 coverImage: books[isbn].coverImage,
+                rating: books[isbn].rating
             }));
 
             const response = {
@@ -254,6 +255,58 @@ router.get('/books/:bookshelfId', verifyToken, async (req, res) => {
             res.status(200).send(response);
         } else {
             res.status(404).send('Bookshelf not found.');
+        }
+    } catch (error) {
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+router.put('/update-rating/:bookshelfId/:isbn', verifyToken, async (req, res) => {
+    try {
+        const bookshelfId = req.params.bookshelfId;
+        const isbn = req.params.isbn;
+        const { rating } = req.body;
+
+        if (!rating) {
+            return res.status(400).send('Rating is required.');
+        }
+
+        const bookshelfRef = db.collection('bookshelves').doc(bookshelfId);
+        const bookshelfDoc = await bookshelfRef.get();
+
+        if (!bookshelfDoc.exists) {
+            return res.status(404).send('Bookshelf not found.');
+        }
+
+        const bookshelfData = bookshelfDoc.data();
+
+        if (!bookshelfData.books || !bookshelfData.books[isbn]) {
+            return res.status(404).send('Book not found in the bookshelf.');
+        }
+
+        await bookshelfRef.update({
+            [`books.${isbn}.rating`]: rating,
+        });
+
+        const bookRef = db.collection('books').doc(isbn);
+        const bookDoc = await bookRef.get();
+
+        if (bookDoc.exists) {
+            const bookData = bookDoc.data();
+            const currentReviews = bookData.reviews || 0;
+            const currentRating = bookData.rating || 0;
+
+            const newReviews = currentReviews + 1;
+            const newOverallRating = ((currentRating * currentReviews) + rating) / newReviews;
+
+            await bookRef.update({
+                rating: newOverallRating,
+                reviews: newReviews,
+            });
+
+            res.status(200).send('Rating updated successfully');
+        } else {
+            res.status(404).send('Book not found in the books collection.');
         }
     } catch (error) {
         res.status(500).send('Internal Server Error');
