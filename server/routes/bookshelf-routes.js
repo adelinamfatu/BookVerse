@@ -140,6 +140,7 @@ router.delete('/delete/:bookshelfId', verifyToken, async (req, res) => {
 
 router.post('/add-book/:bookshelfId', verifyToken, async (req, res) => {
     try {
+        const userEmail = req.user.email;
         const bookshelfId = req.params.bookshelfId;
         const { isbn, title, author, coverImage } = req.body;
 
@@ -171,18 +172,23 @@ router.post('/add-book/:bookshelfId', verifyToken, async (req, res) => {
 
         const batch = db.batch();
 
-        const otherDefaultBookshelvesSnapshot = await db.collection('bookshelves').where('isDefault', '==', true).get();
+        const userRef = db.collection('users').doc(userEmail);
+        const userDoc = await userRef.get();
+        console.log(userDoc);
 
-        otherDefaultBookshelvesSnapshot.forEach((otherBookshelfDoc) => {
-            const otherBookshelfId = otherBookshelfDoc.id;
-            const otherBookshelfData = otherBookshelfDoc.data();
+        if (!userDoc.exists) {
+            return res.status(404).send('User not found.');
+        }
 
-            if (otherBookshelfId !== bookshelfId && otherBookshelfData.books && otherBookshelfData.books[isbn]) {
-                batch.update(db.collection('bookshelves').doc(otherBookshelfId), {
+        const userData = userDoc.data();
+
+        for (const defaultBookshelfId of Object.keys(userData.bookshelves)) {
+            if (userData.bookshelves[defaultBookshelfId].isDefault) {
+                batch.update(db.collection('bookshelves').doc(defaultBookshelfId), {
                     [`books.${isbn}`]: admin.firestore.FieldValue.delete(),
                 });
             }
-        });
+        }
 
         batch.update(bookshelfRef, {
             [`books.${isbn}`]: {
