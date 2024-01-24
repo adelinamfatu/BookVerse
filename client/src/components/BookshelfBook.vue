@@ -1,34 +1,40 @@
 <template>
-    <div class="card-container">
-        <v-card hover elevation="5" style="width: 7rem; height: 14rem">
+  <div class="card-container">
+    <v-card hover elevation="5" style="text-align: center; padding: 1rem;" width="90%">
 
-            <v-img :src="book.coverImage" height="170" contain></v-img>
+      <v-img :src="book.coverImage" height="150" contain></v-img>
 
-            <v-card-title align="center" style="font-size: 14px; font-weight: bold; margin: 0; padding: 0;">{{ book.title }}</v-card-title>
+      <v-card-title style="font-size: 18px; font-weight: bold;">{{ book.title }}</v-card-title>
 
-            <v-card-subtitle align="center" style="font-size: 10px; font-style: italic; margin: 0;">{{ book.author }}</v-card-subtitle>
+      <v-card-subtitle style="font-size: 14px; font-style: italic; margin: 0;">{{ book.author }}</v-card-subtitle>
 
-        </v-card>
-        
-        <v-rating
-                v-model="rating"
-                :item-labels="labels"
-                size="small">
-            <template v-slot:item-label="props">
-                <span
-                    class="font-weight-black text-caption"
-                    :class="`text-${colors[props.index]}`">
-                    {{ props.label }}
-                </span>
-            </template>
-        </v-rating>
-    </div>
+      <v-rating
+        v-if="showRating"
+        v-model="rating"
+        :item-labels="labels"
+        class="mt-3"
+        size="small"
+      >
+        <template v-slot:item-label="props">
+          <span
+            class="font-weight-black text-caption"
+            :class="`text-${colors[props.index]}`"
+          >
+            {{ props.label }}
+          </span>
+        </template>
+      </v-rating>
+
+      <v-btn v-if="showFinishedButton" @click="markFinished" color="primary" class="mt-3">Finished</v-btn>
+    </v-card>
+  </div>
 </template>
 
 <script>
 export default {
   props: {
     book: Object,
+    bookshelfTitle: String,
   },
 
   data() {
@@ -37,7 +43,17 @@ export default {
       colors: ['red', 'orange', 'grey', 'cyan', 'green'],
       labels: ['bad', 'so so', 'ok', 'good', 'great'],
     };
-  }
+  },
+
+  computed: {
+    showRating() {
+      return this.bookshelfTitle === 'Read';
+    },
+
+    showFinishedButton() {
+      return this.bookshelfTitle === 'Currently reading';
+    },
+  },
 };
 </script>
 
