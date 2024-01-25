@@ -71,10 +71,12 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      originalUserDetails: {},
+      userDetails: {},
       userDetails: {
         name: '',
         email: '',
@@ -92,8 +94,36 @@ export default {
   },
   
   methods: {
-    saveChanges() {
-      this.originalUserDetails = { ...this.userDetails };
+    async loadUserProfile() {
+      const token = this.$store.getters['auth/firebaseToken'];
+
+      try {
+        const response = await axios.get('http://localhost:6100/api/users/profile', {
+          headers: {
+            'x-access-token': token,
+          },
+        });
+        this.userDetails = response.data;
+        console.log(this.userDetails)
+      } catch (error) {
+        console.error('Error loading user profile:', error);
+      }
+    },
+
+    async saveChanges() {
+      const token = this.$store.getters['auth/firebaseToken'];
+
+      try {
+        const response = await axios.put('http://localhost:6100/api/users/update', this.userDetails, {
+          headers: {
+            'x-access-token': token,
+          },
+        });
+
+        //this.loadUserProfile();
+      } catch (error) {
+        console.error('Error saving user profile:', error);
+      }
     },
   },
 
@@ -106,6 +136,10 @@ export default {
       return !this.userDetails.profilePicture;
     },
   },
+
+  created() {
+    this.loadUserProfile();
+  }
 };
 </script>
 
