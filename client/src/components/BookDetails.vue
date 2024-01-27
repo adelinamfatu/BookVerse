@@ -188,6 +188,7 @@ export default {
           title: this.bookDetails.title,
           author: this.bookDetails.author,
           coverImage: this.bookDetails.coverImage,
+          nbPages: this.bookDetails.nbPages
         }, {
           headers: {
             'x-access-token': token,

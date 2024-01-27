@@ -142,7 +142,7 @@ router.post('/add-book/:bookshelfId', verifyToken, async (req, res) => {
     try {
         const userEmail = req.user.email;
         const bookshelfId = req.params.bookshelfId;
-        const { isbn, title, author, coverImage } = req.body;
+        const { isbn, title, author, coverImage, nbPages } = req.body;
 
         if (!isbn || !title || !author || !coverImage) {
             return res.status(400).send('Book details are required.');
@@ -162,7 +162,7 @@ router.post('/add-book/:bookshelfId', verifyToken, async (req, res) => {
                 [`books.${isbn}`]: {
                     title,
                     author,
-                    coverImage
+                    coverImage,
                 },
             });
 
@@ -193,7 +193,8 @@ router.post('/add-book/:bookshelfId', verifyToken, async (req, res) => {
             [`books.${isbn}`]: {
                 title,
                 author,
-                coverImage
+                coverImage,
+                nbPages
             },
         });
 
@@ -248,7 +249,9 @@ router.get('/books/:bookshelfId', verifyToken, async (req, res) => {
                 title: books[isbn].title,
                 author: books[isbn].author,
                 coverImage: books[isbn].coverImage,
-                rating: books[isbn].rating
+                rating: books[isbn].rating,
+                nbPages: books[isbn].nbPages,
+                progress: books[isbn].progress
             }));
 
             const response = {

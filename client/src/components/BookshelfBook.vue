@@ -26,9 +26,29 @@
         </template>
       </v-rating>
 
-      <v-btn v-if="showCurrentlyReadingButton" @click="markCurrentlyReading" color="blue-darken-1" class="mt-3">Currently reading?</v-btn>
+      <v-btn v-if="isFinished" @click="markCurrentlyReading" color="blue-darken-1" class="mt-3">Currently reading?</v-btn>
 
-      <v-btn v-if="showFinishedButton" @click="markFinished" color="indigo-darken-1" class="mt-3">Finished?</v-btn>
+      <v-btn v-if="isCurrentlyReading" @click="markFinished" color="indigo-darken-1" class="mt-3">Finished?</v-btn>
+    
+      <div v-if="isCurrentlyReading" class="mt-3" style="display: flex; align-items: center;">
+        <v-text-field
+          v-model="book.currentPage"
+          label="Current Page"
+          class="mr-2"
+          type="number"
+          :rules="[positiveNumber, currentPageLimit]"
+        ></v-text-field>
+
+        <span class="divider">/</span>
+
+        <v-text-field
+          v-model="book.nbPages"
+          label="Total Pages"
+          class="ml-2"
+          type="number"
+          readonly
+        ></v-text-field>
+      </div>
     </v-card>
   </div>
 </template>
@@ -46,6 +66,14 @@ export default {
     return {
       colors: ['red', 'orange', 'grey', 'cyan', 'green'],
       labels: ['bad', 'so so', 'ok', 'good', 'great'],
+      positiveNumber: (value) => {
+        const number = parseInt(value);
+        return !isNaN(number) && number > 0;
+      },
+      currentPageLimit: (value) => {
+        const number = parseInt(value, 10);
+        return number <= parseInt(this.book.nbPages, 10);
+      },
     };
   },
 
@@ -54,11 +82,11 @@ export default {
       return this.bookshelfTitle === 'Read';
     },
 
-    showFinishedButton() {
+    isCurrentlyReading() {
       return this.bookshelfTitle === 'Currently reading';
     },
 
-    showCurrentlyReadingButton() {
+    isFinished() {
       return this.bookshelfTitle === 'Want to read';
     },
   },

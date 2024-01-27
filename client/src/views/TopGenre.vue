@@ -1,6 +1,10 @@
 <template>
   <div class="container">
-    <v-card :color="slideColors[currentSlideIndex]" style="height: 80vh; width: 80%" elevation="12" class="mx-auto">
+    <v-card 
+      class="overflow-y-auto" 
+      :color="slideColors[currentSlideIndex]" 
+      style="height: 80vh; width: 80%" 
+      elevation="12">
       
       <v-card-actions>
         <v-btn @click="goBack">
@@ -16,19 +20,22 @@
           <v-carousel-item v-for="(item, index) in carouselItems" :key="index">
             <v-row align="center" justify="center">
               <v-col cols="12" sm="6">
-                <v-img :src="item.coverImage" contain aspect-ratio="1"></v-img>
+                <v-img :src="item.coverImage" 
+                  contain 
+                  aspect-ratio="1"
+                  ></v-img>
               </v-col>
               
-              <v-col cols="12" sm="6" class="text-center" style="padding-right: 5rem;">
-                <h2>{{ item.title }}</h2>
-                <div class="rating-section pa-4">
+              <v-col cols="12" sm="6" class="text-center">
+                <h2 class="headline">{{ item.title }}</h2>
+                <div class="pa-4">
                   <v-rating v-model="item.rating" 
                     readonly 
                     half-increments
                     ></v-rating>
                     <pre>{{ item.rating }}</pre>
                 </div>
-                <p style="text-align: justify;">{{ item.description }}</p>
+                <p class="description">{{ item.description }}</p>
               </v-col>
             </v-row>
           </v-carousel-item>
@@ -92,9 +99,22 @@ export default {
 
 <style scoped>
 .container {
-  background-color: #E3F2FD;
-  height: 100vh;
   display: flex;
   align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #E3F2FD;
+}
+
+.description {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  text-align: justify;
+}
+
+.headline {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0; 
 }
 </style>
