@@ -119,4 +119,29 @@ router.put('/favorites/remove/:isbn', verifyToken, async (req, res) => {
   }
 });
 
+router.get('/top/:genre', verifyToken, async (req, res) => {
+  try {
+    const genre = req.params.genre;
+
+    const snapshot = await db.collection('books')
+      .where('genre', '==', genre)
+      .orderBy('rating', 'desc')
+      .limit(10)
+      .get();
+
+    const topBooks = [];
+
+    snapshot.forEach((doc) => {
+      const { title, coverImage, author, description } = doc.data();
+      const isbn = doc.id;
+      topBooks.push({ isbn, title, coverImage, author, description });
+    });
+
+    res.status(200).send(topBooks);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 module.exports = router;

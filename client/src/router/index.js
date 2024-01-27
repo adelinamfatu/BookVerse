@@ -80,10 +80,7 @@ const routes = [
       {
         path: '/top/:genre',
         name: 'TopGenre',
-        components: {
-          default: () => import('@/views/TopGenre.vue'),
-          sidebar: () => import('@/components/Sidebar.vue')
-        },
+        component: () => import('@/views/TopGenre.vue'),
         meta: { requiresAuth: true },
       },
     ],
