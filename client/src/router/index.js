@@ -69,10 +69,10 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
-        path: '/mostpopular',
-        name: 'MostPopularBestsellers',
+        path: '/search',
+        name: 'Search',
         components: {
-          default: () => import('@/views/MostPopularBestsellers.vue'),
+          default: () => import('@/views/Search.vue'),
           sidebar: () => import('@/components/Sidebar.vue')
         },
         meta: { requiresAuth: true },
