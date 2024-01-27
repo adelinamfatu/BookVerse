@@ -11,8 +11,8 @@
         <v-col cols="12" sm="9">
           <div class="pa-4" style="text-align: center;">
             <img
-              v-if="userDetails.profilePicture || hasDefaultImage"
-              :src="userDetails.profilePicture || defaultImageSrc"
+              v-if="userDetails.profilePictureUrl || hasDefaultImage"
+              :src="userDetails.profilePictureUrl || defaultImageSrc"
               alt="Profile Picture"
               style="height: 100px; border: 1px solid #ccc; border-radius: 5px;"
               class="mb-4"
@@ -82,7 +82,7 @@ export default {
         email: '',
         gender: '',
         favoriteGenres: [],
-        profilePicture: null,
+        profilePictureUrl: null,
       },
       genders: ['Male', 'Female', 'Other'],
       genres: [
@@ -125,15 +125,15 @@ export default {
     },
 
     handleFileChange(event) {
-      this.userDetails.profilePicture = event.target.files[0];
+      this.userDetails.profilePictureUrl = event.target.files[0];
       this.uploadProfilePicture();
     },
 
     async uploadProfilePicture() {
-      if (this.userDetails.profilePicture) {
+      if (this.userDetails.profilePictureUrl) {
         const token = this.$store.getters['auth/firebaseToken'];
         const formData = new FormData();
-        formData.append('file', this.userDetails.profilePicture);
+        formData.append('file', this.userDetails.profilePictureUrl);
 
         try {
           await axios.put('http://localhost:6100/api/users/picture', formData, {
@@ -158,7 +158,8 @@ export default {
     },
     
     hasDefaultImage() {
-      return !this.userDetails.profilePicture;
+      console.log(this.userDetails.profilePictureUrl)
+      return !this.userDetails.profilePictureUrl;
     },
   },
 

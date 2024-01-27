@@ -29,8 +29,8 @@ router.get('/info', verifyToken, async (req, res) => {
 
     if (userDoc.exists) {
       const userInfo = userDoc.data();
-      const { name, profilePicture } = userInfo;
-      res.json({ name, profilePicture });
+      const { name, profilePictureUrl } = userInfo;
+      res.json({ name, profilePictureUrl });
     } else {
       res.status(404).json({ error: 'User not found' });
     }
@@ -103,7 +103,7 @@ router.put('/picture', verifyToken, async (req, res) => {
 
     const [signedUrl] = await file.getSignedUrl({
       action: 'read',
-      expires: '03-17-2999', 
+      expires: '01-01-2999', 
     });
 
     const userRef = db.collection('users').doc(req.user.email);
