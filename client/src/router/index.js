@@ -69,15 +69,6 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
-        path: '/search',
-        name: 'Search',
-        components: {
-          default: () => import('@/views/Search.vue'),
-          sidebar: () => import('@/components/Sidebar.vue')
-        },
-        meta: { requiresAuth: true },
-      },
-      {
         path: '/top/:genre',
         name: 'TopGenre',
         component: () => import('@/views/TopGenre.vue'),

@@ -1,8 +1,29 @@
 <template>
   <div class="container">
-    <v-card style="height: 95vh; width: 100%" color="blue-grey-lighten-5" elevation="12">
+    <v-card class="overflow-y-auto" style="height: 95vh; width: 100%" color="blue-grey-lighten-5" elevation="12">
       <div class="pa-4">
-        <h2 style="color: #37474F" class="mb-4 ml-8">Recommended for you</h2>  
+        <v-row>
+          <v-col md="6">
+            <h2 style="color: #37474F" class="ml-8">Recommended for you</h2>
+          </v-col>
+          <v-col md="6">
+            <v-autocomplete
+              v-model="searchQuery"
+              :items="[]"
+              label="Search"
+              placeholder="Enter book title, author, or genre"
+              auto-select-first
+              dense
+              item-text="name"
+              item-value="id" 
+              prepend-icon="mdi-magnify"
+              rounded
+              variant="solo"
+              theme="light"
+            ></v-autocomplete>
+          </v-col>
+        </v-row>
+
         <v-slide-group
           v-model="model"
           class="pa-4"
