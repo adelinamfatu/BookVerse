@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { db, auth } = require('../database');
+const { db, auth, storage } = require('../database');
 const verifyToken = require('../middleware/auth');
 
 router.post('/add', (req, res) => {
@@ -87,6 +87,32 @@ router.put('/update', verifyToken, async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+router.put('/picture', verifyToken, async (req, res) => {
+  try {
+    const bucket = storage.bucket();
+    const file = bucket.file(req.user.email);
+
+    await file.save(req.file.buffer, {
+      metadata: {
+        contentType: req.file.mimetype,
+      },
+    });
+
+    const [signedUrl] = await file.getSignedUrl({
+      action: 'read',
+      expires: '03-17-2999', 
+    });
+
+    const userRef = db.collection('users').doc(req.user.email);
+    await userRef.update({ profilePictureUrl: signedUrl });
+
+    res.status(200).json({ message: 'File uploaded successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 

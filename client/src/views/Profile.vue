@@ -19,11 +19,12 @@
             />
 
             <v-file-input
-              v-model="userDetails.profilePicture"
               label="Profile Picture"
               variant="solo"
               class="mb-4"
               bg-color="indigo-lighten-5"
+              ref="files"
+              @change="handleFileChange"
             ></v-file-input>
 
             <v-text-field
@@ -76,7 +77,6 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      userDetails: {},
       userDetails: {
         name: '',
         email: '',
@@ -104,7 +104,6 @@ export default {
           },
         });
         this.userDetails = response.data;
-        console.log(this.userDetails)
       } catch (error) {
         console.error('Error loading user profile:', error);
       }
@@ -120,9 +119,35 @@ export default {
           },
         });
 
-        //this.loadUserProfile();
       } catch (error) {
         console.error('Error saving user profile:', error);
+      }
+    },
+
+    handleFileChange(event) {
+      this.userDetails.profilePicture = event.target.files[0];
+      this.uploadProfilePicture();
+    },
+
+    async uploadProfilePicture() {
+      if (this.userDetails.profilePicture) {
+        const token = this.$store.getters['auth/firebaseToken'];
+        const formData = new FormData();
+        formData.append('file', this.userDetails.profilePicture);
+
+        try {
+          await axios.put('http://localhost:6100/api/users/picture', formData, {
+            headers: {
+              'x-access-token': token,
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+
+          console.log('File uploaded successfully');
+          this.loadUserProfile();
+        } catch (error) {
+          console.error('Error uploading file:', error);
+        }
       }
     },
   },
