@@ -42,6 +42,7 @@ export default {
     Book,
     MostPopular,
   },
+  
   setup() {
     const store = useStore();
     const model = ref([]);
