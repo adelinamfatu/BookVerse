@@ -10,15 +10,13 @@
 
       <v-carousel
           :continuous="false"
-          hide-delimiter-background
-          delimiter-icon="mdi-square"
-          :show-arrows="false"
+          hide-delimiters
           v-model="currentSlideIndex"
         >
           <v-carousel-item v-for="(item, index) in carouselItems" :key="index">
-            <v-row>
+            <v-row align="center" justify="center">
               <v-col cols="12" sm="6">
-                <v-img :src="item.coverImage" aspect-ratio="1"></v-img>
+                <v-img :src="item.coverImage" contain aspect-ratio="1"></v-img>
               </v-col>
               
               <v-col cols="12" sm="6">
@@ -67,11 +65,7 @@ export default {
     const store = useStore();
 
     const routeGenre = this.$route.params.genre;
-    if(routeGenre === 'scifi') {
-      this.genre = 'Sci-Fi'
-    } else {
-      this.genre = routeGenre.charAt(0).toUpperCase() + routeGenre.slice(1);
-    }
+    this.genre = routeGenre.charAt(0).toUpperCase() + routeGenre.slice(1);
 
     const token = store.getters['auth/firebaseToken'];
 

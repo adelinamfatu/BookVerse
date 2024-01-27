@@ -82,6 +82,7 @@ export default {
       dialogLogout: false,
       items: [
         { title: 'Dashboard', route: '/dashboard', icon: 'mdi-view-dashboard' },
+        { title: 'Search', route: '/search', icon: 'mdi-magnify' },
         { title: 'My bookshelves', route: '/bookshelves', icon: 'mdi-bookshelf' },
         { title: 'Favorites', route: '/favorites', icon: 'mdi-heart' },
         { title: 'Profile', route: '/profile', icon: 'mdi-account' },

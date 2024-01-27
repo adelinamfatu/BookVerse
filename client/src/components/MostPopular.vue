@@ -7,14 +7,8 @@
             <v-img src="@/assets/books-pile.png" height="40vh" contain></v-img>
           </v-col>
           <v-col>
-            <h2 class="mb-4" style="color: #01579B">{{ new Date().getFullYear() }} year 50 most popular bestsellers</h2>
+            <h2 class="mb-4" style="color: #01579B">{{ new Date().getFullYear() }} year 30 most popular bestsellers</h2>
             <p class="mb-4" style="color: #90A4AE">List of the most interesting books of the year based on customers and critics reviews</p>
-            
-            <router-link to="/mostpopular">
-              <v-btn rounded color="red-lighten-3">
-                <v-icon left>mdi-eye</v-icon>View all
-              </v-btn>
-            </router-link>
           </v-col>
           
           <v-col>
@@ -26,10 +20,10 @@
                     <v-icon size="40" style="color: white">mdi-alien</v-icon>
                   </v-avatar>
                   <v-card-title>
-                    <h2 style="color: white">Top 10 Sci-Fi books</h2>
+                    <h2 style="color: white">Top 10 Fantasy books</h2>
                   </v-card-title>
                   <v-card-subtitle>
-                    <p style="color: white;">Explore the fascinating world of science fiction literature.</p>
+                    <p style="color: white;">Explore the fascinating world of fantasy literature.</p>
                   </v-card-subtitle>
                 </v-row>
               </v-card>
@@ -58,10 +52,10 @@
                     <v-icon size="40" style="color: white">mdi-book</v-icon>
                   </v-avatar>
                   <v-card-title>
-                    <h2 style="color: white">Top 10 Classic books</h2>
+                    <h2 style="color: white">Top 10 Thriller books</h2>
                   </v-card-title>
                   <v-card-subtitle>
-                    <p style="color: white;">Experience timeless literature with our collection of classic books.</p>
+                    <p style="color: white;">Experience the suspense and excitement with our curated selection.</p>
                   </v-card-subtitle>
                 </v-row>
               </v-card>
