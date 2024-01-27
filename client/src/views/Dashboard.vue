@@ -3,23 +3,26 @@
     <v-card class="overflow-y-auto" style="height: 95vh; width: 100%" color="blue-grey-lighten-5" elevation="12">
       <div class="pa-4">
         <v-row>
+
           <v-col md="6">
             <h2 style="color: #37474F" class="ml-8">Recommended for you</h2>
           </v-col>
+          
           <v-col md="6">
             <v-autocomplete
               v-model="searchQuery"
-              :items="[]"
+              :items="filteredBooks"
               label="Search"
-              placeholder="Enter book title, author, or genre"
+              clearable
+              placeholder="Enter book title"
               auto-select-first
               dense
-              item-text="name"
-              item-value="id" 
+              item-text="title"
+              item-value="isbn"
               prepend-icon="mdi-magnify"
               rounded
               variant="solo"
-              theme="light"
+              @click:prepend="searchBooks"
             ></v-autocomplete>
           </v-col>
         </v-row>
@@ -51,7 +54,6 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
 import Book from '@/components/Book.vue';
 import MostPopular from '@/components/MostPopular.vue';
 import axios from 'axios';
@@ -63,14 +65,20 @@ export default {
     Book,
     MostPopular,
   },
-  
-  setup() {
-    const store = useStore();
-    const model = ref([]);
-    const books = ref([]);
 
-    const fetchBooks = async () => {
+  data() {
+    return {
+      model: [],
+      books: [],
+      filteredBooks: [],
+      searchQuery: '',
+    };
+  },
+
+  methods: {
+    async fetchBooks() {
       try {
+        const store = useStore();
         const token = store.getters['auth/firebaseToken'];
         const response = await axios.get('http://localhost:6100/api/books/all', {
           headers: {
@@ -78,20 +86,23 @@ export default {
           },
         });
 
-        books.value = response.data;
+        this.books = response.data;
+        this.filteredBooks = response.data;
       } catch (error) {
         console.error('Error fetching books:', error);
       }
-    };
+    },
 
-    onMounted(() => {
-      fetchBooks();
-    });
+    searchBooks() {
+      if (this.searchQuery) {
+        const isbn = encodeURIComponent(this.searchQuery);
+        this.$router.push(`/book/${isbn}`);
+      }
+    },
+  },
 
-    return {
-      model,
-      books,
-    };
+  mounted() {
+    this.fetchBooks();
   },
 };
 </script>
