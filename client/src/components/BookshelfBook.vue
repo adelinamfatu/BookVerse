@@ -37,6 +37,7 @@
           class="mr-2"
           type="number"
           :rules="[positiveNumber, currentPageLimit]"
+          @blur="updateCurrentPage"
         ></v-text-field>
 
         <span class="divider">/</span>
@@ -141,6 +142,29 @@ export default {
 
     markCurrentlyReading() {
       this.moveBook('Currently reading');
+    },
+
+    async updateCurrentPage() {
+      const token = this.$store.getters['auth/firebaseToken'];
+      
+      if(this.book.currentPage > 0 && this.book.currentPage <= this.book.nbPages) {
+        try {
+          const bookshelfId = this.$route.params.bookshelfId;
+          const isbn = this.book.isbn;
+
+          await axios.put(`http://localhost:6100/api/bookshelves/update-current-page/${bookshelfId}/${isbn}`, {
+            currentPage: this.book.currentPage,
+          }, {
+            headers: {
+              'x-access-token': token,
+            },
+          });
+
+          console.log('Current page updated successfully');
+        } catch (error) {
+          console.error('Error updating current page:', error.message);
+        }
+      }
     },
   },
 

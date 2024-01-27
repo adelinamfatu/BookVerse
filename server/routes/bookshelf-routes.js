@@ -251,7 +251,7 @@ router.get('/books/:bookshelfId', verifyToken, async (req, res) => {
                 coverImage: books[isbn].coverImage,
                 rating: books[isbn].rating,
                 nbPages: books[isbn].nbPages,
-                progress: books[isbn].progress
+                currentPage: books[isbn].currentPage
             }));
 
             const response = {
@@ -404,6 +404,39 @@ router.post('/move-book/:bookshelfId/:isbn', verifyToken, async (req, res) => {
         res.status(200).send('Book moved successfully.');
     } catch (error) {
         console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+router.put('/update-current-page/:bookshelfId/:isbn', verifyToken, async (req, res) => {
+    try {
+        const bookshelfId = req.params.bookshelfId;
+        const isbn = req.params.isbn;
+        const { currentPage } = req.body;
+
+        if (!currentPage) {
+            return res.status(400).send('Current page is required.');
+        }
+
+        const bookshelfRef = db.collection('bookshelves').doc(bookshelfId);
+        const bookshelfDoc = await bookshelfRef.get();
+
+        if (!bookshelfDoc.exists) {
+            return res.status(404).send('Bookshelf not found.');
+        }
+
+        const bookshelfData = bookshelfDoc.data();
+
+        if (!bookshelfData.books || !bookshelfData.books[isbn]) {
+            return res.status(404).send('Book not found in the bookshelf.');
+        }
+
+        await bookshelfRef.update({
+            [`books.${isbn}.currentPage`]: currentPage,
+        });
+
+        res.status(200).send('Current page updated successfully');
+    } catch (error) {
         res.status(500).send('Internal Server Error');
     }
 });
