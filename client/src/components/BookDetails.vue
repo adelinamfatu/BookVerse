@@ -254,9 +254,9 @@ export default {
 }
 
 .description {
-    padding-left: 2rem;
-    padding-right: 2rem;
-    text-align: justify;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  text-align: justify;
 }
 
 .pointer-on-hover {

@@ -132,9 +132,9 @@ router.get('/top/:genre', verifyToken, async (req, res) => {
     const topBooks = [];
 
     snapshot.forEach((doc) => {
-      const { title, coverImage, author, description } = doc.data();
+      const { title, coverImage, author, description, rating } = doc.data();
       const isbn = doc.id;
-      topBooks.push({ isbn, title, coverImage, author, description });
+      topBooks.push({ isbn, title, coverImage, author, description, rating });
     });
 
     res.status(200).send(topBooks);

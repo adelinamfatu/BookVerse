@@ -19,9 +19,16 @@
                 <v-img :src="item.coverImage" contain aspect-ratio="1"></v-img>
               </v-col>
               
-              <v-col cols="12" sm="6">
+              <v-col cols="12" sm="6" class="text-center" style="padding-right: 5rem;">
                 <h2>{{ item.title }}</h2>
-                <p>{{ item.description }}</p>
+                <div class="rating-section pa-4">
+                  <v-rating v-model="item.rating" 
+                    readonly 
+                    half-increments
+                    ></v-rating>
+                    <pre>{{ item.rating }}</pre>
+                </div>
+                <p style="text-align: justify;">{{ item.description }}</p>
               </v-col>
             </v-row>
           </v-carousel-item>
