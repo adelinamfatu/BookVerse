@@ -68,6 +68,24 @@ const routes = [
         },
         meta: { requiresAuth: true },
       },
+      {
+        path: '/mostpopular',
+        name: 'MostPopularBestsellers',
+        components: {
+          default: () => import('@/views/MostPopularBestsellers.vue'),
+          sidebar: () => import('@/components/Sidebar.vue')
+        },
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/top/:genre',
+        name: 'TopGenre',
+        components: {
+          default: () => import('@/views/TopGenre.vue'),
+          sidebar: () => import('@/components/Sidebar.vue')
+        },
+        meta: { requiresAuth: true },
+      },
     ],
   },
 ]

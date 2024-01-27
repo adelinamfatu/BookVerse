@@ -9,7 +9,7 @@
         </v-col>
 
         <v-col cols="12" sm="9">
-          <div class="pa-4" style="text-align: center;">
+          <div style="text-align: center;">
             <img
               v-if="userDetails.profilePictureUrl || hasDefaultImage"
               :src="userDetails.profilePictureUrl || defaultImageSrc"

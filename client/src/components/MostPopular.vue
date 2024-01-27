@@ -9,9 +9,12 @@
           <v-col>
             <h2 class="mb-4" style="color: #01579B">{{ new Date().getFullYear() }} year 50 most popular bestsellers</h2>
             <p class="mb-4" style="color: #90A4AE">List of the most interesting books of the year based on customers and critics reviews</p>
-            <v-btn rounded color="red-lighten-3">
-              <v-icon left>mdi-eye</v-icon>View all
-            </v-btn>
+            
+            <router-link to="/mostpopular">
+              <v-btn rounded color="red-lighten-3">
+                <v-icon left>mdi-eye</v-icon>View all
+              </v-btn>
+            </router-link>
           </v-col>
           <v-col>
             
@@ -35,7 +38,7 @@
                     <v-icon size="40" style="color: white">mdi-heart</v-icon>
                 </v-avatar>
                 <v-card-title>
-                    <h2 style="color: white">Top 30 Romance books</h2>
+                    <h2 style="color: white">Top 10 Romance books</h2>
                 </v-card-title>
                 <v-card-subtitle>
                     <p style="color: white;">Discover love stories that will captivate your heart.</p>
@@ -49,7 +52,7 @@
                     <v-icon size="40" style="color: white">mdi-book</v-icon>
                   </v-avatar>
                   <v-card-title>
-                    <h2 style="color: white">Top 50 Classic books</h2>
+                    <h2 style="color: white">Top 10 Classic books</h2>
                   </v-card-title>
                   <v-card-subtitle>
                     <p style="color: white;">Experience timeless literature with our collection of classic books.</p>
