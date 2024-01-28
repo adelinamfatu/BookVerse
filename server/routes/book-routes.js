@@ -21,6 +21,43 @@ router.get('/all', verifyToken, async (req, res) => {
   }
 });
 
+router.get('/recommended', verifyToken, async (req, res) => {
+  try {
+    const userEmail = req.user.email;
+
+    if (!userEmail) {
+      return res.status(400).json({ error: 'User email is required' });
+    }
+
+    const userSnapshot = await db.collection('users').doc(userEmail).get();
+
+    if (userSnapshot.empty) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const favoriteGenres = userSnapshot.data().favoriteGenres;
+
+    const recommendedBooksSnapshot = await db.collection('books')
+      .where('genre', 'in', favoriteGenres)
+      .orderBy('rating', 'desc')
+      .limit(20)
+      .get();
+
+    const recommendedBooks = [];
+
+    recommendedBooksSnapshot.forEach((doc) => {
+      const { title, coverImage, author, description, rating } = doc.data();
+      const isbn = doc.id;
+      recommendedBooks.push({ isbn, title, coverImage, author, description, rating });
+    });
+
+    res.status(200).send(recommendedBooks);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 router.get('/details/:isbn', verifyToken, async (req, res) => {
   try {
     const isbn = req.params.isbn;
@@ -156,7 +193,7 @@ router.get('/top', verifyToken, async (req, res) => {
     snapshot.forEach((doc) => {
       const { coverImage, title, genre, author, rating, reviews } = doc.data();
       const isbn = doc.id;
-      topBooks.push({ coverImage, title, genre, author, rating, reviews });
+      topBooks.push({ cover: coverImage, title, genre, author, rating, reviews });
     });
 
     res.status(200).send(topBooks);

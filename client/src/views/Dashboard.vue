@@ -61,7 +61,7 @@ import { useStore } from 'vuex';
 
 export default {
   name: 'Dashboard',
-  
+
   components: {
     Book,
     MostPopular,
@@ -77,6 +77,22 @@ export default {
   },
 
   methods: {
+    async fetchRecommendedBooks() {
+      try {
+        const store = useStore();
+        const token = store.getters['auth/firebaseToken'];
+        const response = await axios.get('http://localhost:6100/api/books/recommended', {
+          headers: {
+            'x-access-token': token,
+          },
+        });
+
+        this.books = response.data;
+      } catch (error) {
+        console.error('Error fetching books:', error);
+      }
+    },
+
     async fetchBooks() {
       try {
         const store = useStore();
@@ -87,7 +103,6 @@ export default {
           },
         });
 
-        this.books = response.data;
         this.filteredBooks = response.data;
       } catch (error) {
         console.error('Error fetching books:', error);
@@ -104,6 +119,7 @@ export default {
 
   mounted() {
     this.fetchBooks();
+    this.fetchRecommendedBooks();
   },
 };
 </script>
