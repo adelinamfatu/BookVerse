@@ -62,7 +62,7 @@ async function addUserToFirestore(allBookshelfTitles, email, gender, name, profi
     }
 }
 
-for (let i = 1; i <= 10; i++) {
+for (let i = 1; i <= 100; i++) {
     const email = faker.internet.email();
     const gender = faker.helpers.arrayElement(['Male', 'Female']);
     const name = faker.person.fullName({ sex: gender });
