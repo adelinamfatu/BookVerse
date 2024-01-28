@@ -9,11 +9,13 @@
           <v-col>
             <h2 class="mb-4" style="color: #01579B">{{ new Date().getFullYear() }} year 30 most popular bestsellers</h2>
             <p class="mb-4" style="color: #90A4AE">List of the most interesting books of the year based on customers and critics reviews</p>
+            <v-btn @click="viewAllBooks" color="light-blue-darken-2">
+              <v-icon left>mdi-book-open</v-icon> View All <template></template>
+            </v-btn>
           </v-col>
           
           <v-col>
-            
-            <router-link to="/top/scifi">
+            <router-link to="/top/fantasy">
               <v-card class="pa-4 mx-auto" style="height: 12vh; width: 95%; border-radius: 30px" elevation="10" color="blue-lighten-4">
                 <v-row align="center">
                   <v-avatar>
@@ -45,7 +47,7 @@
               </v-card>
             </router-link>
 
-            <router-link to="/top/classic">
+            <router-link to="/top/thriller">
               <v-card class="pa-4 mx-auto mt-4" style="height: 12vh; width: 95%; border-radius: 30px" elevation="10" color="green-lighten-4">
                 <v-row align="center">
                   <v-avatar>
@@ -67,6 +69,16 @@
     </v-col>
   </v-row>
 </template>
+
+<script>
+export default {
+  methods: {
+    viewAllBooks() {
+      this.$router.push('/topbestsellers');
+    }
+  }
+}
+</script>
 
 <style scoped>
 a {

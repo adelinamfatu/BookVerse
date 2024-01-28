@@ -74,6 +74,15 @@ const routes = [
         component: () => import('@/views/TopGenre.vue'),
         meta: { requiresAuth: true },
       },
+      {
+        path: '/topbestsellers',
+        name: 'TopBestsellers',
+        components: {
+          default: () => import('@/views/TopBestsellers.vue'),
+          sidebar: () => import('@/components/Sidebar.vue')
+        },
+        meta: { requiresAuth: true },
+      },
     ],
   },
 ]
