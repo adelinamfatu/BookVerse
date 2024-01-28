@@ -5,7 +5,39 @@
         <v-btn @click="goBack">
           <v-icon>mdi-arrow-left</v-icon> Return
         </v-btn>
+        <v-btn v-if="hasComments" @click="showCommentsDialog" class="ml-auto" color="teal darken-2">
+          See Comments
+        </v-btn>
       </v-card-actions>
+
+      <v-dialog v-model="commentsDialog" max-width="400">
+        <v-card>
+          <v-card-title class="text-center">Comments</v-card-title>
+
+          <v-list>
+            <v-list-item-group v-if="bookDetails.comments && Object.keys(bookDetails.comments).length > 0">
+              <v-list-item v-for="(comment, user) in bookDetails.comments" :key="user">
+                <v-list-item-content class="comment-container">
+                  <div class="oval-container">
+                    <v-list-item-subtitle class="user-comment-text">{{ user }}</v-list-item-subtitle>
+                    <v-list-item-title class="user-comment-text">{{ comment }}</v-list-item-title>
+                  </div>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+
+            <v-list-item v-else>
+              <v-list-item-content>No comments available.</v-list-item-content>
+            </v-list-item>
+          </v-list>
+
+          <v-card-actions class="justify-center">
+            <v-btn icon @click="commentsDialog = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 
       <v-row no-gutters>
         <v-col cols="12" md="6">
@@ -91,13 +123,19 @@ export default {
       userBookshelves: [],
       selectedBookshelf: null,
       userTags: [],
-      selectedTags: []
+      selectedTags: [],
+      commentsDialog: false,
+      hasComments: false,
     };
   },
 
   methods: {
     goBack() {
       this.$router.go(-1);
+    },
+
+    showCommentsDialog() {
+      this.commentsDialog = true;
     },
 
     toggleTag(tag) {
@@ -122,6 +160,7 @@ export default {
         
         this.bookDetails = response.data;
         this.isFavorite = response.data.isFavorite;
+        this.hasComments = response.data.comments && Object.keys(response.data.comments).length > 0;
       } catch (error) {
         console.error('Error fetching book details:', error);
       }
@@ -262,5 +301,31 @@ export default {
 
 .pointer-on-hover {
     cursor: pointer !important;
+}
+
+.user-text {
+  font-size: 0.8rem; 
+  font-weight: normal; 
+  color: grey;
+}
+
+.comment-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.oval-container {
+  border-radius: 15px; 
+  padding: 8px; 
+  background-color: #e0e0e0; 
+  margin-bottom: 8px; 
+  display: inline-block; 
+}
+
+.user-comment-text {
+  font-size: 1rem; 
+  font-weight: normal;
+  color: grey; 
 }
 </style>
