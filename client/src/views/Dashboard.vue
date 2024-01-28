@@ -61,6 +61,7 @@ import { useStore } from 'vuex';
 
 export default {
   name: 'Dashboard',
+  
   components: {
     Book,
     MostPopular,

@@ -144,4 +144,26 @@ router.get('/top/:genre', verifyToken, async (req, res) => {
   }
 });
 
+router.get('/top', verifyToken, async (req, res) => {
+  try {
+    const snapshot = await db.collection('books')
+      .orderBy('rating', 'desc')
+      .limit(30)
+      .get();
+
+    const topBooks = [];
+
+    snapshot.forEach((doc) => {
+      const { coverImage, title, genre, author, rating, reviews } = doc.data();
+      const isbn = doc.id;
+      topBooks.push({ coverImage, title, genre, author, rating, reviews });
+    });
+
+    res.status(200).send(topBooks);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 module.exports = router;
