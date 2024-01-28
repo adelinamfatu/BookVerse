@@ -26,7 +26,6 @@ async function addBookToFirestore(title, author, cover, year, house, genre, isbn
 }
 
 for (let i = 1; i <= 20; i++) {
-  console.log('Generating book ' + i);
   const title = faker.word.words({ count: { min: 1, max: 6 } });
   const bookTitle = title.charAt(0).toUpperCase() + title.slice(1);
   const authorName = faker.person.fullName();
