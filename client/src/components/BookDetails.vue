@@ -327,5 +327,7 @@ export default {
   font-size: 1rem; 
   font-weight: normal;
   color: grey; 
+  word-wrap: break-word;
+  white-space: pre-line;
 }
 </style>

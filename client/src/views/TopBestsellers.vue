@@ -18,8 +18,8 @@
                         {{ value }}
                         </v-chip>
                     </template>
-                    <template v-slot:item.coverImage="{ item }">
-                        <v-img :src="item.coverImage" width="50" height="50"></v-img>
+                    <template v-slot:item.cover="{ item }">
+                        <v-img :src="item.cover" width="50" height="50"></v-img>
                     </template>
                 </v-data-table>
             </div>
