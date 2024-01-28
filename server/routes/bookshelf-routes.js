@@ -251,7 +251,8 @@ router.get('/books/:bookshelfId', verifyToken, async (req, res) => {
                 coverImage: books[isbn].coverImage,
                 rating: books[isbn].rating,
                 nbPages: books[isbn].nbPages,
-                currentPage: books[isbn].currentPage
+                currentPage: books[isbn].currentPage,
+                review: books[isbn].review
             }));
 
             const response = {
@@ -437,6 +438,58 @@ router.put('/update-current-page/:bookshelfId/:isbn', verifyToken, async (req, r
 
         res.status(200).send('Current page updated successfully');
     } catch (error) {
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+router.put('/update-review/:bookshelfId/:isbn', verifyToken, async (req, res) => {
+    try {
+        const bookshelfId = req.params.bookshelfId;
+        const isbn = req.params.isbn;
+        const { review } = req.body;
+
+        if (review === undefined || review === null) {
+            return res.status(400).send('Review is required.');
+        }
+
+        const bookshelfRef = db.collection('bookshelves').doc(bookshelfId);
+        const bookshelfDoc = await bookshelfRef.get();
+
+        if (!bookshelfDoc.exists) {
+            return res.status(404).send('Bookshelf not found.');
+        }
+
+        const bookshelfData = bookshelfDoc.data();
+
+        if (!bookshelfData.books || !bookshelfData.books[isbn]) {
+            return res.status(404).send('Book not found in the bookshelf.');
+        }
+
+        const updateData = {
+            [`books.${isbn}.review`]: review,
+        };
+
+        await bookshelfRef.update(updateData);
+
+        const bookRef = db.collection('books').doc(isbn);
+        const bookDoc = await bookRef.get();
+
+        if (bookDoc.exists) {
+            const userReviewMap = bookDoc.data().userReviewMap || {};
+            const userEmail = req.user.email;
+
+            userReviewMap[userEmail] = review;
+
+            await bookRef.update({
+                comments: userReviewMap,
+            });
+
+            res.status(200).send('Review and comment updated successfully');
+        } else {
+            res.status(404).send('Book not found in the books collection.');
+        }
+    } catch (error) {
+        console.error(error);
         res.status(500).send('Internal Server Error');
     }
 });

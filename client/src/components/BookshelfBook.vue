@@ -9,7 +9,7 @@
       <v-card-subtitle style="font-size: 14px; font-style: italic; margin: 0;">{{ book.author }}</v-card-subtitle>
 
       <v-rating
-        v-if="showRating"
+        v-if="isFinished"
         v-model="book.rating"
         :item-labels="labels"
         class="mt-3"
@@ -26,10 +26,18 @@
         </template>
       </v-rating>
 
-      <v-btn v-if="isFinished" @click="markCurrentlyReading" color="blue-darken-1" class="mt-3">Currently reading?</v-btn>
+      <v-btn v-if="isWantToRead" @click="markCurrentlyReading" color="blue-darken-1" class="mt-3">Currently reading?</v-btn>
 
       <v-btn v-if="isCurrentlyReading" @click="markFinished" color="indigo-darken-1" class="mt-3">Finished?</v-btn>
     
+      <v-textarea
+        v-if="isFinished"
+        v-model="book.review"
+        label="Review"
+        rows="2"
+        @blur="updateReview"
+      ></v-textarea>
+
       <div v-if="isCurrentlyReading" class="mt-3" style="display: flex; align-items: center;">
         <v-text-field
           v-model="book.currentPage"
@@ -79,7 +87,7 @@ export default {
   },
 
   computed: {
-    showRating() {
+    isFinished() {
       return this.bookshelfTitle === 'Read';
     },
 
@@ -87,7 +95,7 @@ export default {
       return this.bookshelfTitle === 'Currently reading';
     },
 
-    isFinished() {
+    isWantToRead() {
       return this.bookshelfTitle === 'Want to read';
     },
   },
@@ -164,6 +172,28 @@ export default {
         } catch (error) {
           console.error('Error updating current page:', error.message);
         }
+      }
+    },
+
+    async updateReview() {
+      const token = this.$store.getters['auth/firebaseToken'];
+
+      try {
+        const bookshelfId = this.$route.params.bookshelfId;
+        const isbn = this.book.isbn;
+        const review = this.book.review;
+
+        await axios.put(`http://localhost:6100/api/bookshelves/update-review/${bookshelfId}/${isbn}`, {
+          review: review,
+        }, {
+          headers: {
+            'x-access-token': token,
+          },
+        });
+
+        console.log('Review updated successfully');
+      } catch (error) {
+        console.error('Error updating review:', error.message);
       }
     },
   },
