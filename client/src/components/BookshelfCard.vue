@@ -27,7 +27,10 @@
         <v-card-title>
           <template v-if="!isEditing">{{ editedTitle }}</template>
           <template v-else>
-            <v-text-field v-model="editedTitle" label="Edit Title"></v-text-field>
+            <v-text-field 
+              :disabled="isDefault"
+              v-model="editedTitle" 
+              label="Edit Title"></v-text-field>
           </template>
         </v-card-title>
       </v-col>
@@ -57,6 +60,7 @@
 
 <script>
 import axios from 'axios';
+import { toast } from 'vue3-toastify';
 
 export default {
   props: {
@@ -78,6 +82,13 @@ export default {
   },
 
   methods: {
+    showToast(message, type) {
+      toast(message, {
+        autoClose: 3000,
+        type: type,
+      });
+    },
+
     toggleShow() {
       this.show = !this.show;
     },
@@ -102,10 +113,7 @@ export default {
     confirmDelete() {
       this.$emit('delete-bookshelf', this.id);
       this.deleteDialogVisible = false;
-    },
-
-    deleteBookshelf() {
-      this.$emit('delete-bookshelf', this.id);
+      this.showToast('Bookshelf deleted succesfully', 'success');
     },
 
     handleColorChange(newColor) {
@@ -130,10 +138,14 @@ export default {
         },
       })
       .then(response => {
-        console.log('Update successful', response.data);
+        if (response.status === 200) {
+          this.showToast(response.data, 'success');
+        } else {
+          this.showToast('Error updating the bookshelf. Please try again.', 'error');
+        }
       })
       .catch(error => {
-        console.error('Error updating bookshelf', error);
+        this.showToast('Error updating the bookshelf. Please try again.', 'error');
       });
     },
 

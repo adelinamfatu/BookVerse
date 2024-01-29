@@ -64,6 +64,7 @@
 
 <script>
 import axios from 'axios';
+import { toast } from 'vue3-toastify';
 
 export default {
   props: {
@@ -101,6 +102,13 @@ export default {
   },
 
   methods: {
+    showToast(message, type) {
+      toast(message, {
+        autoClose: 3000,
+        type: type,
+      });
+    },
+
     async updateRating(newRating) {
       const token = this.$store.getters['auth/firebaseToken'];
 
@@ -116,9 +124,13 @@ export default {
           },
         });
 
-        console.log('Rating updated successfully');
+        if (response.status === 200) {
+          this.showToast(response.data.message, 'success');
+        } else {
+          this.showToast('Error updating the rating. Please try again.', 'error');
+        }
       } catch (error) {
-        console.error('Error updating rating:', error.message);
+        this.showToast('Error updating the rating. Please try again.', 'error');
       }
     },
 
@@ -140,7 +152,7 @@ export default {
         this.$emit('bookMoved', isbn);
 
       } catch (error) {
-        //
+        this.showToast('Error moving the book to another bookshelf. Please try again.', 'error');
       }
     },
 
@@ -168,9 +180,13 @@ export default {
             },
           });
 
-          console.log('Current page updated successfully');
+          if (response.status === 200) {
+            this.showToast(response.data.message, 'success');
+          } else {
+            this.showToast('Error updating the progress. Please try again.', 'error');
+          }
         } catch (error) {
-          console.error('Error updating current page:', error.message);
+          this.showToast('Error updating the progress. Please try again.', 'error');
         }
       }
     },
@@ -191,9 +207,13 @@ export default {
           },
         });
 
-        console.log('Review updated successfully');
+        if (response.status === 200) {
+          this.showToast(response.data.message, 'success');
+        } else {
+          this.showToast('Error updating the review. Please try again.', 'error');
+        }
       } catch (error) {
-        console.error('Error updating review:', error.message);
+        this.showToast('Error updating the review. Please try again.', 'error');
       }
     },
   },
