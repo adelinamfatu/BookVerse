@@ -116,7 +116,7 @@ export default {
         const bookshelfId = this.$route.params.bookshelfId;
         const isbn = this.book.isbn; 
 
-        await axios.put(`http://localhost:6100/api/bookshelves/update-rating/${bookshelfId}/${isbn}`, {
+        const response = await axios.put(`http://localhost:6100/api/bookshelves/update-rating/${bookshelfId}/${isbn}`, {
           rating: newRating,
         } , {
           headers: {
@@ -125,7 +125,7 @@ export default {
         });
 
         if (response.status === 200) {
-          this.showToast(response.data.message, 'success');
+          this.showToast(response.data, 'success');
         } else {
           this.showToast('Error updating the rating. Please try again.', 'error');
         }
@@ -172,7 +172,7 @@ export default {
           const bookshelfId = this.$route.params.bookshelfId;
           const isbn = this.book.isbn;
 
-          await axios.put(`http://localhost:6100/api/bookshelves/update-current-page/${bookshelfId}/${isbn}`, {
+          const response = await axios.put(`http://localhost:6100/api/bookshelves/update-current-page/${bookshelfId}/${isbn}`, {
             currentPage: this.book.currentPage,
           }, {
             headers: {
@@ -181,7 +181,7 @@ export default {
           });
 
           if (response.status === 200) {
-            this.showToast(response.data.message, 'success');
+            this.showToast(response.data, 'success');
           } else {
             this.showToast('Error updating the progress. Please try again.', 'error');
           }
@@ -199,7 +199,7 @@ export default {
         const isbn = this.book.isbn;
         const review = this.book.review;
 
-        await axios.put(`http://localhost:6100/api/bookshelves/update-review/${bookshelfId}/${isbn}`, {
+        const response = await axios.put(`http://localhost:6100/api/bookshelves/update-review/${bookshelfId}/${isbn}`, {
           review: review,
         }, {
           headers: {
@@ -208,7 +208,7 @@ export default {
         });
 
         if (response.status === 200) {
-          this.showToast(response.data.message, 'success');
+          this.showToast(response.data, 'success');
         } else {
           this.showToast('Error updating the review. Please try again.', 'error');
         }
