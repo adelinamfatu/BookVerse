@@ -5,6 +5,7 @@ const state = {
   allBooks: [],
   filteredBooks: [],
   favoriteBooks: [],
+  topBooks: [],
 };
 
 const getters = {
@@ -12,6 +13,7 @@ const getters = {
   getAllBooks: (state) => state.allBooks,
   getFilteredBooks: (state) => state.filteredBooks,
   getFavoriteBooks: (state) => state.favoriteBooks,
+  getTopBooks: (state) => state.topBooks,
 };
 
 const actions = {
@@ -78,6 +80,17 @@ const actions = {
       console.error('Error removing from favorites:', error);
     }
   },
+
+  async fetchTopBooks({ commit, rootGetters }) {
+    const token = rootGetters['auth/firebaseToken'];
+
+    try {
+      const topBooks = await booksApi.getTopBooks(token);
+      commit('setTopBooks', topBooks);
+    } catch (error) {
+      console.error('Error fetching top books:', error);
+    }
+  },
 };
 
 const mutations = {
@@ -95,6 +108,10 @@ const mutations = {
 
   setFavoriteBooks(state, favoriteBooks) {
     state.favoriteBooks = favoriteBooks;
+  },
+
+  setTopBooks(state, topBooks) {
+    state.topBooks = topBooks;
   },
 };
 

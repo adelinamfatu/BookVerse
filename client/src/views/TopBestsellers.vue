@@ -6,7 +6,7 @@
             </div>
             <div class="half-width">
                 <v-data-table 
-                    :items="books"
+                    :items="topBooks"
                     :items-per-page-options="[
                         { value: 5, title: '5' },
                         { value: 10, title: '10' },
@@ -28,43 +28,24 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { useStore } from 'vuex';
-
 export default {
   name: 'TopBestsellers',
 
-  data() {
-    return {
-        books: [],
-    };
+  computed: {
+    topBooks() {
+      return this.$store.getters['books/getTopBooks'];
+    },
   },
 
   mounted() {
-    this.fetchTopBooks();
+    this.$store.dispatch('books/fetchTopBooks');
   },
 
   methods: {
-    async fetchTopBooks() {
-        const store = useStore();
-        const token = store.getters['auth/firebaseToken'];
-
-        try {
-            const response = await axios.get('http://localhost:6100/api/books/top', {
-                headers: {
-                    'x-access-token': token,
-                },
-            }); 
-            this.books = response.data;
-        } catch (error) {
-            console.error('Error fetching top books:', error);
-        }
-    },
-
     getRatingColor(rating) {
-        if (rating >= 4) {
+        if (rating >= 4.7) {
             return 'green';
-        } else if (rating >= 3) {
+        } else if (rating >= 4) {
             return 'orange';
         } else {
             return 'red';

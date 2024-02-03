@@ -94,6 +94,19 @@ export const booksApi = {
     }
   },
 
+  getTopBooks: async (token) => {
+    try {
+      const response = await api.get('/books/top', {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   addToFavorites: async (token, bookId) => {
     try {
       const response = await api.post('/books/favorites/add', { bookId }, {
