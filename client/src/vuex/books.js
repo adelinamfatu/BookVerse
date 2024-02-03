@@ -6,6 +6,7 @@ const state = {
   filteredBooks: [],
   favoriteBooks: [],
   topBooks: [],
+  genreBooks: [],
 };
 
 const getters = {
@@ -14,6 +15,7 @@ const getters = {
   getFilteredBooks: (state) => state.filteredBooks,
   getFavoriteBooks: (state) => state.favoriteBooks,
   getTopBooks: (state) => state.topBooks,
+  getGenreBooks: (state) => state.genreBooks,
 };
 
 const actions = {
@@ -91,6 +93,17 @@ const actions = {
       console.error('Error fetching top books:', error);
     }
   },
+
+  async fetchGenreBooks({ commit, rootGetters }, genre) {
+    const token = rootGetters['auth/firebaseToken'];
+
+    try {
+      const genreBooks = await booksApi.getGenreBooks(token, genre);
+      commit('setGenreBooks', genreBooks);
+    } catch (error) {
+      console.error('Error fetching genre books:', error);
+    }
+  },
 };
 
 const mutations = {
@@ -112,6 +125,10 @@ const mutations = {
 
   setTopBooks(state, topBooks) {
     state.topBooks = topBooks;
+  },
+
+  setGenreBooks(state, genreBooks) {
+    state.genreBooks = genreBooks;
   },
 };
 

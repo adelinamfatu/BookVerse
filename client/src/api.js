@@ -107,6 +107,19 @@ export const booksApi = {
     }
   },
 
+  getGenreBooks: async (token, genre) => {
+    try {
+      const response = await api.get(`/books/top/${genre}`, {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   addToFavorites: async (token, bookId) => {
     try {
       const response = await api.post('/books/favorites/add', { bookId }, {

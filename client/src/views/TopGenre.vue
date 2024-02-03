@@ -53,7 +53,6 @@ export default {
   data() {
     return {
       genre: '',
-      carouselItems: [],
       slideColors: [
         'blue-accent-1',
         'indigo-accent-1',
@@ -69,6 +68,12 @@ export default {
     };
   },
 
+  computed: {
+    carouselItems() {
+      return this.$store.getters['books/getGenreBooks'];
+    },
+  },
+
   methods: {
     goBack() {
       this.$router.go(-1);
@@ -77,21 +82,13 @@ export default {
 
   async created() {
     const store = useStore();
-
     const routeGenre = this.$route.params.genre;
     this.genre = routeGenre.charAt(0).toUpperCase() + routeGenre.slice(1);
 
-    const token = store.getters['auth/firebaseToken'];
-
     try {
-      const response = await axios.get(`http://localhost:6100/api/books/top/${this.genre}`, {
-        headers: {
-            'x-access-token': token,
-          },
-      });
-      this.carouselItems = response.data;
+      await store.dispatch('books/fetchGenreBooks', this.genre);
     } catch (error) {
-      console.error('Error fetching top books:', error);
+      console.error('Error fetching genre books:', error);
     }
   },
 };
