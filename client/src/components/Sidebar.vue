@@ -74,8 +74,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-
 export default {
   data() {
     return {
@@ -86,26 +84,19 @@ export default {
         { title: 'Favorites', route: '/favorites', icon: 'mdi-heart' },
         { title: 'Profile', route: '/profile', icon: 'mdi-account' },
       ],
-      userDetails: null,
       isDesktop: true,
     };
+  },
+
+  computed: {
+    userDetails() {
+      return this.$store.getters['sidebar/getUserDetails'];
+    },
   },
   
   methods: {
     async fetchUserData() {
-      const token = this.$store.getters['auth/firebaseToken'];
-
-      try {
-        const response = await axios.get('http://localhost:6100/api/users/info', {
-          headers: {
-              'x-access-token': token,
-            },
-        });
-        this.userDetails = response.data;
-        this.userDetails.email = this.$store.getters['auth/user'].email;
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
+      await this.$store.dispatch('sidebar/fetchUserData');
     },
 
     showLogoutDialog() {

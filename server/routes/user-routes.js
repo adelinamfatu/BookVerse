@@ -30,7 +30,7 @@ router.get('/info', verifyToken, async (req, res) => {
     if (userDoc.exists) {
       const userInfo = userDoc.data();
       const { name, profilePictureUrl } = userInfo;
-      res.json({ name, profilePictureUrl });
+      res.json({ email: userEmail, name, profilePictureUrl });
     } else {
       res.status(404).json({ error: 'User not found' });
     }
