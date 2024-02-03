@@ -62,7 +62,6 @@ export const booksApi = {
           'x-access-token': token,
         },
       });
-      console.log(response.data)
       return response.data;
     } catch (error) {
       throw error;
@@ -115,6 +114,66 @@ export const booksApi = {
           'x-access-token': token,
         },
       });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+};
+
+export const bookshelvesApi = {
+  getBookshelves: async (token) => {
+    try {
+      const response = await api.get('/bookshelves/user', {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  addBookshelf: async (token, newBookshelf) => {
+    try {
+      const response = await api.post('/bookshelves/add', {
+        title: newBookshelf.title,
+        color: newBookshelf.color,
+      }, {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  deleteBookshelf: async (token, bookshelfId) => {
+    try {
+      const response = await api.delete(`/bookshelves/delete/${bookshelfId}`, {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  updateBookshelf: async (token, bookshelfId, updatedData) => {
+    try {
+      const response = await api.put(`/bookshelves/update/${bookshelfId}`, updatedData, {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+
       return response.data;
     } catch (error) {
       throw error;

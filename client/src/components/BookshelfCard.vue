@@ -68,7 +68,6 @@ export default {
     title: String,
     color: String,
     isDefault: Boolean,
-    supplementaryText: String,
   },
 
   data() {
@@ -123,29 +122,12 @@ export default {
     },
 
     async saveChanges() {
-      const token = this.$store.getters['auth/firebaseToken'];
-
       const updatedData = {
         title: this.editedTitle,
         color: this.internalColor,
-        supplementaryText: this.supplementaryText,
       };
 
-      axios.put(`http://localhost:6100/api/bookshelves/update/${this.id}`, updatedData, {
-        headers: {
-          'x-access-token': token,
-        },
-      })
-      .then(response => {
-        if (response.status === 200) {
-          this.showToast(response.data, 'success');
-        } else {
-          this.showToast('Error updating the bookshelf. Please try again.', 'error');
-        }
-      })
-      .catch(error => {
-        this.showToast('Error updating the bookshelf. Please try again.', 'error');
-      });
+      await this.$store.dispatch('bookshelves/updateBookshelf', { id: this.id, data: updatedData });
     },
 
     navigateToBookshelfRoute() {

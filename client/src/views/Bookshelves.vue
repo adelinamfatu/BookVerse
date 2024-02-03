@@ -33,79 +33,29 @@
 
 <script>
 import BookshelfCard from '../components/BookshelfCard.vue';
-import axios from 'axios';
 
 export default {
   components: {
     BookshelfCard,
   },
-  data() {
-    return {
-      cards: [],
-    };
+  
+  computed: {
+    cards() {
+      return this.$store.getters['bookshelves/getBookshelves'];
+    },
   },
 
   mounted() {
-    this.fetchBookshelves();
+    this.$store.dispatch('bookshelves/fetchBookshelves');
   },
 
   methods: {
-    async fetchBookshelves() {
-      const token = this.$store.getters['auth/firebaseToken'];
-
-      try {
-        const response = await axios.get('http://localhost:6100/api/bookshelves/user', {
-          headers: {
-            'x-access-token': token,
-          },
-        });
-
-        this.cards = response.data;
-      } catch (error) {
-        console.error('Error fetching bookshelves:', error);
-      }
-    },
-
-    async addBookshelf() {
-      const token = this.$store.getters['auth/firebaseToken'];
-
-      try {
-        const response = await axios.post('http://localhost:6100/api/bookshelves/add', {
-          title: 'New Bookshelf',
-          color: '#607D8B', 
-        }, {
-          headers: {
-            'x-access-token': token,
-          },
-        });
-
-        const newBookshelf = {
-          id: response.data,
-          title: 'New Bookshelf',
-          color: '#607D8B', 
-        }; 
-
-        this.cards.push(newBookshelf);
-      } catch (error) {
-        console.error('Error adding bookshelf:', error);
-      }
+    addBookshelf() {
+      this.$store.dispatch('bookshelves/addBookshelf');
     },
 
     deleteBookshelf(bookshelfId) {
-      const token = this.$store.getters['auth/firebaseToken'];
-
-      axios.delete(`http://localhost:6100/api/bookshelves/delete/${bookshelfId}`, {
-        headers: {
-          'x-access-token': token,
-        },
-      })
-      .then(response => {
-        console.log('Delete successful', response.data);
-        this.cards = this.cards.filter(card => card.id !== bookshelfId);
-      })
-      .catch(error => {
-        console.error('Error deleting bookshelf', error);
-      });
+      this.$store.dispatch('bookshelves/deleteBookshelf', bookshelfId);
     },
   }
 };
