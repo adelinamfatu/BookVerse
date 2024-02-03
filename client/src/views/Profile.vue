@@ -73,20 +73,9 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { toast } from 'vue3-toastify';
-import { ref } from 'vue';
-
 export default {
   data() {
     return {
-      userDetails: {
-        name: '',
-        email: '',
-        gender: '',
-        favoriteGenres: [],
-        profilePictureUrl: null,
-      },
       genders: ['Male', 'Female', 'Other'],
       genres: [
         'Fantasy', 'Science Fiction', 'Mystery', 'Romance',
@@ -95,85 +84,18 @@ export default {
       ],
     };
   },
-  
-  methods: {
-    showToast(message, type) {
-      toast(message, {
-        autoClose: 3000,
-        type: type,
-      });
-    },
-
-    async loadUserProfile() {
-      const token = this.$store.getters['auth/firebaseToken'];
-
-      try {
-        const response = await axios.get('http://localhost:6100/api/users/profile', {
-          headers: {
-            'x-access-token': token,
-          },
-        });
-
-        this.userDetails = response.data;
-      } catch (error) {
-        this.showToast('Error loading the profile. Please try again.', 'error');
-      }
-    },
-
-    async saveChanges() {
-      const token = this.$store.getters['auth/firebaseToken'];
-
-      try {
-        const response = await axios.put('http://localhost:6100/api/users/update', this.userDetails, {
-          headers: {
-            'x-access-token': token,
-          },
-        });
-
-        if (response.status === 200) {
-          this.showToast(response.data, 'success');
-        } else {
-          this.showToast('Error updating the profile. Please try again.', 'error');
-        }
-
-      } catch (error) {
-        this.showToast('Error updating the profile. Please try again.', 'error');
-      }
-    },
-
-    handleFileChange(event) {
-      this.uploadProfilePicture(event.target.files[0]);
-    },
-
-    async uploadProfilePicture(profilePictureUrl) {
-      if (profilePictureUrl) {
-        const token = this.$store.getters['auth/firebaseToken'];
-        const formData = new FormData();
-        formData.append('file', profilePictureUrl);
-
-        try {
-          const response = await axios.put('http://localhost:6100/api/users/picture', formData, {
-            headers: {
-              'x-access-token': token,
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-
-          if (response.status === 200) {
-            this.userDetails.profilePictureUrl = response.data.profilePictureUrl;
-            this.showToast(response.data.message, 'success');
-          } else {
-            this.showToast('Error uploading the file. Please try again.', 'error');
-          }
-          
-        } catch (error) {
-          this.showToast('Error uploading the file. Please try again.', 'error');
-        }
-      }
-    },
-  },
 
   computed: {
+    userDetails() {
+      return this.$store.getters['users/getUserDetails'] || {
+        name: '',
+        email: '',
+        gender: '',
+        favoriteGenres: [],
+        profilePictureUrl: null,
+      };
+    },
+
     defaultImageSrc() {
       return 'https://firebasestorage.googleapis.com/v0/b/bookverse-86b43.appspot.com/o/profile.png?alt=media&token=5e990f95-08fa-4c78-8911-a50d8d2a9a1d';
     },
@@ -182,9 +104,20 @@ export default {
       return !this.userDetails.profilePictureUrl;
     },
   },
+  
+  methods: {
+    saveChanges() {
+      this.$store.dispatch('users/saveUserProfile', this.userDetails);
+    },
+
+    handleFileChange(event) {
+      const file = event.target.files[0];
+      this.$store.dispatch('users/uploadProfilePicture', file);
+    },
+  },
 
   created() {
-    this.loadUserProfile();
+    this.$store.dispatch('users/fetchUserData');
   }
 };
 </script>
