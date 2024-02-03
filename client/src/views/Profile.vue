@@ -24,6 +24,7 @@
               class="mb-4"
               bg-color="indigo-lighten-5"
               ref="files"
+              accept="image/*"
               @change="handleFileChange"
             ></v-file-input>
 
@@ -73,6 +74,8 @@
 
 <script>
 import axios from 'axios';
+import { toast } from 'vue3-toastify';
+import { ref } from 'vue';
 
 export default {
   data() {
@@ -94,6 +97,13 @@ export default {
   },
   
   methods: {
+    showToast(message, type) {
+      toast(message, {
+        autoClose: 3000,
+        type: type,
+      });
+    },
+
     async loadUserProfile() {
       const token = this.$store.getters['auth/firebaseToken'];
 
@@ -103,9 +113,10 @@ export default {
             'x-access-token': token,
           },
         });
+
         this.userDetails = response.data;
       } catch (error) {
-        console.error('Error loading user profile:', error);
+        this.showToast('Error loading the profile. Please try again.', 'error');
       }
     },
 
@@ -119,34 +130,45 @@ export default {
           },
         });
 
+        if (response.status === 200) {
+          this.showToast(response.data, 'success');
+        } else {
+          this.showToast('Error updating the profile. Please try again.', 'error');
+        }
+
       } catch (error) {
-        console.error('Error saving user profile:', error);
+        this.showToast('Error updating the profile. Please try again.', 'error');
       }
     },
 
     handleFileChange(event) {
-      this.userDetails.profilePictureUrl = event.target.files[0];
-      this.uploadProfilePicture();
+      this.uploadProfilePicture(event.target.files[0]);
     },
 
-    async uploadProfilePicture() {
-      if (this.userDetails.profilePictureUrl) {
+    async uploadProfilePicture(profilePictureUrl) {
+      if (profilePictureUrl) {
         const token = this.$store.getters['auth/firebaseToken'];
         const formData = new FormData();
-        formData.append('file', this.userDetails.profilePictureUrl);
+        formData.append('file', profilePictureUrl);
 
         try {
-          await axios.put('http://localhost:6100/api/users/picture', formData, {
+          const response = await axios.put('http://localhost:6100/api/users/picture', formData, {
             headers: {
               'x-access-token': token,
               'Content-Type': 'multipart/form-data',
             },
           });
 
-          console.log('File uploaded successfully');
-          this.loadUserProfile();
+          if (response.status === 200) {
+            console.log(response.data.profilePictureUrl);
+            this.userDetails.profilePictureUrl = response.data.profilePictureUrl;
+            this.showToast(response.data.message, 'success');
+          } else {
+            this.showToast('Error uploading the file. Please try again.', 'error');
+          }
+          
         } catch (error) {
-          console.error('Error uploading file:', error);
+          this.showToast('Error uploading the file. Please try again.', 'error');
         }
       }
     },
@@ -158,7 +180,6 @@ export default {
     },
     
     hasDefaultImage() {
-      console.log(this.userDetails.profilePictureUrl)
       return !this.userDetails.profilePictureUrl;
     },
   },

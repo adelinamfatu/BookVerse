@@ -101,17 +101,18 @@ router.put('/picture', verifyToken, async (req, res) => {
       },
     });
 
+    const randomYear = Math.floor(Math.random() * (2999 - 2100 + 1)) + 2100;
+
     const [signedUrl] = await file.getSignedUrl({
       action: 'read',
-      expires: '01-01-2999', 
+      expires: `01-01-${randomYear}`,
     });
 
     const userRef = db.collection('users').doc(req.user.email);
     await userRef.update({ profilePictureUrl: signedUrl });
 
-    res.status(200).json({ message: 'File uploaded successfully' });
+    res.status(200).json({ message: 'File uploaded successfully', profilePictureUrl: signedUrl });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
