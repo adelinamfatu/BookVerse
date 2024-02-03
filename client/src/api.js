@@ -120,9 +120,9 @@ export const booksApi = {
     }
   },
 
-  addToFavorites: async (token, bookId) => {
+  getBookDetails: async (token, isbn) => {
     try {
-      const response = await api.post('/books/favorites/add', { bookId }, {
+      const response = await api.get(`/books/details/${isbn}`, {
         headers: {
           'x-access-token': token,
         },
@@ -133,13 +133,54 @@ export const booksApi = {
     }
   },
 
-  removeFromFavorites: async (token, bookId) => {
+  toggleFavorite: async (token, isFavorite, isbn) => {
     try {
-      const response = await api.post('/books/favorites/remove', { bookId }, {
+      console.log(isFavorite);
+      const response = await api.put(
+        `/books/favorites/${isFavorite ? 'add' : 'remove'}/${isbn}`,
+        {},
+        {
+          headers: {
+            'x-access-token': token,
+          },
+        }
+      );
+      return response.data.isFavorite;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  addBookToBookshelf: async (token, data) => {
+    try {
+      const response = await api.post(`/bookshelves/add-book/${data.bookshelfId}`, {
+        isbn: data.isbn,
+        title: data.title,
+        author: data.author,
+        coverImage: data.coverImage,
+        nbPages: data.nbPages
+      }, {
         headers: {
           'x-access-token': token,
         },
       });
+
+      console.log(response);
+
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  removeBookFromBookshelf: async (token, bookshelfId, isbn) => {
+    try {
+      const response = await api.delete(`/bookshelves/delete-book/${bookshelfId}/${isbn}`, {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+
       return response.data;
     } catch (error) {
       throw error;
@@ -148,6 +189,19 @@ export const booksApi = {
 };
 
 export const bookshelvesApi = {
+  getUserBookshelves: async (token, isbn) => {
+    try {
+      const response = await api.get(`/bookshelves/book?isbn=${isbn}`, {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   getBookshelves: async (token) => {
     try {
       const response = await api.get('/bookshelves/user', {

@@ -61,28 +61,6 @@ const actions = {
     }
   },
 
-  async addToFavorites({ commit, rootGetters }, bookId) {
-    const token = rootGetters['auth/firebaseToken'];
-
-    try {
-      const updatedFavorites = await booksApi.addToFavorites(token, bookId);
-      commit('setFavoriteBooks', updatedFavorites);
-    } catch (error) {
-      console.error('Error adding to favorites:', error);
-    }
-  },
-
-  async removeFromFavorites({ commit, rootGetters }, bookId) {
-    const token = rootGetters['auth/firebaseToken'];
-
-    try {
-      const updatedFavorites = await booksApi.removeFromFavorites(token, bookId);
-      commit('setFavoriteBooks', updatedFavorites);
-    } catch (error) {
-      console.error('Error removing from favorites:', error);
-    }
-  },
-
   async fetchTopBooks({ commit, rootGetters }) {
     const token = rootGetters['auth/firebaseToken'];
 

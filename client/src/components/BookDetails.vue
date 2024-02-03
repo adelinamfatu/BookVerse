@@ -113,20 +113,35 @@
 </template>
 
 <script>
-import axios from 'axios';
-
 export default {
+  name: 'BookDetails',
+
   data() {
     return {
-      bookDetails: null,
-      isFavorite: false,
-      userBookshelves: [],
-      selectedBookshelf: null,
-      userTags: [],
-      selectedTags: [],
       commentsDialog: false,
-      hasComments: false,
+      selectedBookshelf: null,
     };
+  },
+
+  computed: {
+    bookDetails() {
+      return this.$store.getters['book/getBookDetails'];
+    },
+    isFavorite() {
+      return this.$store.getters['book/getIsFavorite'];
+    },
+    userBookshelves() {
+      return this.$store.getters['book/getUserBookshelves'];
+    },
+    userTags() {
+      return this.$store.getters['book/getUserTags'];
+    },
+    selectedTags() {
+      return this.$store.getters['book/getSelectedTags'];
+    },
+    hasComments() {
+      return this.$store.getters['book/getHasComments'];
+    },
   },
 
   methods: {
@@ -148,115 +163,25 @@ export default {
       }
     },
 
-    async fetchBookDetails(isbn) {
-      const token = this.$store.getters['auth/firebaseToken'];
-
-      try {
-        const response = await axios.get(`http://localhost:6100/api/books/details/${isbn}`, {
-          headers: {
-            'x-access-token': token,
-          },
-        });
-        
-        this.bookDetails = response.data;
-        this.isFavorite = response.data.isFavorite;
-        this.hasComments = response.data.comments && Object.keys(response.data.comments).length > 0;
-      } catch (error) {
-        console.error('Error fetching book details:', error);
-      }
-    },
-
-    async fetchUserBookshelves(isbn) {
-      const token = this.$store.getters['auth/firebaseToken'];
-
-      try {
-        const response = await axios.get(`http://localhost:6100/api/bookshelves/book?isbn=${isbn}`, {
-          headers: {
-            'x-access-token': token,
-          },
-        });
-
-        this.userBookshelves = response.data.filter(bookshelf => bookshelf.isDefault);
-        this.selectedBookshelf = this.userBookshelves.find(bookshelf => bookshelf.isSelected === true) || null;
-
-        this.userTags = response.data.filter(bookshelf => !bookshelf.isDefault);
-        this.selectedTags = this.userTags.find(tag => tag.isSelected === true);
-      } catch (error) {
-        console.error('Error fetching user bookshelves:', error);
-      }
-    },
-
     async toggleFavorite() {
-      const token = this.$store.getters['auth/firebaseToken'];
-      this.isFavorite = !this.isFavorite;
-      const isbn = this.$route.params.isbn;
-
-      if (this.isFavorite) {
-        try {
-          await axios.put(`http://localhost:6100/api/books/favorites/add/${isbn}`, {}, {
-            headers: {
-              'x-access-token': token,
-            },
-          });
-
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      else {
-        try {
-          await axios.put(`http://localhost:6100/api/books/favorites/remove/${isbn}`, {}, {
-            headers: {
-              'x-access-token': token,
-            },
-          });
-
-        } catch (error) {
-          console.log(error);
-        }
-      }
+      await this.$store.dispatch('book/toggleFavorite', this.$route.params.isbn);
     },
 
     async addBookToBookshelf(bookshelf) {
-      const token = this.$store.getters['auth/firebaseToken'];
-      const isbn = this.$route.params.isbn;
-
-      try {
-        await axios.post(`http://localhost:6100/api/bookshelves/add-book/${bookshelf.id}`, {
-          isbn,
-          title: this.bookDetails.title,
-          author: this.bookDetails.author,
-          coverImage: this.bookDetails.coverImage,
-          nbPages: this.bookDetails.nbPages
-        }, {
-          headers: {
-            'x-access-token': token,
-          },
-        });
-
-      } catch (error) {
-        console.error('Error adding book to bookshelf:', error);
-      }
+      await this.$store.dispatch('book/addBookToBookshelf', {
+        bookshelf,
+        bookDetails: this.bookDetails,
+      });
     },
 
     async removeBookFromBookshelf(bookshelf) {
-      const token = this.$store.getters['auth/firebaseToken'];
       const isbn = this.$route.params.isbn;
-
-      try {
-        const response = await axios.delete(`http://localhost:6100/api/bookshelves/delete-book/${bookshelf.id}/${isbn}`, {
-          headers: {
-            'x-access-token': token,
-          },
-        });
-
-      } catch (error) {
-        console.error('Error removing book from bookshelf:', error);
-      }
+      await this.$store.dispatch('book/removeBookFromBookshelf', { bookshelf, isbn });
     },
 
     async onBookshelfChange() {
       if (this.selectedBookshelf) {
+        this.$store.commit('book/setSelectedBookshelf', this.selectedBookshelf);
         await this.addBookToBookshelf(this.selectedBookshelf);
       }
     },
@@ -264,8 +189,13 @@ export default {
   
   async created() {
     const isbn = this.$route.params.isbn;
-    await this.fetchBookDetails(isbn);
-    await this.fetchUserBookshelves(isbn);
+    await this.$store.dispatch('book/fetchBookDetails', isbn);
+    await this.$store.dispatch('book/fetchUserBookshelves', isbn);
+
+    const selectedBookshelfFromStore = this.$store.getters['book/getSelectedBookshelf'];
+    if (selectedBookshelfFromStore) {
+      this.selectedBookshelf = selectedBookshelfFromStore;
+    }
   },
 };
 </script>

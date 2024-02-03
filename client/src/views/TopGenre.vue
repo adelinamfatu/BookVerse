@@ -46,9 +46,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { useStore } from 'vuex';
-
 export default {
   data() {
     return {
@@ -81,12 +78,11 @@ export default {
   },
 
   async created() {
-    const store = useStore();
     const routeGenre = this.$route.params.genre;
     this.genre = routeGenre.charAt(0).toUpperCase() + routeGenre.slice(1);
 
     try {
-      await store.dispatch('books/fetchGenreBooks', this.genre);
+      await this.$store.dispatch('books/fetchGenreBooks', this.genre);
     } catch (error) {
       console.error('Error fetching genre books:', error);
     }
