@@ -24,19 +24,23 @@ import FavoriteBook from '../components/FavoriteBook.vue';
 
 export default {
   name: 'Favorites',
+
   components: {
     FavoriteBook,
   },
+
   data() {
     return {
       currentPage: 1,
       itemsPerPage: 6,
-      totalBooks: 0,
-      allBooks: [],
     };
   },
 
   computed: {
+    totalBooks() {
+      return this.$store.getters['books/getFavoriteBooks'].length;
+    },
+
     totalPages() {
       return Math.ceil(this.totalBooks / this.itemsPerPage);
     },
@@ -44,34 +48,18 @@ export default {
     displayedBooks() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
-      return this.allBooks.slice(start, end);
+      return this.$store.getters['books/getFavoriteBooks'].slice(start, end);
     },
   },
 
   methods: {
-    async fetchData() {
-      const token = this.$store.getters['auth/firebaseToken'];
-
-      try {
-        const response = await axios.get('http://localhost:6100/api/books/favorites', {
-          headers: {
-            'x-access-token': token,
-          },
-        });
-        this.allBooks = response.data;
-        this.totalBooks = this.allBooks.length;
-      } catch (error) {
-        console.error('Error fetching books:', error);
-      }
-    },
-
     updatePagination(newPage) {
       this.currentPage = newPage;
     },
   },
   
   created() {
-    this.fetchData();
+    this.$store.dispatch('books/fetchFavoriteBooks');
   },
 };
 </script>

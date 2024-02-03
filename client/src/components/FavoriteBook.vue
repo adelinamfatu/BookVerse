@@ -40,17 +40,20 @@ export default {
       required: true,
     },
   },
+  
   data() {
     return {
       show: false,
     };
   },
+
   computed: {
     truncateDescription() {
       const words = this.book.description.split(' ');
       return words.slice(0, 25).join(' ');
     },
   },
+
   methods: {
     toggleShow() {
       this.show = !this.show;

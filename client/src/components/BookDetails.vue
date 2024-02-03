@@ -222,7 +222,7 @@ export default {
       const isbn = this.$route.params.isbn;
 
       try {
-        const response = await axios.post(`http://localhost:6100/api/bookshelves/add-book/${bookshelf.id}`, {
+        await axios.post(`http://localhost:6100/api/bookshelves/add-book/${bookshelf.id}`, {
           isbn,
           title: this.bookDetails.title,
           author: this.bookDetails.author,
@@ -234,7 +234,6 @@ export default {
           },
         });
 
-        console.log(response.data); 
       } catch (error) {
         console.error('Error adding book to bookshelf:', error);
       }
@@ -251,7 +250,6 @@ export default {
           },
         });
 
-        console.log(response.data);
       } catch (error) {
         console.error('Error removing book from bookshelf:', error);
       }

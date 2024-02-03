@@ -48,4 +48,43 @@ export const booksApi = {
       throw error;
     }
   },
+
+  getFavoriteBooks: async (token) => {
+    try {
+      const response = await api.get('/books/favorites', {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  addToFavorites: async (token, bookId) => {
+    try {
+      const response = await api.post('/books/favorites/add', { bookId }, {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  removeFromFavorites: async (token, bookId) => {
+    try {
+      const response = await api.post('/books/favorites/remove', { bookId }, {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

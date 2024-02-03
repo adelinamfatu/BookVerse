@@ -117,7 +117,6 @@ export default {
     },
 
     handleColorChange(newColor) {
-      console.log(this.internalColor);
       this.internalColor = newColor;
       
       this.$emit('update:color', newColor);
