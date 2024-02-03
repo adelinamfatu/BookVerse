@@ -90,13 +90,13 @@ export default {
 
   computed: {
     userDetails() {
-      return this.$store.getters['sidebar/getUserDetails'];
+      return this.$store.getters['users/getUserDetails'];
     },
   },
   
   methods: {
     async fetchUserData() {
-      await this.$store.dispatch('sidebar/fetchUserData');
+      await this.$store.dispatch('users/fetchUserData');
     },
 
     showLogoutDialog() {

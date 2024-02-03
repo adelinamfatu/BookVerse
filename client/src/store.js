@@ -1,12 +1,12 @@
 import { createStore } from 'vuex';
 import authModule from './vuex/auth'
-import sidebarModule from './vuex/sidebar'
+import usersModule from './vuex/users'
 import booksModule from './vuex/books'
 
 const store = createStore({
   modules: {
     auth: authModule, 
-    sidebar: sidebarModule,
+    users: usersModule,
     books: booksModule
   },
 });

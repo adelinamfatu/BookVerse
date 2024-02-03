@@ -160,7 +160,6 @@ export default {
           });
 
           if (response.status === 200) {
-            console.log(response.data.profilePictureUrl);
             this.userDetails.profilePictureUrl = response.data.profilePictureUrl;
             this.showToast(response.data.message, 'success');
           } else {
