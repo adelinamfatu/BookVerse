@@ -34,7 +34,7 @@
           show-arrows
         >
           <v-slide-group-item
-            v-for="(book, index) in books"
+            v-for="(book, index) in recommendedBooks"
             :key="index"
             v-slot="{ toggle, selectedClass }"
           >
@@ -56,8 +56,6 @@
 <script>
 import Book from '@/components/Book.vue';
 import MostPopular from '@/components/MostPopular.vue';
-import axios from 'axios';
-import { useStore } from 'vuex';
 
 export default {
   name: 'Dashboard',
@@ -70,47 +68,35 @@ export default {
   data() {
     return {
       model: [],
-      books: [],
-      filteredBooks: [],
-      searchQuery: '',
     };
   },
 
-  methods: {
-    async fetchRecommendedBooks() {
-      try {
-        const store = useStore();
-        const token = store.getters['auth/firebaseToken'];
-        const response = await axios.get('http://localhost:6100/api/books/recommended', {
-          headers: {
-            'x-access-token': token,
-          },
-        });
-
-        this.books = response.data;
-      } catch (error) {
-        console.error('Error fetching books:', error);
-      }
+  computed: {
+    recommendedBooks() {
+      return this.$store.getters['books/getRecommendedBooks'];
     },
 
-    async fetchBooks() {
-      try {
-        const store = useStore();
-        const token = store.getters['auth/firebaseToken'];
-        const response = await axios.get('http://localhost:6100/api/books/all', {
-          headers: {
-            'x-access-token': token,
-          },
-        });
+    allBooks() {
+      return this.$store.getters['books/getAllBooks'];
+    },
 
-        this.filteredBooks = response.data;
-      } catch (error) {
-        console.error('Error fetching books:', error);
-      }
+    filteredBooks() {
+      return this.$store.getters['books/getFilteredBooks']; 
+    },
+  },
+
+  methods: {
+    async fetchBooks() {
+      await this.$store.dispatch('books/fetchAllBooks');
+    },
+
+    async fetchRecommendedBooks() {
+      await this.$store.dispatch('books/fetchRecommendedBooks');
     },
 
     searchBooks() {
       if (this.searchQuery) {
+        this.$store.dispatch('books/updateFilteredBooks', this.searchQuery);
         const isbn = encodeURIComponent(this.searchQuery);
         this.$router.push(`/book/${isbn}`);
       }

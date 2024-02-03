@@ -1,4 +1,4 @@
-import { getUserInfo } from '../api';
+import { usersApi } from '../api';
 
 const state = {
   userDetails: null,
@@ -13,9 +13,10 @@ const actions = {
     const token = rootGetters['auth/firebaseToken'];
 
     try {
-      const userDetails = await getUserInfo(token);
+      const userDetails = await usersApi.getUserInfo(token);
       commit('setUserDetails', userDetails);
     } catch (error) {
+      console.error('Error fetching user details:', error);
     }
   },
 };
