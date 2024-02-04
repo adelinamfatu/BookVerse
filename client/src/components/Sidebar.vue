@@ -24,7 +24,7 @@
         <v-list>
           <v-list-item
             v-if="userDetails"
-            :prepend-avatar="userDetails.profilePictureUrl || 'https://firebasestorage.googleapis.com/v0/b/bookverse-86b43.appspot.com/o/profile.png?alt=media&token=5e990f95-08fa-4c78-8911-a50d8d2a9a1d'"
+            :prepend-avatar="userDetails.profilePictureUrl || 'https://firebasestorage.googleapis.com/v0/b/bookverse-86b43.appspot.com/o/profile.png?alt=media&token=eefc0167-5b43-45d6-9d69-35b05961cfaa'"
             :title="userDetails.name"
             :subtitle="userDetails.email"
           ></v-list-item>

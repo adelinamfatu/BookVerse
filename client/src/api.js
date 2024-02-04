@@ -165,8 +165,6 @@ export const booksApi = {
         },
       });
 
-      console.log(response);
-
       return response.data;
     } catch (error) {
       throw error;
@@ -314,11 +312,9 @@ export const bookshelvesApi = {
           'x-access-token': token,
         },
       });
-      console.log(response);
 
       return response;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   },

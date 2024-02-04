@@ -37,11 +37,20 @@ router.get('/recommended', verifyToken, async (req, res) => {
 
     const favoriteGenres = userSnapshot.data().favoriteGenres;
 
-    const recommendedBooksSnapshot = await db.collection('books')
-      .where('genre', 'in', favoriteGenres)
-      .orderBy('rating', 'desc')
-      .limit(20)
-      .get();
+    let recommendedBooksSnapshot;
+
+    if (favoriteGenres && favoriteGenres.length > 0) {
+      recommendedBooksSnapshot = await db.collection('books')
+        .where('genre', 'in', favoriteGenres)
+        .orderBy('rating', 'desc')
+        .limit(20)
+        .get();
+    } else {
+      recommendedBooksSnapshot = await db.collection('books')
+        .orderBy('rating', 'desc')
+        .limit(20)
+        .get();
+    }
 
     const recommendedBooks = [];
 

@@ -3,19 +3,41 @@ const router = express.Router();
 const { db, auth, storage } = require('../database');
 const verifyToken = require('../middleware/auth');
 
-router.post('/add', (req, res) => {
+router.post('/add', async (req, res) => {
   try {
     const id = req.body.email
 
     const userJson = {
       email: req.body.email,
-      password: req.body.password,
-      name: req.body.name
+      name: req.body.name,
+      bookshelves: {}
     }
 
-    const response = db.collection('users').doc(id).set(userJson);
-    
-    res.send(response)
+    const userResponse = await db.collection('users').doc(id).set(userJson);
+
+    const defaultBookshelves = [
+      { title: 'Want to read', isDefault: true },
+      { title: 'Currently reading', isDefault: true },
+      { title: 'Read', isDefault: true }
+    ];
+
+    const shelvesBatch = db.batch();
+
+    defaultBookshelves.forEach(async (shelf, index) => {
+      const shelfId = db.collection('bookshelves').doc().id;
+      console.log(shelfId);
+
+      userJson.bookshelves[shelfId] = { ...shelf, color: '#607D8B' };
+
+      const bookshelfRef = db.collection('bookshelves').doc(shelfId);
+      shelvesBatch.set(bookshelfRef, { title: shelf.title, isDefault: true });
+    });
+
+    await shelvesBatch.commit();
+
+    const userUpdateResponse = await db.collection('users').doc(id).update({ bookshelves: userJson.bookshelves });
+
+    res.send({ user: userResponse, userUpdate: userUpdateResponse });
   } catch(error) {
     res.send(error)
   }
