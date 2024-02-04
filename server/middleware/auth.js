@@ -14,7 +14,7 @@ const verifyToken = (req, res, next) => {
       next();
     })
     .catch((error) => {
-      return res.status(403).send('Unauthorized: Invalid token');
+      return res.status(403).send('Forbidden: Invalid token');
     });
 };
   

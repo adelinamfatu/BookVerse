@@ -90,14 +90,13 @@ export default {
           }
         }
 
-        // If rounded ratings are equal, consider title
         if (this.sortByTitle === 'asc') {
           return a.title.localeCompare(b.title);
         } else if (this.sortByTitle === 'desc') {
           return b.title.localeCompare(a.title);
         }
 
-        return 0; // Default case
+        return 0;
       });
 
       const start = (this.currentPage - 1) * this.itemsPerPage;

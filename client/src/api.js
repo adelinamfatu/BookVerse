@@ -12,8 +12,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 403) {
-      //store.dispatch('auth/logout');
-      //router.push('/login');
+      store.dispatch('auth/logout');
+      router.push('/login');
     }
     return Promise.reject(error);
   }
