@@ -119,6 +119,27 @@ export default {
   align-items: center;
 }
 
+@media (min-width: 601px) and (max-width: 1200px) {
+  .container {
+    height: auto;
+  }
+  .v-autocomplete input {
+    font-size: 14px; 
+  }
+  h2 {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    height: auto;
+  }
+  h2 {
+    font-size: 15px;
+  }
+}
+
 a {
   text-decoration: none;
 }

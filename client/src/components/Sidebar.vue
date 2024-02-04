@@ -110,7 +110,7 @@ export default {
     },
 
     updateScreenSize() {
-      this.isDesktop = window.innerWidth >= 960;
+      this.isDesktop = window.innerWidth >= 1200;
     },
   },
 

@@ -14,7 +14,7 @@
             </v-btn>
           </v-col>
           
-          <v-col>
+          <v-col class="top10">
             <router-link to="/top/fantasy">
               <v-card class="pa-4 mx-auto" style="height: 12vh; width: 95%; border-radius: 30px" elevation="10" color="blue-lighten-4">
                 <v-row align="center">
@@ -83,5 +83,23 @@ export default {
 <style scoped>
 a {
   text-decoration: none;
+}
+
+@media (max-width: 600px) {
+  .top10 {
+    display: none;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 1200px) {
+  h2 {
+    font-size: 30px;
+  }
+  p {
+    font-size: 25px;
+  }
+  .top10 {
+    display: none;
+  }
 }
 </style>

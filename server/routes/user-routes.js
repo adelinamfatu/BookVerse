@@ -25,7 +25,6 @@ router.post('/add', async (req, res) => {
 
     defaultBookshelves.forEach(async (shelf, index) => {
       const shelfId = db.collection('bookshelves').doc().id;
-      console.log(shelfId);
 
       userJson.bookshelves[shelfId] = { ...shelf, color: '#607D8B' };
 
