@@ -59,7 +59,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { toast } from 'vue3-toastify';
 
 export default {
@@ -112,7 +111,6 @@ export default {
     confirmDelete() {
       this.$emit('delete-bookshelf', this.id);
       this.deleteDialogVisible = false;
-      this.showToast('Bookshelf deleted succesfully', 'success');
     },
 
     handleColorChange(newColor) {
@@ -126,6 +124,26 @@ export default {
         title: this.editedTitle,
         color: this.internalColor,
       };
+
+      if (this.editedTitle === this.title && this.internalColor === this.color) {
+        this.isEditing = false;
+        return;
+      }
+
+      const existingBookshelves = this.$store.getters['bookshelves/getBookshelves'];
+      const isTitleUnique = !existingBookshelves.some(bookshelf => {
+        return (
+          bookshelf.id !== this.id &&
+          bookshelf.title.toLowerCase() === this.editedTitle.toLowerCase()
+        );
+      });
+
+      if (!isTitleUnique) {
+        this.showToast('Title must be unique.', 'error');
+        this.editedTitle = this.title;
+        this.isEditing = false;
+        return;
+      }
 
       await this.$store.dispatch('bookshelves/updateBookshelf', { id: this.id, data: updatedData });
     },

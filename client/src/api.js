@@ -251,7 +251,7 @@ export const bookshelvesApi = {
         },
       });
 
-      return response.data;
+      return response;
     } catch (error) {
       throw error;
     }
@@ -265,7 +265,7 @@ export const bookshelvesApi = {
         },
       });
 
-      return response.data;
+      return response;
     } catch (error) {
       throw error;
     }

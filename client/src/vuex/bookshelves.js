@@ -45,25 +45,37 @@ const actions = {
     }
   },
 
-  async deleteBookshelf({ commit, rootGetters }, bookshelfId) {
+  async deleteBookshelf({ commit, dispatch, rootGetters }, bookshelfId) {
     const token = rootGetters['auth/firebaseToken'];
 
     try {
-      await bookshelvesApi.deleteBookshelf(token, bookshelfId);
-      commit('deleteBookshelf', bookshelfId);
+      const response = await bookshelvesApi.deleteBookshelf(token, bookshelfId);
+      
+      if (response.status === 200) {
+        commit('deleteBookshelf', bookshelfId);
+        dispatch('showToast', { message: response.data, type: 'success' });
+      } else {
+        dispatch('showToast', { message: 'Error deleting the bookshelf. Please try again.', type: 'error' });
+      }
     } catch (error) {
-      console.error('Error deleting bookshelf', error);
+      dispatch('showToast', { message: 'Error deleting the bookshelf. Please try again.', type: 'error' });
     }
   },
 
-  async updateBookshelf({ commit, rootGetters }, { id, data }) {
+  async updateBookshelf({ commit, dispatch, rootGetters }, { id, data }) {
     const token = rootGetters['auth/firebaseToken'];
 
     try {
-      await bookshelvesApi.updateBookshelf(token, id, data);
-      commit('updateBookshelf', { id, data });
+      const response = await bookshelvesApi.updateBookshelf(token, id, data);
+
+      if (response.status === 200) {
+        commit('updateBookshelf', { id, data });
+        dispatch('showToast', { message: response.data, type: 'success' });
+      } else {
+        dispatch('showToast', { message: 'Error updating the bookshelf. Please try again.', type: 'error' });
+      }
     } catch (error) {
-      console.error('Error updating bookshelf', error);
+      dispatch('showToast', { message: 'Error updating the bookshelf. Please try again.', type: 'error' });
     }
   },
 
