@@ -3,11 +3,17 @@
     <v-img :src="book.coverImage" alt="Book Cover" max-height="10rem"></v-img>
 
     <v-card-title>
-      {{ book.title }}
+      {{ book.title }} 
     </v-card-title>
 
     <v-card-subtitle>
-      by {{ book.author }}
+      by {{ book.author }} 
+      <v-rating 
+        v-model="book.rating" 
+        class="ma-2" 
+        density="compact"
+        half-increments
+        readonly></v-rating>
     </v-card-subtitle>
 
     <v-card-actions class="d-flex justify-space-between">

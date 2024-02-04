@@ -2,7 +2,31 @@
   <div class="container">
     <v-card class="overflow-y-auto" style="height: 95vh; width: 100%" color="blue-grey-lighten-5" elevation="12">
       <div class="pa-4">
-        <h2 style="color: #37474F" class="mb-4 ml-8">Favorites</h2>  
+        <v-row>
+          <v-col>
+            <h2 style="color: #37474F" class="mb-4 ml-8">Favorites</h2>
+          </v-col>
+
+          <v-col cols="3">
+            <v-select
+              v-model="sortByTitle"
+              :items="['asc', 'desc']"
+              label="Sort by Title"
+              dense
+              variant="solo-filled"
+            ></v-select>
+          </v-col>
+
+          <v-col cols="3">
+            <v-select
+              v-model="sortByRating"
+              :items="['asc', 'desc']"
+              label="Sort by Rating"
+              dense
+              variant="solo-filled"
+            ></v-select>
+          </v-col>
+        </v-row>
 
         <v-container v-if="totalBooks > 0">
           <v-row>
@@ -35,6 +59,8 @@ export default {
     return {
       currentPage: 1,
       itemsPerPage: 6,
+      sortByTitle: 'asc',
+      sortByRating: 'asc',
     };
   },
 
@@ -48,9 +74,35 @@ export default {
     },
 
     displayedBooks() {
+      const sortedBooks = [...this.$store.getters['books/getFavoriteBooks']];
+      
+      sortedBooks.sort((a, b) => {
+        const roundedRatingA = Math.floor(a.rating * 2) / 2 + 0.5;
+        const roundedRatingB = Math.floor(b.rating * 2) / 2 + 0.5;
+
+        if (this.sortByRating === 'asc') {
+          if (roundedRatingA !== roundedRatingB) {
+            return roundedRatingA - roundedRatingB;
+          }
+        } else if (this.sortByRating === 'desc') {
+          if (roundedRatingA !== roundedRatingB) {
+            return roundedRatingB - roundedRatingA;
+          }
+        }
+
+        // If rounded ratings are equal, consider title
+        if (this.sortByTitle === 'asc') {
+          return a.title.localeCompare(b.title);
+        } else if (this.sortByTitle === 'desc') {
+          return b.title.localeCompare(a.title);
+        }
+
+        return 0; // Default case
+      });
+
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
-      return this.$store.getters['books/getFavoriteBooks'].slice(start, end);
+      return sortedBooks.slice(start, end);
     },
   },
 

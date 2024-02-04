@@ -105,9 +105,9 @@ router.get('/favorites', verifyToken, async (req, res) => {
     const books = [];
 
     snapshot.forEach((doc) => {
-      const { title, coverImage, author, description } = doc.data();
+      const { title, coverImage, author, description, rating } = doc.data();
       const isbn = doc.id;
-      books.push({ isbn, title, coverImage, author, description });
+      books.push({ isbn, title, coverImage, author, description, rating });
     });
 
     res.status(200).send(books);
@@ -190,7 +190,7 @@ router.get('/top/:genre', verifyToken, async (req, res) => {
   }
 });
 
-router.get('/top', verifyToken, async (req, res) => {
+router.get('/top', async (req, res) => {
   try {
     const snapshot = await db.collection('books')
       .orderBy('rating', 'desc')
@@ -201,7 +201,6 @@ router.get('/top', verifyToken, async (req, res) => {
 
     snapshot.forEach((doc) => {
       const { coverImage, title, genre, author, rating, reviews } = doc.data();
-      const isbn = doc.id;
       topBooks.push({ cover: coverImage, title, genre, author, rating, reviews });
     });
 

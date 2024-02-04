@@ -1,10 +1,23 @@
 import axios from 'axios';
+import store from './store';
+import router from '@/router';
 
 const BASE_URL = 'http://localhost:6100/api';
 
 const api = axios.create({
   baseURL: BASE_URL,
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 403) {
+      //store.dispatch('auth/logout');
+      //router.push('/login');
+    }
+    return Promise.reject(error);
+  }
+);
 
 export const usersApi = {
   getUserInfo: async (token) => {
