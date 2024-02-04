@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="fill-height" style="background-color: #E3F2FD;">
     <v-row justify="center">
-      <v-col cols="7" md="5">
+      <v-col cols="12" md="7" sm="8" lg="5">
         <v-card color="light-blue-lighten-4" elevation="10"> 
           <v-row justify="center" class="mt-5">
             <v-col class="d-flex justify-center align-center">
