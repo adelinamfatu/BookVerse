@@ -42,7 +42,10 @@ const actions = {
       commit('setUser', user);
       commit('setFirebaseToken', idToken);
     } catch (error) {
-      console.error('Registration error:', error);
+      dispatch('showToast', {
+        message: 'An error occured. Please try again later',
+        type: 'error',
+      });
     }
   },
 

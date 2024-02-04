@@ -307,9 +307,10 @@ router.put('/update-rating/:bookshelfId/:isbn', verifyToken, async (req, res) =>
 
             const newReviews = currentReviews + 1;
             const newOverallRating = ((currentRating * currentReviews) + rating) / newReviews;
+            const roundedNewOverallRating = parseFloat(newOverallRating.toFixed(2));
 
             await bookRef.update({
-                rating: newOverallRating,
+                rating: roundedNewOverallRating,
                 reviews: newReviews,
             });
 
