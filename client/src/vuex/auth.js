@@ -1,5 +1,6 @@
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail  } from 'firebase/auth';
 import { auth } from '../firebase';
+import { toast } from 'vue3-toastify';
 
 const state = {
   isLogged: localStorage.getItem("isLogged") || false,
@@ -24,7 +25,10 @@ const actions = {
       commit('setUser', user);
       commit('setFirebaseToken', idToken);
     } catch (error) {
-      console.error('Login error:', error);
+      dispatch('showToast', {
+        message: 'Wrong credentials or account not found.',
+        type: 'error',
+      });
     }
   },
 
@@ -42,10 +46,33 @@ const actions = {
     }
   },
 
+  async resetPassword({ dispatch }, email) {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      dispatch('showToast', {
+        message: 'Password reset email sent successfully!',
+        type: 'success',
+      });
+    } catch (error) {
+      dispatch('showToast', {
+        message: 'Password reset error.',
+        type: 'error',
+      });
+      throw error;
+    }
+  },
+
   async logout({ commit }) {
     commit('setLoginStatus', false);
     commit('setUser', null);
     commit('setFirebaseToken', null);
+  },
+
+  showToast({ commit }, { message, type }) {
+    toast(message, {
+      autoClose: 3000,
+      type: type,
+    });
   },
 };
 

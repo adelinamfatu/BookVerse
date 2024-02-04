@@ -18,7 +18,7 @@
             </v-col>
           </v-row>
           <v-card-text class="mt-5">
-            <v-form @submit.prevent="login">
+            <v-form @submit.prevent="resetPassword">
               <v-text-field
                 :rules="emailRules"
                 class="mb-4"
@@ -30,34 +30,14 @@
                 prepend-inner-icon="mdi-email-outline"
                 variant="outlined">
               </v-text-field>
-              <v-text-field
-                :rules="passwordRules"
-                :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-                :type="visible ? 'text' : 'password'"
-                density="compact"
-                v-model="password"
-                label="Password"
-                placeholder="Enter your password"
-                prepend-inner-icon="mdi-lock-outline"
-                variant="outlined"
-                @click:append-inner="visible = !visible">
-              </v-text-field>
               <div class="d-flex justify-center">
-                <v-btn @click="login" color="orange-accent-1">Login</v-btn>
+                <v-btn @click="resetPassword" color="orange-accent-1">Reset Password</v-btn>
+              </div>
+              <div class="d-flex justify-center mt-2">
+                <router-link to="/login" style="font-size: 14px; text-decoration: underline; color: blue;">Back to Login</router-link>
               </div>
             </v-form>
           </v-card-text>
-          <v-row justify="center" class="mb-4">
-            <v-col>
-              <div class="d-flex justify-center align-center">
-                <span style="font-size: 14px;">Don't have an account?</span>
-                <router-link to="/register" style="margin-left: 5px; text-decoration: underline; color: blue;">Register</router-link>
-              </div>
-              <div class="d-flex justify-center mt-3">
-                <router-link to="/reset-password" style="font-size: 14px; text-decoration: underline; color: blue;">Forgot Password?</router-link>
-              </div>
-            </v-col>
-          </v-row>
         </v-card>
       </v-col>
     </v-row>
@@ -72,28 +52,18 @@ import { useStore } from 'vuex';
 const store = useStore();
 const router = useRouter();
 const email = ref("");
-const password = ref("");
 const emailRules = ref([
   value => !!value || 'Email is required',
   value => /.+@.+\..+/.test(value) || 'Email must be valid'
 ]);
-const passwordRules = ref([
-  value => !!value || 'Password is required',
-  value => (value && value.length >= 8) || 'Password should be at least 8 characters long'
-])
-const visible = ref(false);
 
-const login = async () => {
-  const userData = {
-    email: email.value,
-    password: password.value
-  };
-
-  try {
-    await store.dispatch('auth/login', userData);
-    router.push('/dashboard');
-  } catch (error) {
-    console.error('Login error:', error);
+const resetPassword = async () => {
+  if (emailRules.value.every(rule => rule(email.value) === true)) {
+    try {
+      await store.dispatch('auth/resetPassword', email.value);
+    } catch (error) {
+      console.error('Password reset error:', error);
+    }
   }
 }
 </script>
