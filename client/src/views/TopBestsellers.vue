@@ -19,7 +19,7 @@
                         </v-chip>
                     </template>
                     <template v-slot:item.cover="{ item }">
-                        <v-img :src="item.cover" width="50" height="50"></v-img>
+                        <v-img :src="item.cover" class="cover-image"></v-img>
                     </template>
                 </v-data-table>
             </div>
@@ -63,6 +63,11 @@ export default {
   align-items: center;
 }
 
+.cover-image {
+  width: 50px; /* Default width for small screens */
+  height: 50px; /* Default height for small screens */
+}
+
 .half-width {
   width: 90%;
   margin: 0 auto;
@@ -70,5 +75,15 @@ export default {
 
 .table {
   background-color: #ECEFF1;
+}
+
+@media (max-width: 1200px) {
+  .container {
+    height: auto;
+  }
+  .cover-image {
+    width: 90px; 
+    height: 90px;
+  }
 }
 </style>

@@ -73,4 +73,10 @@ export default {
   display: flex;
   align-items: center;
 }
+
+@media (max-width: 1200px) {
+  .container {
+    height: auto;
+  }
+}
 </style>

@@ -8,7 +8,7 @@
           </div>
         </v-col>
 
-        <v-col cols="12" sm="9">
+        <v-col cols="12" sm="10">
           <div style="text-align: center;">
             <img
               v-if="userDetails.profilePictureUrl || hasDefaultImage"
@@ -128,5 +128,14 @@ export default {
   height: 100vh;
   display: flex;
   align-items: center;
+}
+
+@media (max-width: 1200px) {
+  .container {
+    height: auto;
+  }
+  h2 {
+    font-size: 20px;
+  }
 }
 </style>
