@@ -36,6 +36,7 @@
         label="Review"
         rows="2"
         @blur="updateReview"
+        @input="validateReviewInput"
       ></v-textarea>
 
       <div v-if="isCurrentlyReading" class="mt-3" style="display: flex; align-items: center;">
@@ -102,13 +103,6 @@ export default {
   },
 
   methods: {
-    showToast(message, type) {
-      toast(message, {
-        autoClose: 3000,
-        type: type,
-      });
-    },
-
     async updateRating(newRating) {
       const bookshelfId = this.$route.params.bookshelfId;
       const isbn = this.book.isbn;
@@ -138,6 +132,17 @@ export default {
       const isbn = this.book.isbn;
       this.$store.dispatch('bookshelves/updateReview', { bookshelfId, isbn, review: this.book.review });
       this.ratingChangedByUser = true;
+    },
+
+    validateReviewInput() {
+      const validCharactersRegex = /^[a-zA-Z0-9\s\.,'"?!-]*$/;
+      if (!validCharactersRegex.test(this.book.review)) {
+        this.book.review = this.sanitizeReviewInput(this.book.review);
+      }
+    },
+
+    sanitizeReviewInput(input) {
+      return input.replace(/[^a-zA-Z0-9\s\.,'"?!-]/g, '');
     },
   },
 

@@ -43,6 +43,7 @@
               variant="solo"
               class="mb-4"
               bg-color="indigo-lighten-5"
+              @input="processName"
             ></v-text-field>
 
             <v-select
@@ -113,6 +114,12 @@ export default {
     handleFileChange(event) {
       const file = event.target.files[0];
       this.$store.dispatch('users/uploadProfilePicture', file);
+    },
+
+    processName() {
+      const cleanedName = this.userDetails.name.replace(/[^a-zA-Z\s]/g, '');
+      const formattedName = cleanedName.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
+      this.userDetails.name = formattedName;
     },
   },
 
