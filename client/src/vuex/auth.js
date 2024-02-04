@@ -23,8 +23,6 @@ const actions = {
       commit('setLoginStatus', true);
       commit('setUser', user);
       commit('setFirebaseToken', idToken);
-
-      //dispatch('fetchUserData');
     } catch (error) {
       console.error('Login error:', error);
     }
@@ -39,8 +37,6 @@ const actions = {
       commit('setLoginStatus', true);
       commit('setUser', user);
       commit('setFirebaseToken', idToken);
-
-      //dispatch('storeUserData');
     } catch (error) {
       console.error('Registration error:', error);
     }

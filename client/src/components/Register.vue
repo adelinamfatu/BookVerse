@@ -89,8 +89,10 @@
 import { ref } from "vue";
 import axios from 'axios';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
 const store = useStore();
+const router = useRouter();
 const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
@@ -134,12 +136,11 @@ const register = async () => {
 
     axios.post('http://localhost:6100/api/users/add', userData)
       .then(response => {
+        router.push('/dashboard');
       })
       .catch(error => {
         console.error('Backend request error:', error);
       });
-
-    router.push('/dashboard');
 
   } catch (error) {
     const errorCode = error.code;
