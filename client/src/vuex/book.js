@@ -1,4 +1,5 @@
 import { booksApi, bookshelvesApi } from "../api"
+import { toast } from 'vue3-toastify';
 
 const state = {
   bookDetails: null,
@@ -21,65 +22,65 @@ const getters = {
 };
 
 const actions = {
-    async fetchBookDetails({ commit, rootGetters }, isbn) {
-        const token = rootGetters['auth/firebaseToken'];
+  async fetchBookDetails({ commit, rootGetters }, isbn) {
+    const token = rootGetters['auth/firebaseToken'];
     
-        try {
-          const bookDetails = await booksApi.getBookDetails(token, isbn);
-          commit('setBookDetails', { bookDetails, isbn });
-        } catch (error) {
-          console.error('Error fetching book details:', error);
-        }
-    },
+    try {
+      const bookDetails = await booksApi.getBookDetails(token, isbn);
+      commit('setBookDetails', { bookDetails, isbn });
+    } catch (error) {
+      console.error('Error fetching book details:', error);
+    }
+  },
 
-    async fetchUserBookshelves({ commit, rootGetters }, isbn) {
-        const token = rootGetters['auth/firebaseToken'];
+  async fetchUserBookshelves({ commit, rootGetters }, isbn) {
+    const token = rootGetters['auth/firebaseToken'];
     
-        try {
-          const userBookshelves = await bookshelvesApi.getUserBookshelves(token, isbn);
-          commit('setUserBookshelves', userBookshelves);
-        } catch (error) {
-          console.error('Error fetching user bookshelves:', error);
-        }
-    },
+    try {
+      const userBookshelves = await bookshelvesApi.getUserBookshelves(token, isbn);
+      commit('setUserBookshelves', userBookshelves);
+    } catch (error) {
+      console.error('Error fetching user bookshelves:', error);
+    }
+  },
 
-    async toggleFavorite({ commit, rootGetters }, isbn) {
-        const token = rootGetters['auth/firebaseToken'];
+  async toggleFavorite({ commit, rootGetters }, isbn) {
+    const token = rootGetters['auth/firebaseToken'];
     
-        try {
-            await booksApi.toggleFavorite(token, !state.isFavorite, isbn);
-            commit('setFavorite', !state.isFavorite);
-        } catch (error) {
-            console.log(error);
-        }
-    },
+    try {
+      await booksApi.toggleFavorite(token, !state.isFavorite, isbn);
+      commit('setFavorite', !state.isFavorite);
+    } catch (error) {
+      console.log(error);
+    }
+  },
 
-    async addBookToBookshelf({ rootGetters }, { bookshelf, bookDetails }) {
-        const token = rootGetters['auth/firebaseToken'];
+  async addBookToBookshelf({ rootGetters }, { bookshelf, bookDetails }) {
+    const token = rootGetters['auth/firebaseToken'];
     
-        try {
-            await booksApi.addBookToBookshelf(token, {
-                bookshelfId: bookshelf.id,
-                isbn: bookDetails.isbn,
-                title: bookDetails.title,
-                author: bookDetails.author,
-                coverImage: bookDetails.coverImage,
-                nbPages: bookDetails.nbPages,
-            });
-        } catch (error) {
-            console.error('Error adding book to bookshelf:', error);
-        }
-    },
+    try {
+      await booksApi.addBookToBookshelf(token, {
+        bookshelfId: bookshelf.id,
+        isbn: bookDetails.isbn,
+        title: bookDetails.title,
+        author: bookDetails.author,
+        coverImage: bookDetails.coverImage,
+        nbPages: bookDetails.nbPages,
+      });
+    } catch (error) {
+      console.error('Error adding book to bookshelf:', error);
+    }
+  },
     
-    async removeBookFromBookshelf({ rootGetters }, { bookshelf, isbn }) {
-        const token = rootGetters['auth/firebaseToken'];
+  async removeBookFromBookshelf({ rootGetters }, { bookshelf, isbn }) {
+    const token = rootGetters['auth/firebaseToken'];
     
-        try {
-          await booksApi.removeBookFromBookshelf(token, bookshelf.id, isbn);
-        } catch (error) {
-          console.error('Error removing book from bookshelf:', error);
-        }
-    },
+    try {
+      await booksApi.removeBookFromBookshelf(token, bookshelf.id, isbn);
+    } catch (error) {
+      console.error('Error removing book from bookshelf:', error);
+    }
+  },
 };
 
 const mutations = {
@@ -103,6 +104,13 @@ const mutations = {
 
   setSelectedBookshelf(state, selectedBookshelf) {
     state.selectedBookshelf = selectedBookshelf;
+  },
+
+  showToast({ commit }, { message, type }) {
+    toast(message, {
+      autoClose: 3000,
+      type: type,
+    });
   },
 };
 

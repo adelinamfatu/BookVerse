@@ -3,9 +3,18 @@
     <v-card class="overflow-y-auto" style="height: 95vh; width: 100%" color="blue-grey-lighten-5" elevation="12">
       <div class="pa-4">
             
-        <h2 style="color: #37474F" class="mb-4 ml-8">
-          {{ selectedBookshelf.isDefault ? selectedBookshelf.title : 'Books in ' + selectedBookshelf.title }}
-        </h2>
+        <v-row>
+          <v-col>
+            <h2 style="color: #37474F" class="mb-4 ml-8">
+              {{ selectedBookshelf.isDefault ? selectedBookshelf.title : 'Books in ' + selectedBookshelf.title }}
+            </h2>
+          </v-col>
+          <v-col class="text-right">
+            <v-btn @click="goBack" icon>
+              <v-icon>mdi-arrow-left</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
 
         <v-row>
           <v-col v-for="(book, index) in selectedBookshelf.books" :key="index" cols="12" sm="6" md="4" lg="3">
@@ -46,6 +55,10 @@ export default {
       if (index !== -1) {
         this.selectedBookshelf.books.splice(index, 1);
       }
+    },
+
+    goBack() {
+      this.$router.go(-1);
     },
   },
 };
