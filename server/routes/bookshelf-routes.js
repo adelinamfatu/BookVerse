@@ -396,6 +396,7 @@ router.post('/move-book/:bookshelfId/:isbn', verifyToken, async (req, res) => {
                     title: sourceBook.title || '',
                     author: sourceBook.author || '',
                     coverImage: sourceBook.coverImage || '',
+                    nbPages: sourceBook.nbPages || '',
                 },
             });
         }

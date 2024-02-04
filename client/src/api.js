@@ -259,4 +259,83 @@ export const bookshelvesApi = {
       throw error;
     }
   },
+
+  getBookshelfBooks: async (token, bookshelfId) => {
+    try {
+      const response = await api.get(`/bookshelves/books/${bookshelfId}`, {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  updateRating: async (token, bookshelfId, isbn, newRating) => {
+    try {
+      const response = await api.put(`/bookshelves/update-rating/${bookshelfId}/${isbn}`, {
+        rating: newRating,
+      }, {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  moveBook: async (token, bookshelfId, isbn, targetBookshelfTitle) => {
+    try {
+      const response = await api.post(`/bookshelves/move-book/${bookshelfId}/${isbn}`, {
+        targetBookshelfTitle,
+      }, {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  updateCurrentPage: async (token, bookshelfId, isbn, currentPage) => {
+    try {
+      const response = await api.put(`/bookshelves/update-current-page/${bookshelfId}/${isbn}`, {
+        currentPage,
+      }, {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+      console.log(response);
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  },
+
+  updateReview: async (token, bookshelfId, isbn, review) => {
+    try {
+      const response = await api.put(`/bookshelves/update-review/${bookshelfId}/${isbn}`, {
+        review,
+      }, {
+        headers: {
+          'x-access-token': token,
+        },
+      });
+
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
 };

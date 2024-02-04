@@ -4,12 +4,12 @@
       <div class="pa-4">
             
         <h2 style="color: #37474F" class="mb-4 ml-8">
-          {{ isDefault ? bookshelfTitle : 'Books in ' + bookshelfTitle }}
+          {{ selectedBookshelf.isDefault ? selectedBookshelf.title : 'Books in ' + selectedBookshelf.title }}
         </h2>
 
         <v-row>
-          <v-col v-for="(book, index) in books" :key="index" cols="12" sm="6" md="4" lg="3">
-            <BookshelfBook :book="book" :bookshelfTitle="bookshelfTitle" @bookMoved="removeBookFromUI" />
+          <v-col v-for="(book, index) in selectedBookshelf.books" :key="index" cols="12" sm="6" md="4" lg="3">
+            <BookshelfBook :book="book" :bookshelfTitle="selectedBookshelf.title" @bookMoved="removeBookFromUI" />
           </v-col>
         </v-row>
 
@@ -19,52 +19,32 @@
 </template>
 
 <script>
-import axios from 'axios';
 import BookshelfBook from '../components/BookshelfBook.vue';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
     BookshelfBook,
   },
 
-  data() {
-    return {
-      books: [],
-      bookshelfTitle: '',
-      isDefault: false,
-    };
+  computed: {
+    ...mapGetters('bookshelves', ['getSelectedBookshelf']), 
+    selectedBookshelf() {
+      return this.getSelectedBookshelf;
+    },
   },
 
   created() {
-    this.fetchBooks();
+    const bookshelfId = this.$route.params.bookshelfId;
+    this.$store.dispatch('bookshelves/fetchSelectedBookshelf', bookshelfId); 
   },
 
   methods: {
-    async fetchBooks() {
-      const token = this.$store.getters['auth/firebaseToken'];
-
-      try {
-        const bookshelfId = this.$route.params.bookshelfId;
-        const response = await axios.get(`http://localhost:6100/api/bookshelves/books/${bookshelfId}`, {
-          headers: {
-            'x-access-token': token,
-          },
-        });
-
-        this.bookshelfTitle = response.data.title;
-        this.isDefault = response.data.isDefault;
-        this.books = response.data.books;
-
-      } catch (error) {
-        console.error('Error fetching books:', error);
-      }
-    },
-
     removeBookFromUI(isbn) {
-      const index = this.books.findIndex(book => book.isbn === isbn);
+      const index = this.selectedBookshelf.books.findIndex(book => book.isbn === isbn);
 
       if (index !== -1) {
-        this.books.splice(index, 1);
+        this.selectedBookshelf.books.splice(index, 1);
       }
     },
   },

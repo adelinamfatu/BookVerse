@@ -63,7 +63,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import { toast } from 'vue3-toastify';
 
 export default {
@@ -84,6 +83,7 @@ export default {
         const number = parseInt(value, 10);
         return number <= parseInt(this.book.nbPages, 10);
       },
+      ratingChangedByUser: false,
     };
   },
 
@@ -110,118 +110,43 @@ export default {
     },
 
     async updateRating(newRating) {
-      const token = this.$store.getters['auth/firebaseToken'];
-
-      try {
-        const bookshelfId = this.$route.params.bookshelfId;
-        const isbn = this.book.isbn; 
-
-        const response = await axios.put(`http://localhost:6100/api/bookshelves/update-rating/${bookshelfId}/${isbn}`, {
-          rating: newRating,
-        } , {
-          headers: {
-            'x-access-token': token,
-          },
-        });
-
-        if (response.status === 200) {
-          this.showToast(response.data, 'success');
-        } else {
-          this.showToast('Error updating the rating. Please try again.', 'error');
-        }
-      } catch (error) {
-        this.showToast('Error updating the rating. Please try again.', 'error');
-      }
-    },
-
-    async moveBook(targetBookshelfTitle) {
-      const token = this.$store.getters['auth/firebaseToken'];
-
-      try {
-        const bookshelfId = this.$route.params.bookshelfId;
-        const isbn = this.book.isbn;
-
-        await axios.post(`http://localhost:6100/api/bookshelves/move-book/${bookshelfId}/${isbn}`, {
-          targetBookshelfTitle,
-        }, {
-          headers: {
-            'x-access-token': token,
-          },
-        });
-
-        this.$emit('bookMoved', isbn);
-
-      } catch (error) {
-        this.showToast('Error moving the book to another bookshelf. Please try again.', 'error');
-      }
+      const bookshelfId = this.$route.params.bookshelfId;
+      const isbn = this.book.isbn;
+      this.$store.dispatch('bookshelves/updateRating', { newRating, bookshelfId, isbn });
     },
 
     markFinished() {
-      this.moveBook('Read');
+      const bookshelfId = this.$route.params.bookshelfId;
+      const isbn = this.book.isbn;
+      this.$store.dispatch('bookshelves/moveBook', { targetBookshelfTitle: 'Read', bookshelfId, isbn });
     },
 
     markCurrentlyReading() {
-      this.moveBook('Currently reading');
+      const bookshelfId = this.$route.params.bookshelfId;
+      const isbn = this.book.isbn;
+      this.$store.dispatch('bookshelves/moveBook', { targetBookshelfTitle: 'Currently reading', bookshelfId, isbn });
     },
 
     async updateCurrentPage() {
-      const token = this.$store.getters['auth/firebaseToken'];
-      
-      if(this.book.currentPage > 0 && this.book.currentPage <= this.book.nbPages) {
-        try {
-          const bookshelfId = this.$route.params.bookshelfId;
-          const isbn = this.book.isbn;
-
-          const response = await axios.put(`http://localhost:6100/api/bookshelves/update-current-page/${bookshelfId}/${isbn}`, {
-            currentPage: this.book.currentPage,
-          }, {
-            headers: {
-              'x-access-token': token,
-            },
-          });
-
-          if (response.status === 200) {
-            this.showToast(response.data, 'success');
-          } else {
-            this.showToast('Error updating the progress. Please try again.', 'error');
-          }
-        } catch (error) {
-          this.showToast('Error updating the progress. Please try again.', 'error');
-        }
-      }
+      const bookshelfId = this.$route.params.bookshelfId;
+      const isbn = this.book.isbn;
+      this.$store.dispatch('bookshelves/updateCurrentPage', { bookshelfId, isbn, currentPage: this.book.currentPage });
     },
 
     async updateReview() {
-      const token = this.$store.getters['auth/firebaseToken'];
-
-      try {
-        const bookshelfId = this.$route.params.bookshelfId;
-        const isbn = this.book.isbn;
-        const review = this.book.review;
-
-        const response = await axios.put(`http://localhost:6100/api/bookshelves/update-review/${bookshelfId}/${isbn}`, {
-          review: review,
-        }, {
-          headers: {
-            'x-access-token': token,
-          },
-        });
-
-        if (response.status === 200) {
-          this.showToast(response.data, 'success');
-        } else {
-          this.showToast('Error updating the review. Please try again.', 'error');
-        }
-      } catch (error) {
-        this.showToast('Error updating the review. Please try again.', 'error');
-      }
+      const bookshelfId = this.$route.params.bookshelfId;
+      const isbn = this.book.isbn;
+      this.$store.dispatch('bookshelves/updateReview', { bookshelfId, isbn, review: this.book.review });
+      this.ratingChangedByUser = true;
     },
   },
 
   watch: {
     'book.rating': {
       handler(newValue) {
-        this.updateRating(newValue);
+        if (this.ratingChangedByUser) {
+          this.updateRating(newValue);
+        }
       },
       deep: true, 
     },
