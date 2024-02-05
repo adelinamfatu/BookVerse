@@ -26,6 +26,7 @@ export default {
   beforeDestroy() {
     window.removeEventListener('resize', this.handleResize);
   },
+  
   methods: {
     handleResize() {
       this.isTablet = window.innerWidth >= 601 && window.innerWidth <= 1200;

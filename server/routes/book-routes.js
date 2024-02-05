@@ -4,7 +4,7 @@ const { db, auth } = require('../database');
 const verifyToken = require('../middleware/auth');
 const admin = require('firebase-admin');
 
-router.get('/all', verifyToken, async (req, res) => {
+router.get('/all', async (req, res) => {
   try {
     const snapshot = await db.collection('books').get();
     const books = [];
@@ -62,7 +62,6 @@ router.get('/recommended', verifyToken, async (req, res) => {
 
     res.status(200).send(recommendedBooks);
   } catch (error) {
-    console.error(error);
     res.status(500).send('Internal Server Error');
   }
 });
@@ -112,7 +111,6 @@ router.get('/favorites', verifyToken, async (req, res) => {
 
     res.status(200).send(books);
   } catch (error) {
-    console.error(error);
     res.status(500).send('Internal Server Error');
   }
 });
@@ -185,7 +183,6 @@ router.get('/top/:genre', verifyToken, async (req, res) => {
 
     res.status(200).send(topBooks);
   } catch (error) {
-    console.error(error);
     res.status(500).send('Internal Server Error');
   }
 });
@@ -206,7 +203,6 @@ router.get('/top', async (req, res) => {
 
     res.status(200).send(topBooks);
   } catch (error) {
-    console.error(error);
     res.status(500).send('Internal Server Error');
   }
 });
